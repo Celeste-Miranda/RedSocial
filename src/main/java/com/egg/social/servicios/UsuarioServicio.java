@@ -5,16 +5,21 @@ import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.RolRepositorio;
 import com.egg.social.repositorios.UsuarioRepositorio;
 import com.egg.social.utilidades.Utilidad;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/*
-implements UserDetailsService
- */
 @Service
-public class UsuarioServicio {
+public class UsuarioServicio implements UserDetailsService {
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
@@ -22,10 +27,9 @@ public class UsuarioServicio {
     @Autowired
     private RolRepositorio rolRepositorio;
 
-    /*
     @Autowired
     private BCryptPasswordEncoder encoder;
-     */
+
     @Transactional
     public void crearUsuario(String correo, String password, String password2) throws ExcepcionSpring {
         try {
@@ -35,7 +39,7 @@ public class UsuarioServicio {
                 Usuario usuario = new Usuario();
 
                 usuario.setCorreo(correo);
-                // usuario.setPassword(encoder.encode(password));
+                usuario.setPassword(encoder.encode(password));
 
                 if (usuarioRepositorio.findAll().isEmpty()) {
                     usuario.setRol(rolRepositorio.buscarRolAdministrador());
@@ -75,7 +79,6 @@ public class UsuarioServicio {
         }
     }
 
-    /*
     @Override
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepositorio.buscarUsuarioPorCorreo(correo);
@@ -88,5 +91,4 @@ public class UsuarioServicio {
 
         return new User(usuario.getCorreo(), usuario.getPassword(), Collections.singletonList(rol));
     }
-     */
 }
