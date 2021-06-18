@@ -25,4 +25,26 @@ public class Utilidad {
             throw new ExcepcionSpring("Ambas contraseñas deben ser iguales");
         }
     }
+    
+     public static void validarPerfil (String nombre,String apellido) throws ExcepcionSpring {
+        
+        if ( nombre ==null || nombre.isEmpty()) {
+            throw new ExcepcionSpring("campo obligatorio");
+        }
+        
+         if ( apellido == null || apellido.isEmpty()) {
+            throw new ExcepcionSpring("campo obligatiorio");
+        }
+        
+        if ( !nombre.matches("^[a-zA-Z]$")) {
+            throw new ExcepcionSpring("formato incorrecto");
+        }
+        
+        if (!apellido.matches("^[a-zA-Z]$")) {
+            throw new ExcepcionSpring("formato incorrecto");
+        }
+        
+       
+        
+    }
 }

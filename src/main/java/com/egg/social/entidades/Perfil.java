@@ -22,6 +22,8 @@ public class Perfil implements Serializable {
     private String apellido;
     @Enumerated(EnumType.STRING)
     private Residencia residencia;
+    @OneToOne
+    private Usuario usuario;
     @OneToMany(mappedBy = "perfil")
     private List<Publicacion> publicaciones;
     @OneToMany(mappedBy = "remitente")
@@ -96,5 +98,13 @@ public class Perfil implements Serializable {
 
     public void setFoto(Foto foto) {
         this.foto = foto;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

@@ -1,13 +1,19 @@
 package com.egg.social.controladores;
 
 import com.egg.social.entidades.Perfil;
+import com.egg.social.enumeraciones.Residencia;
 import com.egg.social.servicios.PerfilServicio;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/perfil")
@@ -15,19 +21,41 @@ public class PerfilControlador {
 
     @Autowired
     private PerfilServicio perfilServicio;
-
-    @GetMapping("/crear")
-    public String crear(Model model) {
-        model.addAttribute("objeto", new Perfil());
-        model.addAttribute("accion", "guardar");
-
-        return "perfil-formulario";
-    }
+    
+    
 
     @GetMapping("/editar/{id}")
-    public String modificar(@PathVariable Long id, Model model) {
-        model.addAttribute("objeto", perfilServicio.buscarPorId(id));
-        model.addAttribute("accion", "editar");
-        return "perfil-formulario";
+    public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
+        Perfil perfil =perfilServicio.buscarPorId(id);
+        Long idUsuario = perfil.getUsuario().getId();
+        
+        if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
+            return new ModelAndView (new RedirectView ("/"));
+          
+        }
+      
+        ModelAndView mav = new ModelAndView ("perfil-formulario");
+        
+        mav.addObject("objeto",perfil );
+        mav.addObject("accion", "guardar");
+        
+        return mav;
     }
+
+    @PostMapping("/guardar")
+    public RedirectView guardar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
+            @RequestParam Residencia residencia, @RequestParam(required = false) MultipartFile foto) throws Exception {
+        
+        perfilServicio.modificar(idPerfil, nombre, apellido, residencia);
+        
+        if (!foto.isEmpty()) {
+           
+            perfilServicio.modificarFoto(foto, idPerfil);
+        }
+        
+
+        return new RedirectView("/");
+
+    }
+
 }
