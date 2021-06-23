@@ -4,6 +4,7 @@ import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.UsuarioServicio;
 import java.security.Principal;
 import java.util.Map;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,14 @@ public class UsuarioControlador {
 
     @Autowired
     private UsuarioServicio usuarioServicio;
+
+    public void authWithHttpServletRequest(HttpServletRequest request, String correo, String password) {
+        try {
+            request.login(correo, password);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+    }
 
     @GetMapping("/signin")
     public ModelAndView ingreso(@RequestParam(required = false) String error, @RequestParam(required = false) String logout, Principal principal) {
