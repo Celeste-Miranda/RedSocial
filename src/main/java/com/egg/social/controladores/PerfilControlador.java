@@ -25,8 +25,9 @@ public class PerfilControlador {
     
 
     @GetMapping("/editar/{id}")
-    public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
-        Perfil perfil =perfilServicio.buscarPorId(id);
+    public ModelAndView modificar(@PathVariable Long idPerfil, HttpSession session) {
+       
+        Perfil perfil = perfilServicio.buscarPorIdUsuario((Long)session.getAttribute("idUsuario"));
         Long idUsuario = perfil.getUsuario().getId();
         
         if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
@@ -37,14 +38,14 @@ public class PerfilControlador {
         ModelAndView mav = new ModelAndView ("perfil-formulario");
         
         mav.addObject("objeto",perfil );
-        mav.addObject("accion", "guardar");
+        mav.addObject("accion", "modificar");
         
         return mav;
     }
 
-    @PostMapping("/guardar")
-    public RedirectView guardar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
-            @RequestParam Residencia residencia, @RequestParam(required = false) MultipartFile foto) throws Exception {
+    @PostMapping("/modificar")
+    public RedirectView modificar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
+            @RequestParam Residencia residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws Exception {
         
         perfilServicio.modificar(idPerfil, nombre, apellido, residencia);
         

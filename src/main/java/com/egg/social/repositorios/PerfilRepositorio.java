@@ -18,9 +18,9 @@ public interface PerfilRepositorio extends JpaRepository<Perfil, Long> {
      void modificar(@Param("id") Long id, @Param("nombre") String nombre, 
              @Param("apellido")String apellido, @Param("residencia")Residencia residencia);
      
-     @Query("SELECT Perfil p WHERE p.apellido =:apellido AND p.nombre =:nombre ")
-     List<Perfil> buscarPorNombreYApellido (@Param("apellido") String apellido ,@Param("nombre")String nombre); 
+     @Query("SELECT p FROM Perfil p WHERE p.apellido = :apellido AND p.nombre = :nombre")
+     List<Perfil> buscarPorNombreYApellido(@Param("apellido") String apellido ,@Param("nombre")String nombre); 
      
-     @Query ("SELECT Perfil p WHERE p.usuario.id = :idUsuario")
-     Perfil buscarPorIdUsuario (@Param("idUsuario") Long idUsuario);
+     @Query("SELECT p FROM Perfil p WHERE p.usuario.id = :idUsuario")
+     Perfil buscarPorIdUsuario(@Param("idUsuario") Long idUsuario);
 }

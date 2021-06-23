@@ -23,8 +23,7 @@ public class PerfilServicio {
     private PerfilRepositorio perfilRepositorio;
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
-    @Autowired
-    private Utilidad utilidad;
+   
     @Autowired
     private FotoServicio fotoService;
 
@@ -62,7 +61,7 @@ public class PerfilServicio {
     public void modificar(Long idPerfil, String nombre, String apellido, Residencia residencia) throws Exception {
 
         try {
-            utilidad.validarPerfil(nombre, apellido);
+            Utilidad.validarPerfil(nombre, apellido);
             perfilRepositorio.modificar(idPerfil, nombre, apellido, residencia);
         } catch (Exception e) {
             throw new Exception("Error al completar Perfil ");

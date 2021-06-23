@@ -1,6 +1,8 @@
 package com.egg.social.utilidades;
 
 import com.egg.social.excepciones.ExcepcionSpring;
+import org.springframework.stereotype.Component;
+
 
 public class Utilidad {
 
