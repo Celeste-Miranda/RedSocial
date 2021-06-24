@@ -80,18 +80,16 @@
             
 
            
-            <!-- <div class="col-md-5">
+            <div class="col-md-5">
               <label for="country" class="form-label"   >Pais</label>
-              <select class="form-select" id="country" required  th:field="*{residencia}">
-                <option value="Argentina">Seleccionar...</option>
-                <option>Argentina</option>
-                <option>Brasil</option>
-                <option>United States</option>
+              <select class="form-select" id="provincias" required  th:field="*{residencia}">
+                <option value="" disabled selected>Elegi provincia</option>
+              
               </select>
               <div class="invalid-feedback">
-                Please select a valid country.
+                Por favor seleccione una Residencia.
               </div>
-            </div> -->
+            </div>
           
 
            
@@ -99,12 +97,12 @@
         <br><br>
 
           
-          <div class="form-floating mb-5 col-mb-6">
-            <input id="foto" class="form-control" type="file" name="foto" th:field="*{residencia}"/>
+     <!--      <div class="form-floating mb-5 col-mb-6">
+            <input id="foto" class="form-control" type="file" name="foto" th:field="*{foto}">
             
             <label for="foto">Cargar Foto Perfil</label>
           
-        </div>    
+        </div>    --> 
                
 
           <hr class="my-4">
@@ -122,7 +120,58 @@
 </div>
 
 
-<script th:src="@{/jss/bootstrap.bundle.min.js}"></script>  
+<script th:src="@{/jss/bootstrap.bundle.min.js}">     
+
+
+
+    const provincias = document.getElementById("provincias");
+
+  
+
+    async function buscar(provincia) {
+        const url = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=200`;
+        const response = await fetch(url);
+        return response.json();
+    }
+
+   /*  function buscarMunicipios(provincia) {
+        selectMunicipios.innerHTML = "";
+
+        buscar(provincia).then(data => {
+            for (const municipio of data["municipios"]) {
+                const option = document.createElement("option");
+                option.value = municipio["nombre"];
+                option.innerText = municipio["nombre"];
+                selectMunicipios.appendChild(option);
+            }
+        });
+    } */
+
+    (() => {
+        const buscar = async () => {
+            const url = "https://apis.datos.gob.ar/georef/api/provincias?campos=nombre";
+            const response = await fetch(url);
+            return response.json();
+        };
+
+        buscar().then(data => {
+            for (const provincia of data["provincias"]) {
+                const option = document.createElement("option");
+                option.value = provincia["nombre"];
+                option.innerText = provincia["nombre"];
+                provincias.appendChild(option);
+            }
+        })
+    })();
+
+
+
+
+
+
+
+
+</script>  
 
      
   </body>
