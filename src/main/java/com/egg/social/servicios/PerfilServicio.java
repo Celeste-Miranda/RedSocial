@@ -26,10 +26,10 @@ public class PerfilServicio {
     private FotoServicio fotoService;
 
     @Transactional
-    public void crear(Usuario usuario) {
+    public Perfil crear(Usuario usuario) {
         Perfil perfil = new Perfil();
         perfil.setUsuario(usuario);
-        perfilRepositorio.save(perfil);
+        return perfilRepositorio.save(perfil);
     }
 
     @Transactional
@@ -46,13 +46,13 @@ public class PerfilServicio {
     }
 
     @Transactional
-    public void modificar(Long idPerfil, String nombre, String apellido, Residencia residencia) throws Exception {
+    public void modificar(Long idPerfil, String nombre, String apellido) throws Exception {
 
         try {
             Utilidad.validarPerfil(nombre, apellido);
-            perfilRepositorio.modificar(idPerfil, nombre, apellido, residencia);
+            perfilRepositorio.modificar(idPerfil, nombre, apellido);
         } catch (Exception e) {
-            throw new Exception("Error al completar Perfil ");
+            throw new Exception("Error al completar Perfil "+ e.getMessage());
         }
 
     }

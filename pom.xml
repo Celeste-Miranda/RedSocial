@@ -11,7 +11,7 @@
     <groupId>com.egg</groupId>
     <artifactId>EggSocial</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>EggSocial</name>
+    <name>EggSocial2</name>
     <description>Proyecto Final Egg Educación</description>
     <properties>
         <java.version>1.8</java.version>

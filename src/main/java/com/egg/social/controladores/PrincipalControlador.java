@@ -9,6 +9,27 @@ public class PrincipalControlador {
 
     @GetMapping("/")
     public ModelAndView principal() {
-        return new ModelAndView("index");
+        return new ModelAndView("inicio");
     }
+    
+    
+//     @GetMapping("/")
+//    public ModelAndView principal() {
+//        return new ModelAndView("usuario-formulario");
+//    }
+    
+//       @GetMapping("/")
+//    public ModelAndView principal() {
+//        return new ModelAndView("rol-formulario");
+//    }
+    
+//         @GetMapping("/")
+//    public ModelAndView principal() {
+//        return new ModelAndView("lista-roles");
+//    }
+    
+//       @GetMapping("/")
+//    public ModelAndView principal() {
+//        return new ModelAndView("perfil-formulario");
+//    }
 }

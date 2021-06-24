@@ -1,5 +1,7 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Perfil;
+import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.UsuarioServicio;
@@ -37,6 +39,7 @@ public class UsuarioControlador {
     @GetMapping("/signin")
     public ModelAndView ingreso(@RequestParam(required = false) String error, @RequestParam(required = false) String logout, Principal principal) {
         ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("title", "login");
 
         if (error != null) {
             modelAndView.addObject("error", "Correo electrónico o contraseña inválida");
@@ -55,7 +58,10 @@ public class UsuarioControlador {
 
     @GetMapping("/signup-get")
     public ModelAndView registro(HttpServletRequest request, Principal principal) {
-        ModelAndView modelAndView = new ModelAndView("signup");
+
+        ModelAndView modelAndView = new ModelAndView("usuario-formulario");
+        modelAndView.addObject("title", "Registro");
+
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
 
         if (flashMap != null) {
@@ -74,9 +80,24 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/signup-post")
-    public RedirectView registro(@RequestParam String correo, @RequestParam String password, @RequestParam String password2, RedirectAttributes redirectAttributes) {
+    public RedirectView registro(HttpServletRequest request,@RequestParam String correo, @RequestParam String password, @RequestParam String password2, RedirectAttributes redirectAttributes) {
+       
+        
+        Usuario usuario = null;
+        
+        Perfil perfil = null;
+        
         try {
-            perfilServicio.crear(usuarioServicio.crearUsuario(correo, password, password2));
+            
+            usuario = usuarioServicio.crearUsuario(correo, password, password2);
+            
+            perfil = perfilServicio.crear(usuario);
+
+            try {
+                request.login(correo, password);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            }
 
             redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
         } catch (ExcepcionSpring e) {
@@ -88,6 +109,6 @@ public class UsuarioControlador {
             return new RedirectView("/signup-get");
         }
 
-        return new RedirectView("/login");
+        return new RedirectView("/perfil/editar/"+perfil.getId());
     }
 }

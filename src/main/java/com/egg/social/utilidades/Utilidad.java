@@ -37,12 +37,12 @@ public class Utilidad {
             throw new ExcepcionSpring("campo obligatiorio");
         }
 
-        if (!nombre.matches("^[a-zA-Z]$")) {
-            throw new ExcepcionSpring("formato incorrecto");
-        }
-
-        if (!apellido.matches("^[a-zA-Z]$")) {
-            throw new ExcepcionSpring("formato incorrecto");
-        }
+//        if (!nombre.matches("^[a-zA-Z]$")) {
+//            throw new ExcepcionSpring("formato incorrecto");
+//        }
+//
+//        if (!apellido.matches("^[a-zA-Z]$")) {
+//            throw new ExcepcionSpring("formato incorrecto");
+//        }
     }
 }
