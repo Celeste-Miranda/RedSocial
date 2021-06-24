@@ -7,6 +7,7 @@ import com.egg.social.repositorios.UsuarioRepositorio;
 import com.egg.social.utilidades.Utilidad;
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 public class UsuarioServicio implements UserDetailsService {
@@ -31,7 +34,7 @@ public class UsuarioServicio implements UserDetailsService {
     private BCryptPasswordEncoder encoder;
 
     @Transactional
-    public void crearUsuario(String correo, String password, String password2) throws ExcepcionSpring {
+    public Usuario crearUsuario(String correo, String password, String password2) throws ExcepcionSpring {
         try {
             Utilidad.validarUsuario(correo, password, password2);
 
@@ -47,7 +50,7 @@ public class UsuarioServicio implements UserDetailsService {
                     usuario.setRol(rolRepositorio.buscarRolUsuario());
                 }
 
-                usuarioRepositorio.save(usuario);
+                return usuarioRepositorio.save(usuario);
             } else {
                 throw new ExcepcionSpring("Ya existe un usuario con el correo ingresado");
             }
@@ -86,6 +89,12 @@ public class UsuarioServicio implements UserDetailsService {
         if (usuario == null) {
             throw new UsernameNotFoundException("No existe un usuario registrado con el correo electrónico ingresado");
         }
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+
+        HttpSession sesion = attr.getRequest().getSession(true);
+
+        sesion.setAttribute("idUsuario", usuario.getId());
 
         GrantedAuthority rol = new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre());
 

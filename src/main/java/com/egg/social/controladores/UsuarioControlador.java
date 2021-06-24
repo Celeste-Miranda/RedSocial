@@ -1,6 +1,7 @@
 package com.egg.social.controladores;
 
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.UsuarioServicio;
 import java.security.Principal;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class UsuarioControlador {
     @Autowired
     private UsuarioServicio usuarioServicio;
 
+    @Autowired
+    private PerfilServicio perfilServicio;
+
     public void authWithHttpServletRequest(HttpServletRequest request, String correo, String password) {
         try {
             request.login(correo, password);
@@ -32,7 +36,7 @@ public class UsuarioControlador {
 
     @GetMapping("/signin")
     public ModelAndView ingreso(@RequestParam(required = false) String error, @RequestParam(required = false) String logout, Principal principal) {
-        ModelAndView modelAndView = new ModelAndView("signin");
+        ModelAndView modelAndView = new ModelAndView("login");
 
         if (error != null) {
             modelAndView.addObject("error", "Correo electrónico o contraseña inválida");
@@ -72,7 +76,7 @@ public class UsuarioControlador {
     @PostMapping("/signup-post")
     public RedirectView registro(@RequestParam String correo, @RequestParam String password, @RequestParam String password2, RedirectAttributes redirectAttributes) {
         try {
-            usuarioServicio.crearUsuario(correo, password, password2);
+            perfilServicio.crear(usuarioServicio.crearUsuario(correo, password, password2));
 
             redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
         } catch (ExcepcionSpring e) {
@@ -84,6 +88,6 @@ public class UsuarioControlador {
             return new RedirectView("/signup-get");
         }
 
-        return new RedirectView("/signin");
+        return new RedirectView("/login");
     }
 }

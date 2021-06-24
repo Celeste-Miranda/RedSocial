@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -21,11 +20,8 @@ public class Usuario implements Serializable {
     @Column(unique = true)
     private String correo;
     private String password;
-    private String password2;
     @ManyToOne
     private Rol rol;
-    @OneToOne
-    private Perfil perfil;
     @Temporal(TemporalType.DATE)
     private Date fechaDeBaja;
 
@@ -56,28 +52,12 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public String getPassword2() {
-        return password2;
-    }
-
-    public void setPassword2(String password2) {
-        this.password2 = password2;
-    }
-
     public Rol getRol() {
         return rol;
     }
 
     public void setRol(Rol rol) {
         this.rol = rol;
-    }
-
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
     }
 
     public Date getFechaDeBaja() {

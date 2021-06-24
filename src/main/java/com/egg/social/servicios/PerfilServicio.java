@@ -21,27 +21,15 @@ public class PerfilServicio {
 
     @Autowired
     private PerfilRepositorio perfilRepositorio;
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
-   
+
     @Autowired
     private FotoServicio fotoService;
 
     @Transactional
-    public void crear(Long idUsuario) throws Exception {
-
-        Optional<Usuario> respuesta = usuarioRepositorio.findById(idUsuario);
-
-        if (respuesta.isPresent()) {
-            Perfil perfil = new Perfil();
-            perfil.setUsuario(usuarioRepositorio.getById(idUsuario));
-            perfilRepositorio.save(perfil);
-
-        } else {
-            throw new Exception("Primero debe crear un Usuario");
-
-        }
-
+    public void crear(Usuario usuario) {
+        Perfil perfil = new Perfil();
+        perfil.setUsuario(usuario);
+        perfilRepositorio.save(perfil);
     }
 
     @Transactional
