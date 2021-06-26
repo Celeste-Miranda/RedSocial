@@ -19,7 +19,7 @@ public class Usuario implements Serializable {
     private Long id;
     @Column(unique = true)
     private String correo;
-    private String password;
+    private String clave;
     @ManyToOne
     private Rol rol;
     @Temporal(TemporalType.DATE)
@@ -44,12 +44,12 @@ public class Usuario implements Serializable {
         this.correo = correo;
     }
 
-    public String getPassword() {
-        return password;
+    public String getClave() {
+        return clave;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
     public Rol getRol() {

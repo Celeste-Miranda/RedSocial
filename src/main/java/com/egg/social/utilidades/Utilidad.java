@@ -8,12 +8,6 @@ public class Utilidad {
         if (correo == null || correo.isEmpty()) {
             throw new ExcepcionSpring("El correo electrónico no puede ser nulo");
         }
-        
-        /*
-        if (correo.matches("^[\\w-]+(\\.[\\w-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")) {
-            throw new ExcepcionSpring("El formato del correo electrónico ingresado es inválido");
-        }
-        */
 
         if (password == null || correo.isEmpty()) {
             throw new ExcepcionSpring("La contraseña no puede ser nula");
@@ -28,21 +22,33 @@ public class Utilidad {
         }
     }
 
-    public static void validarPerfil(String nombre, String apellido) throws ExcepcionSpring {
+    public static void validarPerfil(Long idPerfil, String nombre, String apellido, String residencia) throws ExcepcionSpring {
+        if (idPerfil == null) {
+            throw new ExcepcionSpring("El ID no puede ser nulo");
+        }
+
         if (nombre == null || nombre.isEmpty()) {
-            throw new ExcepcionSpring("campo obligatorio");
+            throw new ExcepcionSpring("El nombre no puede ser nulo");
+        }
+
+        if (nombre.matches("^-?[0-9]+$")) {
+            throw new ExcepcionSpring("Sólo se admiten caracteres en el nombre");
         }
 
         if (apellido == null || apellido.isEmpty()) {
-            throw new ExcepcionSpring("campo obligatiorio");
+            throw new ExcepcionSpring("El apellido no puede ser nulo");
         }
 
-//        if (!nombre.matches("^[a-zA-Z]$")) {
-//            throw new ExcepcionSpring("formato incorrecto");
-//        }
-//
-//        if (!apellido.matches("^[a-zA-Z]$")) {
-//            throw new ExcepcionSpring("formato incorrecto");
-//        }
+        if (apellido.matches("^-?[0-9]+$")) {
+            throw new ExcepcionSpring("Sólo se admiten caracteres en el apellido");
+        }
+
+        if (residencia == null || residencia.isEmpty()) {
+            throw new ExcepcionSpring("La residencia no puede ser nula");
+        }
+
+        if (residencia.matches("^-?[0-9]+$")) {
+            throw new ExcepcionSpring("Sólo se admiten caracteres en la residencia");
+        }
     }
 }

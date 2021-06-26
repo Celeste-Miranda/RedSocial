@@ -1,7 +1,7 @@
 package com.egg.social.controladores;
 
 import com.egg.social.entidades.Perfil;
-import com.egg.social.enumeraciones.Residencia;
+import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,42 +21,30 @@ public class PerfilControlador {
 
     @Autowired
     private PerfilServicio perfilServicio;
-    
-    
 
-    @GetMapping("/editar/{idPerfil}")
-    public ModelAndView modificar(@PathVariable Long idPerfil, HttpSession session) {
-       
-        Perfil perfil = perfilServicio.buscarPorIdUsuario((Long)session.getAttribute("idUsuario"));
+    @GetMapping("/editar/{id}")
+    public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
+        ModelAndView mav = new ModelAndView("perfil-formulario");
+
+        Perfil perfil = perfilServicio.buscarPorIdUsuario((Long) session.getAttribute("idUsuario"));
         Long idUsuario = perfil.getUsuario().getId();
-        
+
         if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
-            return new ModelAndView (new RedirectView ("/"));
-          
+            return new ModelAndView(new RedirectView("/"));
+            /*Redirigir a una vista que detalle el error 403*/
         }
-      
-        ModelAndView mav = new ModelAndView ("perfil-formulario");
-         mav.addObject("title", "Cargando Perfil");
-        mav.addObject("perfil",perfil );
+
+        mav.addObject("title", "Cargando Perfil");
+        mav.addObject("perfil", perfil);
         mav.addObject("accion", "modificar");
-        
+
         return mav;
     }
 
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido,
-            @RequestParam(required = false) Residencia residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws Exception {
-        
-        perfilServicio.modificar(id, nombre, apellido);
-        
-        if (!foto.isEmpty()) {
-           
-            perfilServicio.modificarFoto(foto, id);
-        }
-        
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws ExcepcionSpring {
+        perfilServicio.modificar(id, nombre, apellido, residencia, foto);
 
         return new RedirectView("/");
-
     }
-
 }

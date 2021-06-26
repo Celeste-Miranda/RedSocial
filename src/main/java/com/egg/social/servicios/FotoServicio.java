@@ -1,10 +1,11 @@
 package com.egg.social.servicios;
 
-import com.egg.social.entidades.Foto;
 import com.egg.social.excepciones.ExcepcionSpring;
-import com.egg.social.repositorios.FotoRepositorio;
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,50 +13,30 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FotoServicio {
 
-    @Autowired
-    private FotoRepositorio fotoRepositorio;
-
     @Transactional
-    public Foto guardarFoto(MultipartFile archivo) throws ExcepcionSpring {
-        if (!archivo.isEmpty()) {
-            try {
-                Foto foto = new Foto();
+    public String guardarFoto(MultipartFile archivo) throws ExcepcionSpring {
+        String nombreDelArchivo = UUID.randomUUID().toString() + "_" + archivo.getOriginalFilename().replace(" ", "");
+        Path rutaDelArchivo = Paths.get("src//main//resources//Static//foto").resolve(nombreDelArchivo).toAbsolutePath();
 
-                foto.setNombre(archivo.getName());
-                foto.setMime(archivo.getContentType());
-                foto.setContenido(archivo.getBytes());
-
-                return fotoRepositorio.save(foto);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ExcepcionSpring("Error al guardar portada");
-            }
-        }
-
-        return null;
-    }
-
-    @Transactional
-    public Foto actualizarFoto(Long idFoto, MultipartFile archivo) throws ExcepcionSpring {
         try {
-            Foto foto = new Foto();
-
-            if (idFoto != null) {
-                Optional<Foto> respuesta = fotoRepositorio.findById(idFoto);
-
-                if (respuesta.isPresent()) {
-                    foto = respuesta.get();
-                }
-            }
-
-            foto.setNombre(archivo.getName());
-            foto.setMime(archivo.getContentType());
-            foto.setContenido(archivo.getBytes());
-
-            return fotoRepositorio.save(foto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ExcepcionSpring("Error al actualizar foto");
+            Files.copy(archivo.getInputStream(), rutaDelArchivo);
+        } catch (IOException e) {
+            throw new ExcepcionSpring("Error al subir la foto del perfil en la base de datos");
         }
+
+        /*
+        String nombreDeFotoAnterior = perfil.getFoto();
+
+        if (nombreDeFotoAnterior != null && nombreDeFotoAnterior.length() > 0) {
+            Path rutaDeFotoAnterior = Paths.get("src//main//resources//static").resolve(nombreDeFotoAnterior).toAbsolutePath();
+            File archivoDeFotoAnterior = rutaDeFotoAnterior.toFile();
+
+            if (archivoDeFotoAnterior.exists() && archivoDeFotoAnterior.canRead()) {
+                archivoDeFotoAnterior.delete();
+            }
+        }
+         */
+        
+        return nombreDelArchivo;
     }
 }

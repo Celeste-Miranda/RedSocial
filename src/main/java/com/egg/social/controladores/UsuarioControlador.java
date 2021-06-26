@@ -28,14 +28,6 @@ public class UsuarioControlador {
     @Autowired
     private PerfilServicio perfilServicio;
 
-    public void authWithHttpServletRequest(HttpServletRequest request, String correo, String password) {
-        try {
-            request.login(correo, password);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
-    }
-
     @GetMapping("/signin")
     public ModelAndView ingreso(@RequestParam(required = false) String error, @RequestParam(required = false) String logout, Principal principal) {
         ModelAndView modelAndView = new ModelAndView("login");
@@ -58,7 +50,6 @@ public class UsuarioControlador {
 
     @GetMapping("/signup-get")
     public ModelAndView registro(HttpServletRequest request, Principal principal) {
-
         ModelAndView modelAndView = new ModelAndView("usuario-formulario");
         modelAndView.addObject("title", "Registro");
 
@@ -68,8 +59,8 @@ public class UsuarioControlador {
             modelAndView.addObject("exito", flashMap.get("exito"));
             modelAndView.addObject("error", flashMap.get("error"));
             modelAndView.addObject("correo", flashMap.get("correo"));
-            modelAndView.addObject("password", flashMap.get("password"));
-            modelAndView.addObject("password2", flashMap.get("password2"));
+            modelAndView.addObject("clave", flashMap.get("clave"));
+            modelAndView.addObject("clave2", flashMap.get("clave2"));
         }
 
         if (principal != null) {
@@ -80,35 +71,30 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/signup-post")
-    public RedirectView registro(HttpServletRequest request,@RequestParam String correo, @RequestParam String password, @RequestParam String password2, RedirectAttributes redirectAttributes) {
-       
-        
+    public RedirectView registro(@RequestParam String correo, @RequestParam String clave, @RequestParam String clave2, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Usuario usuario = null;
-        
         Perfil perfil = null;
-        
+
         try {
-            
-            usuario = usuarioServicio.crearUsuario(correo, password, password2);
-            
+            usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
             perfil = perfilServicio.crear(usuario);
 
+            redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
+
             try {
-                request.login(correo, password);
+                request.login(correo, clave);
             } catch (ServletException e) {
                 e.printStackTrace();
             }
-
-            redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
         } catch (ExcepcionSpring e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             redirectAttributes.addFlashAttribute("correo", correo);
-            redirectAttributes.addFlashAttribute("password", password);
-            redirectAttributes.addFlashAttribute("password2", password2);
+            redirectAttributes.addFlashAttribute("clave", clave);
+            redirectAttributes.addFlashAttribute("clave2", clave2);
 
             return new RedirectView("/signup-get");
         }
 
-        return new RedirectView("/perfil/editar/"+perfil.getId());
+        return new RedirectView("/perfil/editar/" + perfil.getId());
     }
 }
