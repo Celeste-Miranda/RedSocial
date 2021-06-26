@@ -1,10 +1,12 @@
 package com.egg.social.servicios;
 
+import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.utilidades.Utilidad;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +77,26 @@ public class PerfilServicio {
     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombre, String apellido) {
         return perfilRepositorio.buscarPorNombreYApellido(apellido, nombre);
+    }
+    
+      @Transactional
+    public List<Perfil> amigos(Long idPerfil) {
+
+        List<Perfil> amigos = new ArrayList();
+
+        for (Invitacion i : buscarPorId(idPerfil).getInvitacionesEnviadas()) {
+            if (i.getAceptada() == true) {
+                amigos.add(i.getDestinatario());
+            }
+
+        }
+        for (Invitacion i : buscarPorId(idPerfil).getInvitacionesRecibidas()) {
+            if (i.getAceptada() == true) {
+                amigos.add(i.getRemitente());
+            }
+
+        }
+
+        return amigos;
     }
 }
