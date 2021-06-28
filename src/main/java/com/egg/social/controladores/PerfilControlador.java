@@ -44,7 +44,7 @@ public class PerfilControlador {
     }
 
     @PostMapping("/modificar")
-    public RedirectView modificar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
+    public RedirectView guardar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
             @RequestParam Residencia residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws Exception {
         
         perfilServicio.modificar(idPerfil, nombre, apellido, residencia);

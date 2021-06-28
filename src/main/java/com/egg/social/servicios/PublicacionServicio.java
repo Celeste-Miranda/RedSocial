@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PublicacionServicio {
@@ -32,23 +33,30 @@ public class PublicacionServicio {
     
     //Metodo para crear una publicacion
     @Transactional
-    public void crearNueva(Long dni, String descripcion, Foto foto, Date fecha)  throws Exception {
+    public void crearNuevaConFoto(Long dni, MultipartFile foto, Date fecha)  throws Exception {
         Publicacion publicacion = new Publicacion();
         if (perfilRepositorio.getById(dni) == null) {
             throw new Exception("No se ha encontrado a ningun perfil con ese identificador.");
         }
-        if (descripcion == null || descripcion.isEmpty()) {
-            if (foto == null) {
-                throw new Exception("No se puede crear una publicacion vacia.");
-            }
+        if (foto == null || foto.isEmpty()) {
+            throw new Exception("No se puede crear una publicacion vacia.");
         }
         publicacion.setPerfil(perfilRepositorio.getById(dni));  //Obtener perfil
         publicacion.setComentarios(null);
         publicacion.setEggs(null);
-        publicacion.setDescripcion(descripcion);
-        publicacion.setFoto(foto);
+        publicacion.setDescripcion(null);
+        publicacion.setFoto(FotoServicio.guardar(foto));
         publicacion.setFechaDePublicacion(fecha);
         publicacion.setFechaDeBaja(null);
         publicacionRepositorio.save(publicacion);
+    }
+    
+    //Metodo para modificar una publicacion
+    @Transactional
+    public Publicacion buscarPorId(Long dni)  throws Exception {
+        if (perfilRepositorio.getById(dni) == null) {
+            throw new Exception("No se ha encontrado a ningun perfil con ese identificador.");
+        }
+        return publicacionRepositorio.getById(dni);
     }
 }
