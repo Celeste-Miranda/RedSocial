@@ -1,15 +1,13 @@
 package com.egg.social.servicios;
 
-import com.egg.social.entidades.Foto;
+import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Usuario;
-import com.egg.social.enumeraciones.Residencia;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.PerfilRepositorio;
-import com.egg.social.repositorios.UsuarioRepositorio;
 import com.egg.social.utilidades.Utilidad;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +24,13 @@ public class PerfilServicio {
     private FotoServicio fotoService;
 
     @Transactional
-    public void crear(Usuario usuario) {
+    public Perfil crear(Usuario usuario) {
         Perfil perfil = new Perfil();
         perfil.setUsuario(usuario);
-        perfilRepositorio.save(perfil);
+        return perfilRepositorio.save(perfil);
     }
 
+    /*
     @Transactional
     public void eliminar(Long id) throws Exception {
         Perfil perfil = buscarPorId(id);
@@ -44,41 +43,20 @@ public class PerfilServicio {
         }
 
     }
-
+     */
+    
     @Transactional
-    public void modificar(Long idPerfil, String nombre, String apellido, Residencia residencia) throws Exception {
-
+    public void modificar(Long idPerfil, String nombre, String apellido, String residencia, MultipartFile foto) throws ExcepcionSpring {
         try {
-            Utilidad.validarPerfil(nombre, apellido);
-            perfilRepositorio.modificar(idPerfil, nombre, apellido, residencia);
+            Utilidad.validarPerfil(idPerfil, nombre, apellido, residencia);
+
+            perfilRepositorio.modificar(idPerfil, nombre, apellido, fotoService.guardarFoto(foto));
+        } catch (ExcepcionSpring e) {
+            throw e;
         } catch (Exception e) {
-            throw new Exception("Error al completar Perfil ");
+            e.printStackTrace();
+            throw new ExcepcionSpring("Error al modificar perfil");
         }
-
-    }
-
-    @Transactional
-    public void modificarFoto(MultipartFile archivo, Long id) throws ExcepcionSpring {
-
-        Perfil perfil = buscarPorId(id);
-
-        if (perfil != null) {
-            Long idFoto = null;
-
-            if (perfil.getFoto().getId() != null) {
-                idFoto = perfil.getFoto().getId();
-
-                Foto foto = fotoService.actualizarFoto(idFoto, archivo);
-
-                perfil.setFoto(foto);
-
-                perfilRepositorio.save(perfil);
-            }
-        } else {
-
-            throw new ExcepcionSpring("No se encontro el perfil");
-        }
-
     }
 
     @Transactional(readOnly = true)
@@ -100,5 +78,25 @@ public class PerfilServicio {
     public List<Perfil> buscarPorNombreYApellido(String nombre, String apellido) {
         return perfilRepositorio.buscarPorNombreYApellido(apellido, nombre);
     }
+    
+      @Transactional
+    public List<Perfil> amigos(Long idPerfil) {
 
+        List<Perfil> amigos = new ArrayList();
+
+        for (Invitacion i : buscarPorId(idPerfil).getInvitacionesEnviadas()) {
+            if (i.getAceptada() == true) {
+                amigos.add(i.getDestinatario());
+            }
+
+        }
+        for (Invitacion i : buscarPorId(idPerfil).getInvitacionesRecibidas()) {
+            if (i.getAceptada() == true) {
+                amigos.add(i.getRemitente());
+            }
+
+        }
+
+        return amigos;
+    }
 }

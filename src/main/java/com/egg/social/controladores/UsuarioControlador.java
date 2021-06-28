@@ -1,5 +1,7 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Perfil;
+import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.UsuarioServicio;
@@ -26,17 +28,10 @@ public class UsuarioControlador {
     @Autowired
     private PerfilServicio perfilServicio;
 
-    public void authWithHttpServletRequest(HttpServletRequest request, String correo, String password) {
-        try {
-            request.login(correo, password);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
-    }
-
     @GetMapping("/signin")
     public ModelAndView ingreso(@RequestParam(required = false) String error, @RequestParam(required = false) String logout, Principal principal) {
         ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("title", "login");
 
         if (error != null) {
             modelAndView.addObject("error", "Correo electrónico o contraseña inválida");
@@ -55,15 +50,17 @@ public class UsuarioControlador {
 
     @GetMapping("/signup-get")
     public ModelAndView registro(HttpServletRequest request, Principal principal) {
-        ModelAndView modelAndView = new ModelAndView("signup");
+        ModelAndView modelAndView = new ModelAndView("usuario-formulario");
+        modelAndView.addObject("title", "Registro");
+
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
 
         if (flashMap != null) {
             modelAndView.addObject("exito", flashMap.get("exito"));
             modelAndView.addObject("error", flashMap.get("error"));
             modelAndView.addObject("correo", flashMap.get("correo"));
-            modelAndView.addObject("password", flashMap.get("password"));
-            modelAndView.addObject("password2", flashMap.get("password2"));
+            modelAndView.addObject("clave", flashMap.get("clave"));
+            modelAndView.addObject("clave2", flashMap.get("clave2"));
         }
 
         if (principal != null) {
@@ -74,20 +71,30 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/signup-post")
-    public RedirectView registro(@RequestParam String correo, @RequestParam String password, @RequestParam String password2, RedirectAttributes redirectAttributes) {
+    public RedirectView registro(@RequestParam String correo, @RequestParam String clave, @RequestParam String clave2, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        Usuario usuario = null;
+        Perfil perfil = null;
+
         try {
-            perfilServicio.crear(usuarioServicio.crearUsuario(correo, password, password2));
+            usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
+            perfil = perfilServicio.crear(usuario);
 
             redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
+
+            try {
+                request.login(correo, clave);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            }
         } catch (ExcepcionSpring e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             redirectAttributes.addFlashAttribute("correo", correo);
-            redirectAttributes.addFlashAttribute("password", password);
-            redirectAttributes.addFlashAttribute("password2", password2);
+            redirectAttributes.addFlashAttribute("clave", clave);
+            redirectAttributes.addFlashAttribute("clave2", clave2);
 
             return new RedirectView("/signup-get");
         }
 
-        return new RedirectView("/login");
+        return new RedirectView("/perfil/editar/" + perfil.getId());
     }
 }

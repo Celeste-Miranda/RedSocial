@@ -1,11 +1,8 @@
 package com.egg.social.entidades;
 
-import com.egg.social.enumeraciones.Residencia;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,8 +17,7 @@ public class Perfil implements Serializable {
     private Long id;
     private String nombre;
     private String apellido;
-    @Enumerated(EnumType.STRING)
-    private Residencia residencia;
+    private String residencia;
     @OneToOne
     private Usuario usuario;
     @OneToMany(mappedBy = "perfil")
@@ -30,8 +26,7 @@ public class Perfil implements Serializable {
     private List<Invitacion> invitacionesRecibidas;
     @OneToMany(mappedBy = "destinatario")
     private List<Invitacion> invitacionesEnviadas;
-    @OneToOne
-    private Foto foto;
+    private String foto;
 
     public Perfil() {
     }
@@ -60,12 +55,20 @@ public class Perfil implements Serializable {
         this.apellido = apellido;
     }
 
-    public Residencia getResidencia() {
+    public String getResidencia() {
         return residencia;
     }
 
-    public void setResidencia(Residencia residencia) {
+    public void setResidencia(String residencia) {
         this.residencia = residencia;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public List<Publicacion> getPublicaciones() {
@@ -92,19 +95,11 @@ public class Perfil implements Serializable {
         this.invitacionesEnviadas = invitacionesEnviadas;
     }
 
-    public Foto getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(Foto foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 }

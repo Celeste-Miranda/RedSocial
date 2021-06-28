@@ -1,8 +1,5 @@
 package com.egg.social.controladores;
 
-import com.egg.social.entidades.Foto;
-import com.egg.social.entidades.Perfil;
-import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PublicacionServicio;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.servicios.PerfilServicio;
@@ -31,7 +28,7 @@ public class PublicacionControlador {
     private PerfilServicio perfilServicio;
 
     //Metodo para mostrar todas las publicaciones
-    @GetMapping("")
+    @GetMapping("/mostrar-publicaciones")
     public ModelAndView buscarTodos() {
         ModelAndView mav = new ModelAndView("publicaciones");
         List<Publicacion> publicaciones = publicacionServicio.buscarTodas();
@@ -99,5 +96,10 @@ public class PublicacionControlador {
             mav.addObject("error", "Error en buscar publicacion por id. --- Mensaje: " + e.getMessage());
         }
         return new ModelAndView("/");
+        
+    public RedirectView guardar(@RequestParam Long dni, @RequestParam String descripcion, @RequestParam MultipartFile foto) {
+        Calendar cal = Calendar.getInstance();
+        //publicacionServicio.crearNueva(dni, descripcion, foto, (Date) (cal));   //Pasar a date
+        return new RedirectView("/usuarios/ver-todos");
     }
 }

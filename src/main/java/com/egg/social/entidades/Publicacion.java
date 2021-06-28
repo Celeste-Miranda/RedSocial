@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -26,8 +25,7 @@ public class Publicacion implements Serializable {
     @OneToMany(mappedBy = "publicacion")
     private List<Egg> eggs;
     private String descripcion;
-    @OneToOne
-    private Foto foto;
+    private String foto;
     @Temporal(TemporalType.DATE)
     private Date fechaDePublicacion;
     @Temporal(TemporalType.DATE)
@@ -76,11 +74,11 @@ public class Publicacion implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Foto getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(Foto foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 

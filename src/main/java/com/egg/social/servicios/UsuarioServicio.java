@@ -34,15 +34,15 @@ public class UsuarioServicio implements UserDetailsService {
     private BCryptPasswordEncoder encoder;
 
     @Transactional
-    public Usuario crearUsuario(String correo, String password, String password2) throws ExcepcionSpring {
+    public Usuario crearUsuario(String correo, String clave, String clave2) throws ExcepcionSpring {
         try {
-            Utilidad.validarUsuario(correo, password, password2);
+            Utilidad.validarUsuario(correo, clave, clave2);
 
             if (usuarioRepositorio.buscarUsuarioPorCorreo(correo) == null) {
                 Usuario usuario = new Usuario();
 
                 usuario.setCorreo(correo);
-                usuario.setPassword(encoder.encode(password));
+                usuario.setClave(encoder.encode(clave));
 
                 if (usuarioRepositorio.findAll().isEmpty()) {
                     usuario.setRol(rolRepositorio.buscarRolAdministrador());
@@ -98,6 +98,6 @@ public class UsuarioServicio implements UserDetailsService {
 
         GrantedAuthority rol = new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre());
 
-        return new User(usuario.getCorreo(), usuario.getPassword(), Collections.singletonList(rol));
+        return new User(usuario.getCorreo(), usuario.getClave(), Collections.singletonList(rol));
     }
 }
