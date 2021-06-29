@@ -16,7 +16,7 @@ public class FotoServicio {
     @Transactional
     public String guardarFoto(MultipartFile archivo) throws ExcepcionSpring {
         String nombreDelArchivo = UUID.randomUUID().toString() + "_" + archivo.getOriginalFilename().replace(" ", "");
-        Path rutaDelArchivo = Paths.get("src//main//resources//Static//foto").resolve(nombreDelArchivo).toAbsolutePath();
+        Path rutaDelArchivo = Paths.get("src//main//resources//static//foto").resolve(nombreDelArchivo).toAbsolutePath();
 
         try {
             Files.copy(archivo.getInputStream(), rutaDelArchivo);
@@ -31,7 +31,7 @@ public class FotoServicio {
             Path rutaDeFotoAnterior = Paths.get("src//main//resources//static").resolve(nombreDeFotoAnterior).toAbsolutePath();
             File archivoDeFotoAnterior = rutaDeFotoAnterior.toFile();
 
-            if (archivoDeFotoAnterior.exists() && archivoDeFotoAnterior.canRead()) {
+            if (archivoDeFotoAnterior.exists() || archivoDeFotoAnterior.canRead()) {
                 archivoDeFotoAnterior.delete();
             }
         }

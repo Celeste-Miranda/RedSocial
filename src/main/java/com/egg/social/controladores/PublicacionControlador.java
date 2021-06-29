@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("/publicaciones")
 public class PublicacionControlador {
+
     //Importar servicios a utilizar
     @Autowired
     private PublicacionServicio publicacionServicio;
@@ -42,47 +43,26 @@ public class PublicacionControlador {
     public ModelAndView mostrarFormulario() {
         return new ModelAndView("formulario-publicacion");
     }
+
     //Metodo que lo guarda y redirige
     @PostMapping("/guardar-publicacion")
     public RedirectView guardar(@RequestParam Long dni, @RequestParam(required = false) String descripcion, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) {
-        if (descripcion != null && foto != null) {
-            try {
-                publicacionServicio.crearNuevaCompleta(dni, descripcion, foto, new Date());
-                redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("error", e.getMessage());
-                return new RedirectView("/publicaciones");
-            }
+
+        try {
+            publicacionServicio.crearNueva(dni, descripcion, foto, new Date());
+            redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            // enviar a pag personalizada por Astor return new RedirectView("/publicaciones");
         }
-        if ((descripcion == null || descripcion.isEmpty()) && (foto != null)) {
-            try {
-                publicacionServicio.crearNuevaConFoto(dni, foto, new Date());
-                redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
-            } catch (Exception e) {
-                redirectAttributes.addFlashAttribute("error", e.getMessage());
-                return new RedirectView("/publicaciones");
-            }
-        } else {
-            if ((foto == null || foto.isEmpty()) && (descripcion != null)) {
-                try {
-                    publicacionServicio.crearNuevaConDescripcion(dni, descripcion, new Date());
-                    redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
-                } catch (Exception e) {
-                    redirectAttributes.addFlashAttribute("error", e.getMessage());
-                    return new RedirectView("/publicaciones");
-                }
-            } else {
-                redirectAttributes.addFlashAttribute("error", "No se puede crear una publicacion vacia");
-                return new RedirectView("/publicaciones");
-            }
-        }
+
         return new RedirectView("/publicaciones");
     }
-    
+
     //Metodo para editar una publicacion
     @GetMapping("/editar/{id}")
     public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
-        ModelAndView mav = new ModelAndView("usuario-formulario");
+        ModelAndView mav = new ModelAndView("publicacion-formulario");
         try {
             Publicacion publicacion = publicacionServicio.buscarPorId(id);
             Long idUsuario = publicacion.getPerfil().getUsuario().getId();
@@ -90,16 +70,28 @@ public class PublicacionControlador {
                 return new ModelAndView("/");
             }
             mav.addObject("publicacion", publicacion);
+            mav.addObject("action", "guardar-modificado");
             return mav;
         } catch (Exception e) {
             mav = new ModelAndView("/");
             mav.addObject("error", "Error en buscar publicacion por id. --- Mensaje: " + e.getMessage());
         }
         return new ModelAndView("/");
-        
-    public RedirectView guardar(@RequestParam Long dni, @RequestParam String descripcion, @RequestParam MultipartFile foto) {
-        Calendar cal = Calendar.getInstance();
-        //publicacionServicio.crearNueva(dni, descripcion, foto, (Date) (cal));   //Pasar a date
-        return new RedirectView("/usuarios/ver-todos");
+
+    }
+
+    @PostMapping("/guardar-modificado")
+    public RedirectView guardarModificado(@RequestParam Long idPublicacion, @RequestParam String descripcion, @RequestParam MultipartFile foto)  {
+
+        try {
+
+            publicacionServicio.Modificar(idPublicacion, descripcion, foto);
+            //mandar mensaje de cambio exitoso
+        } catch (Exception e) {
+
+            //mandar mensaje de error al modificar
+        }
+
+        return new RedirectView("/publicacion/ver-todos");
     }
 }

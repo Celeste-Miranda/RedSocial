@@ -3,6 +3,7 @@ package com.egg.social.controladores;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,16 @@ public class PerfilControlador {
 
     @Autowired
     private PerfilServicio perfilServicio;
+
+    
+
+    @GetMapping  
+    public ModelAndView buscarTodos() {
+        ModelAndView mav = new ModelAndView("inicio");
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        mav.addObject("perfiles", perfiles);
+        return mav;
+    }
 
     @GetMapping("/editar/{id}")
     public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
@@ -42,21 +53,8 @@ public class PerfilControlador {
     }
 
     @PostMapping("/modificar")
-<<<<<<< HEAD
-    public RedirectView guardar(@RequestParam Long idPerfil, @RequestParam Long idUsuario, @RequestParam String nombre, @RequestParam String apellido,
-            @RequestParam Residencia residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws Exception {
-        
-        perfilServicio.modificar(idPerfil, nombre, apellido, residencia);
-        
-        if (!foto.isEmpty()) {
-           
-            perfilServicio.modificarFoto(foto, idPerfil);
-        }
-        
-=======
     public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws ExcepcionSpring {
         perfilServicio.modificar(id, nombre, apellido, residencia, foto);
->>>>>>> 927f0d0e327a7aab673a28e7c9e7eb1c6d4bd2cd
 
         return new RedirectView("/");
     }

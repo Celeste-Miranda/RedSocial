@@ -41,9 +41,9 @@
   <body class="bg-light">
     
 <div class="container">
-  <main>
+   <main>
     <div class="py-5 text-center">
-      <img class="d-block mx-auto mb-4" th:src="@{/iconos/iconoEgg.svg}" alt="" width="230" height="57">
+      <img class="d-block mx-auto mb-4" th:src="@{/iconos/logoFraseEgg.svg}" alt="" width="230" height="57">
       <h2>Bienvenido </h2>
       <p class="lead">Somos una organización que busca conectar personas a través de la cooperación. 
           Pusimos en marcha un laboratorio social y aplicamos principios científicos de la Cooperación Humana. 
@@ -52,9 +52,9 @@
     </div>
 
     
-      <div class="col-md-7 col-lg-8">
+   <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Datos Personales</h4>
-        <form class="needs-validation" novalidate  th:action="@{/perfil/__${accion}__}" method="POST" th:object="${perfil}" autocomplete="off" >
+        <form class="needs-validation"  enctype="multipart/form-data" novalidate  th:action="@{/perfil/__${accion}__}" method="POST" th:object="${perfil}" autocomplete="off" >
           <div class="row g-3">
 
             <input type="hidden" th:field="*{id}"/>
@@ -93,63 +93,48 @@
           
 
            
-          </div>
+          
         <br><br>
 
           
-     <!--      <div class="form-floating mb-5 col-mb-6">
-            <input id="foto" class="form-control" type="file" name="foto" th:field="*{foto}">
-            
-            <label for="foto">Cargar Foto Perfil</label>
+          <div class="form-floating mb-5 col-mb-6">
+          <input id="foto" class="form-control" type="file" name="foto"  th:field="*{foto}"/>
           
-        </div>    --> 
-               
+          <label for="foto">Cargar Foto Perfil</label>
+        
+           </div>    
+             
 
-          <hr class="my-4">
 
-          <button class="w-100 btn btn-yellow btn-lg" type="submit">Guardar</button>
-        </form>
-      </div>
+        <button class="w-100 btn btn-yellow btn-lg" type="submit">Guardar</button>
+      </form>
     </div>
-  </main>
+  </div>
+</main>
 
-  <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2017–2021 EggSocial</p>
-    
-  </footer>
+<footer class="my-5 pt-5 text-muted text-center text-small">
+  <p class="mb-1">&copy; 2017–2021 EggSocial</p>
+  
+</footer>
 </div>
 
+<script th:src="@{/jss/bootstrap.bundle.min.js}">  </script>  
 
-<script th:src="@{/jss/bootstrap.bundle.min.js}">     
+<script th:src="@{/form-validation.js}"></script>
 
+<script>
 
 
     const provincias = document.getElementById("provincias");
 
-  
 
-    async function buscar(provincia) {
-        const url = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=nombre&max=200`;
-        const response = await fetch(url);
-        return response.json();
-    }
 
-   /*  function buscarMunicipios(provincia) {
-        selectMunicipios.innerHTML = "";
 
-        buscar(provincia).then(data => {
-            for (const municipio of data["municipios"]) {
-                const option = document.createElement("option");
-                option.value = municipio["nombre"];
-                option.innerText = municipio["nombre"];
-                selectMunicipios.appendChild(option);
-            }
-        });
-    } */
+    
 
     (() => {
         const buscar = async () => {
-            const url = "https://apis.datos.gob.ar/georef/api/provincias?campos=nombre";
+            const url = "https://apis.datos.gob.ar/georef/api/provincias?campos=nombre&orden=nombre";
             const response = await fetch(url);
             return response.json();
         };
@@ -168,10 +153,10 @@
 
 
 
+  </script>
 
 
 
-</script>  
 
      
   </body>

@@ -12,25 +12,5 @@ public class PrincipalControlador {
         return new ModelAndView("inicio");
     }
 
-    /*
-    @GetMapping("/")
-    public ModelAndView principal() {
-        return new ModelAndView("usuario-formulario");
-    }
-
-    @GetMapping("/")
-    public ModelAndView principal() {
-        return new ModelAndView("rol-formulario");
-    }
-
-    @GetMapping("/")
-    public ModelAndView principal() {
-        return new ModelAndView("lista-roles");
-    }
-
-    @GetMapping("/")
-    public ModelAndView principal() {
-        return new ModelAndView("perfil-formulario");
-    }
-     */
+  
 }

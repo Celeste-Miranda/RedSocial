@@ -72,20 +72,16 @@ public class UsuarioControlador {
 
     @PostMapping("/signup-post")
     public RedirectView registro(@RequestParam String correo, @RequestParam String clave, @RequestParam String clave2, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        Usuario usuario = null;
-        Perfil perfil = null;
 
         try {
-            usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
-            perfil = perfilServicio.crear(usuario);
+            Usuario usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
+            Perfil perfil = perfilServicio.crear(usuario);
 
             redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
 
-            try {
-                request.login(correo, clave);
-            } catch (ServletException e) {
-                e.printStackTrace();
-            }
+            request.login(correo, clave);
+
+            return new RedirectView("/perfil/editar/" + perfil.getId());
         } catch (ExcepcionSpring e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             redirectAttributes.addFlashAttribute("correo", correo);
@@ -93,8 +89,10 @@ public class UsuarioControlador {
             redirectAttributes.addFlashAttribute("clave2", clave2);
 
             return new RedirectView("/signup-get");
+        } catch (ServletException e) {
+            e.printStackTrace();
+            return new RedirectView("/signin");
         }
 
-        return new RedirectView("/perfil/editar/" + perfil.getId());
     }
 }
