@@ -82,7 +82,7 @@
            
             <div class="col-md-5">
               <label for="country" class="form-label"   >Pais</label>
-              <select class="form-select" id="provincias" required  th:field="*{residencia}">
+              <select class="form-select" id="provincias" name="residencia" required  th:field="*{residencia}">
                 <option value="" disabled selected>Elegi provincia</option>
               
               </select>
@@ -98,7 +98,7 @@
 
           
           <div class="form-floating mb-5 col-mb-6">
-          <input id="foto" class="form-control" type="file" name="foto"  th:field="*{foto}"/>
+          <input id="foto" class="form-control" max-size="10000" type="file" name="foto"  th:field="*{foto}"/>
           
           <label for="foto">Cargar Foto Perfil</label>
         
@@ -126,9 +126,6 @@
 
 
     const provincias = document.getElementById("provincias");
-
-
-
 
     
 

@@ -1,12 +1,15 @@
 package com.egg.social.servicios;
 
+import com.egg.social.entidades.Comentario;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.repositorios.ComentarioRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +32,31 @@ public class PublicacionServicio {
     //Metodo para mostrar todas las publiciones
     @Transactional(readOnly = true)
     public List<Publicacion> buscarTodas() {
-        return publicacionRepositorio.findAll();
+
+        List<Publicacion> publicaciones = publicacionRepositorio.findByFechaDeBajaIsNull();
+        List<Publicacion> publicacionesRetorno = new ArrayList<>();
+
+//        List<Comentario> comentarios = new ArrayList<>();
+
+        for (Publicacion publicacion : publicaciones) {
+            publicacion.setComentarios(publicacion.getComentarios().stream()
+                    .filter(c -> c.getFechaDeBaja()==null).collect(Collectors.toList()));
+//            for (Comentario comentario : publicacion.getComentarios()) {
+//
+//                if (comentario.getFechaDeBaja() == null) {
+//
+//                    comentarios.add(comentario);
+//
+//                }
+//            }
+//
+//            publicacion.setComentarios(comentarios);
+            publicacionesRetorno.add(publicacion);
+
+//            comentarios.clear();
+        }
+
+        return publicacionesRetorno;
     }
 
     //Metodo para crear una publicacion
@@ -75,9 +102,8 @@ public class PublicacionServicio {
         Optional<Publicacion> respuesta = publicacionRepositorio.findById(idPublicacion);
 
         if (respuesta.isPresent()) {
-            
+
             Publicacion publicacion = respuesta.get();
-            
 
             publicacion.setDescripcion(descripcion);
 
@@ -94,6 +120,6 @@ public class PublicacionServicio {
             throw new Exception("No se ha encontrado a ningun publicacion para editar.");
         }
 
-
     }
+
 }

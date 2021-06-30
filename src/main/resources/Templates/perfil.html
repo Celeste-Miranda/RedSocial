@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.83.1">
+
+    <link rel="icon" href="./iconos/iconoEgg.svg">
+    
+
+    <title>Perfil</title>
+
+   <!--  <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/album/"> -->
+
+    
+
+    <!-- Bootstrap core CSS -->
+<link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+  </head>
+ 
+  <body>
+<header>
+
+  <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #ffffff;">
+    <div class="container ">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">EggSocial</a>
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          
+        
+          <a href="#" class="navbar-brand d-flex align-items-center ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <strong>Album</strong>
+          </a>
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+          </li>
+         
+        
+        <form class="d-flex">
+          <input class="form-control mx-auto" type="search" placeholder="Nombre de Usuario" aria-label="Search">
+          <button class="btn btn-success " type="submit">Buscar</button>
+        </form>
+      </ul>
+
+<ul class="navbar-nav ml-auto">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Nombre de Usuario
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+      <li><a class="dropdown-item" href="#">Ver Perfil</a></li>
+      <li><a class="dropdown-item" href="#">Configurar Perfil</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+    </ul>
+  </li>
+
+
+</ul>
+
+        <button class="btn btn-outline-warning" type="submit">Cerrar Sesión</button>
+      </div>
+    </div>
+  </nav>
+
+ 
+</header>
+
+<main style="background-color:#e9ebee">
+
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Bienvenido a EggSocial</h1>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+        <p>
+          <a href="#" class="btn btn-warning my-2">publicar</a>
+         
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- <div class="album py-5 " style="background-color: #e9ebee"> -->
+        
+    
+    <div class="container mt-4">
+      <h2>Listado de perfiles</h2>
+      <hr class="mb-4"/>
+      <div class="alert alert-danger" th:if="${excepcion != null}" th:text="${excepcion}"></div>
+      <div class="alert alert-success" th:if="${exito != null}" th:text="${exito}"></div>
+      <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
+      <div th:if="${perfiles.isEmpty()}">
+        <h5>No hay perfiles cargados</h5>
+      </div>
+      <div th:unless="${perfiles.isEmpty()}">
+          <div class="row">
+              <div class="col-3" th:each="perfil : ${perfiles}">
+                  <div class="card mb-4 shadow">
+                      <div th:if="${perfil.foto != null}" class="card-body text-center my-2">
+                          <img class="shadow rounded-circle" th:src="@{|/obtener-foto/${perfil.foto}|}" width="165">
+                      </div>
+                      <div th:unless="${perfil.foto != null}" class="card-body text-center my-2">
+                          <img class="rounded-circle" th:src="@{/foto-no-disponible.png}" width="165">
+                      </div>
+                      <div class="card-footer">
+                          <div th:text="|Perfil: ${perfil}|"></div>
+                          <div th:text="|Residencia: ${perfil.residencia}|"></div>
+                          <div class="d-flex justify-content-start my-2">
+                              <a th:href="@{/perfil/modificar-perfil/_${perfil.id}_}" class="btn btn-warning btn-sm me-2"><img th:src="@{/editar.svg}" width="24" role="img"/></a>
+                              <form th:action="@{/perfil/eliminar-perfil/_${perfil.id}_}" method="POST">
+                                  <button class="btn btn-danger btn-sm" type="submit"><img th:src="@{/eliminar.svg}" width="24" role="img"/></button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+<!--   </div> -->
+
+
+
+
+            
+
+</main>
+
+<footer class="text-muted py-5" style="background-color:  #37474f;">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+    <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
+     
+ 
+  </div>
+</footer>
+
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+
+      
+  </body>
+</html>
+
+
+
+
+

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface PerfilRepositorio extends JpaRepository<Perfil, Long> {
 
     @Modifying
-    @Query("UPDATE Perfil p SET p.nombre = :nombre, p.apellido = :apellido, p.foto = :foto  WHERE p.id = :id")
-    void modificar(@Param("id") Long id, @Param("nombre") String nombre, @Param("apellido") String apellido, @Param("foto") String foto);
+    @Query("UPDATE Perfil p SET p.nombre = :nombre, p.apellido = :apellido, p.residencia = :residencia , p.foto = :foto  WHERE p.id = :id")
+    void modificar(@Param("id") Long id, @Param("nombre") String nombre, @Param("apellido") String apellido,@Param("residencia")String residencia, @Param("foto") String foto);
 
     @Query("SELECT p FROM Perfil p WHERE p.apellido = :apellido AND p.nombre = :nombre")
     List<Perfil> buscarPorNombreYApellido(@Param("apellido") String apellido, @Param("nombre") String nombre);

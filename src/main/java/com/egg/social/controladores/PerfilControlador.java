@@ -27,7 +27,7 @@ public class PerfilControlador {
 
     @GetMapping  
     public ModelAndView buscarTodos() {
-        ModelAndView mav = new ModelAndView("inicio");
+        ModelAndView mav = new ModelAndView("perfil");
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
         mav.addObject("perfiles", perfiles);
         return mav;

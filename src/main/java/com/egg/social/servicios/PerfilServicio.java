@@ -50,7 +50,7 @@ public class PerfilServicio {
         try {
             Utilidad.validarPerfil(idPerfil, nombre, apellido, residencia);
 
-            perfilRepositorio.modificar(idPerfil, nombre, apellido, fotoService.guardarFoto(foto));
+            perfilRepositorio.modificar(idPerfil, nombre, apellido,residencia, fotoService.guardarFoto(foto));
         } catch (ExcepcionSpring e) {
             throw e;
         } catch (Exception e) {

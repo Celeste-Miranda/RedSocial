@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -22,8 +23,38 @@ public class Comentario implements Serializable {
     private Publicacion publicacion;
     @Temporal(TemporalType.DATE)
     private Date fechaDeComentario;
+    
+    @Temporal(TemporalType.DATE)
+    private Date fechaDeBaja;
+    
+
+    @PrePersist
+    public void prePersist() {
+        fechaDeComentario = new Date();
+    }
+
+    private String descripcion;
 
     public Comentario() {
+    }
+
+    public Date getFechaDeBaja() {
+        return fechaDeBaja;
+    }
+
+    public void setFechaDeBaja(Date fechaDeBaja) {
+        this.fechaDeBaja = fechaDeBaja;
+    }
+
+    
+    
+    
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Long getId() {
