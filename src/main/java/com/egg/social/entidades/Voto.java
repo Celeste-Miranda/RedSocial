@@ -1,14 +1,17 @@
 package com.egg.social.entidades;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-public class Egg implements Serializable {
+public class Voto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +20,10 @@ public class Egg implements Serializable {
     private Perfil perfil;
     @ManyToOne
     private Publicacion publicacion;
+    @Temporal(TemporalType.DATE)
+    private Date fechaDeBaja;
 
-    public Egg() {
+    public Voto() {
     }
 
     public Long getId() {
@@ -43,5 +48,14 @@ public class Egg implements Serializable {
 
     public void setPublicacion(Publicacion publicacion) {
         this.publicacion = publicacion;
+        
+    }
+
+    public Date getFechaDeBaja() {
+        return fechaDeBaja;
+    }
+
+    public void setFechaDeBaja(Date fechaDeBaja) {
+        this.fechaDeBaja = fechaDeBaja;
     }
 }

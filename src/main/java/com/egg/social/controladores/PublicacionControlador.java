@@ -30,9 +30,10 @@ public class PublicacionControlador {
 
     //Metodo para mostrar todas las publicaciones
     @GetMapping("/mostrar-publicaciones")
-    public ModelAndView buscarTodos() {
+    public ModelAndView buscarTodos(HttpSession session) {
+                
         ModelAndView mav = new ModelAndView("publicaciones");
-        List<Publicacion> publicaciones = publicacionServicio.buscarTodas();
+        List<Publicacion> publicaciones = publicacionServicio.buscarTodas((Long)session.getAttribute("idUsuario"));
         mav.addObject("publicaciones", publicaciones);
         return mav;
     }

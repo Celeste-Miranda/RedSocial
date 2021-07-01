@@ -14,5 +14,7 @@ public interface PublicacionRepositorio extends JpaRepository<Publicacion, Long>
 
     @Query("SELECT p From Publicacion p WHERE p.perfil.id = :idPerfil and p.fechaDeBaja IS NULL")
     List<Publicacion> publicacionesPorPerfil(@Param("idPerfil") Long idPerfil);
+    
+    List<Publicacion> findByPerfil_IdIn(List<Long> amigos);
 
 }

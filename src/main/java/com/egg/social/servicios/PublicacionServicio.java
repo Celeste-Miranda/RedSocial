@@ -1,9 +1,11 @@
 package com.egg.social.servicios;
 
 import com.egg.social.entidades.Comentario;
+import com.egg.social.entidades.Perfil;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.repositorios.ComentarioRepositorio;
+import com.egg.social.repositorios.InvitacionRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,16 +27,26 @@ public class PublicacionServicio {
     private PerfilRepositorio perfilRepositorio;
     @Autowired
     private ComentarioRepositorio comentarioRepositorio;
+    @Autowired
+    private InvitacionRepositorio invitacionRepositorio;
 
     @Autowired
     private FotoServicio fotoServicio;
+    @Autowired
+    private PerfilServicio perfilservicio;
 
     //Metodo para mostrar todas las publiciones
     @Transactional(readOnly = true)
-    public List<Publicacion> buscarTodas() {
-
-        List<Publicacion> publicaciones = publicacionRepositorio.findByFechaDeBajaIsNull();
-        List<Publicacion> publicacionesRetorno = new ArrayList<>();
+    public List<Publicacion> buscarTodas( Long idUsuario) {
+        Perfil perfil=perfilservicio.buscarPorIdUsuario(idUsuario);
+        
+        List<Long> amigos = invitacionRepositorio.listaDestinatario(perfil.getId());
+        amigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
+        
+        List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdIn(amigos);
+        
+        //List<Publicacion> publicaciones = publicacionRepositorio.findByFechaDeBajaIsNull();
+          List<Publicacion> publicacionesRetorno = new ArrayList<>();
 
 //        List<Comentario> comentarios = new ArrayList<>();
 
@@ -69,7 +81,7 @@ public class PublicacionServicio {
 
         publicacion.setPerfil(perfilRepositorio.getById(idPerfil));  //Obtener perfil
         publicacion.setComentarios(null);
-        publicacion.setEggs(null);
+        publicacion.setVotos(null);
 
         publicacion.setDescripcion(descripcion);
 

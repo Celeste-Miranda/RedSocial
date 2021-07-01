@@ -23,7 +23,7 @@ public class Publicacion implements Serializable {
     @OneToMany(mappedBy = "publicacion")
     private List<Comentario> comentarios;
     @OneToMany(mappedBy = "publicacion")
-    private List<Egg> eggs;
+    private List<Voto> votos;
     private String descripcion;
     private String foto;
     @Temporal(TemporalType.DATE)
@@ -58,13 +58,7 @@ public class Publicacion implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public List<Egg> getEggs() {
-        return eggs;
-    }
-
-    public void setEggs(List<Egg> eggs) {
-        this.eggs = eggs;
-    }
+   
 
     public String getDescripcion() {
         return descripcion;
@@ -97,4 +91,13 @@ public class Publicacion implements Serializable {
     public void setFechaDeBaja(Date fechaDeBaja) {
         this.fechaDeBaja = fechaDeBaja;
     }
+
+    public List<Voto> getVotos() {
+        return votos;
+    }
+
+    public void setVotos(List<Voto> votos) {
+        this.votos = votos;
+    }
+    
 }
