@@ -12,9 +12,11 @@ public interface PublicacionRepositorio extends JpaRepository<Publicacion, Long>
 
     List<Publicacion> findByFechaDeBajaIsNull();
 
-    @Query("SELECT p From Publicacion p WHERE p.perfil.id = :idPerfil and p.fechaDeBaja IS NULL")
+    @Query("SELECT p FROM Publicacion p WHERE p.perfil.id = :idPerfil and p.fechaDeBaja IS NULL")
     List<Publicacion> publicacionesPorPerfil(@Param("idPerfil") Long idPerfil);
-    
+
     List<Publicacion> findByPerfil_IdIn(List<Long> amigos);
 
+    @Query("SELECT p FROM Publicacion p WHERE p.id = :idPublicacion")
+    Publicacion buscarPublicacionPorId(@Param("idPublicacion") Long idPublicacion);
 }

@@ -1,27 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.egg.social.servicios;
 
 import com.egg.social.entidades.Comentario;
+import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
+import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.ComentarioRepositorio;
+import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- * @author Rodri
- */
 @Service
 public class ComentarioServicio {
 
-    //Importar repositorios a utilizar
     @Autowired
     private PublicacionRepositorio publicacionRepositorio;
 
@@ -29,31 +22,53 @@ public class ComentarioServicio {
     private ComentarioRepositorio comentarioRepositorio;
 
     @Autowired
-    private PerfilServicio perfilServicio;
+    private PerfilRepositorio perfilRepositorio;
 
     @Transactional
-    public void crearComentario(Long idUsuario, Publicacion publicacion, String descripcion) {
+    public void crearComentario(Long idUsuario, Publicacion publicacion, String descripcion) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
 
-        //despues hacemos validacion 
-        Comentario comentario = new Comentario();
+            if (perfil != null && publicacion != null) {
+                if (descripcion == null && descripcion.isEmpty()) {
+                    throw new ExcepcionSpring("La descripción no puede ser nula");
+                }
 
-        comentario.setPublicacion(publicacion);
-        comentario.setPerfil(perfilServicio.buscarPorIdUsuario(idUsuario));
-        comentario.setDescripcion(descripcion);
+                Comentario comentario = new Comentario();
 
-        comentarioRepositorio.save(comentario);
+                comentario.setPublicacion(publicacion);
+                comentario.setPerfil(perfil);
+                comentario.setDescripcion(descripcion);
 
-        publicacion.getComentarios().add(comentario);
+                comentarioRepositorio.save(comentario);
 
-        publicacionRepositorio.save(publicacion);
+                publicacion.getComentarios().add(comentario);
+
+                publicacionRepositorio.save(publicacion);
+            } else {
+                throw new ExcepcionSpring("Es necesario que exista tanto un usuario como una publicación");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al crear comentario");
+        }
     }
 
     @Transactional
-    public void eliminar(Comentario comentario) {
-        comentario.setFechaDeBaja(new Date());
+    public void eliminarComentario(Comentario comentario) throws ExcepcionSpring {
+        try {
+            if (comentario != null) {
+                comentario.setFechaDeBaja(new Date());
 
-        comentarioRepositorio.save(comentario);
-
+                comentarioRepositorio.save(comentario);
+            } else {
+                throw new ExcepcionSpring("El comentario indicado no existe");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al eliminar comentario");
+        }
     }
-
 }

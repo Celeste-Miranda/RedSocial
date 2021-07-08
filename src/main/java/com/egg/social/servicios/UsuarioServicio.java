@@ -4,8 +4,9 @@ import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.RolRepositorio;
 import com.egg.social.repositorios.UsuarioRepositorio;
-import com.egg.social.utilidades.Utilidad;
+import com.egg.social.validaciones.Validacion;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UsuarioServicio implements UserDetailsService {
     @Transactional
     public Usuario crearUsuario(String correo, String clave, String clave2) throws ExcepcionSpring {
         try {
-            Utilidad.validarUsuario(correo, clave, clave2);
+            Validacion.validarUsuario(correo, clave, clave2);
 
             if (usuarioRepositorio.buscarUsuarioPorCorreo(correo) == null) {
                 Usuario usuario = new Usuario();
@@ -55,11 +56,29 @@ public class UsuarioServicio implements UserDetailsService {
                 throw new ExcepcionSpring("Ya existe un usuario con el correo ingresado");
             }
         } catch (ExcepcionSpring e) {
-            e.printStackTrace();
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ExcepcionSpring("Error al registrar usuario");
+        }
+    }
+
+    public void modificarUsuario(Long idUsuario, String clave) throws ExcepcionSpring {
+        try {
+            Validacion.validarUsuario(idUsuario, clave);
+
+            Usuario usuario = usuarioRepositorio.buscarUsuarioPorId(idUsuario);
+
+            if (usuario != null) {
+                usuario.setClave(encoder.encode(clave));
+
+                usuarioRepositorio.save(usuario);
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al modificar usuario");
         }
     }
 
@@ -74,11 +93,47 @@ public class UsuarioServicio implements UserDetailsService {
                 throw new ExcepcionSpring("No existen usuarios registrados en la plataforma");
             }
         } catch (ExcepcionSpring e) {
-            e.printStackTrace();
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ExcepcionSpring("Error al buscar usuarios");
+        }
+    }
+
+    @Transactional
+    public void deshabilitar(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Usuario usuario = usuarioRepositorio.buscarUsuarioPorId(idUsuario);
+
+            if (usuario != null) {
+                usuario.setFechaDeBaja(new Date());
+
+                usuarioRepositorio.save(usuario);
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al deshabilitar usuario");
+        }
+    }
+
+    @Transactional
+    public void habilitar(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Usuario usuario = usuarioRepositorio.buscarUsuarioPorId(idUsuario);
+
+            if (usuario != null) {
+                usuario.setFechaDeBaja(null);
+
+                usuarioRepositorio.save(usuario);
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al habilitar usuario");
         }
     }
 
@@ -95,6 +150,7 @@ public class UsuarioServicio implements UserDetailsService {
         HttpSession sesion = attr.getRequest().getSession(true);
 
         sesion.setAttribute("idUsuario", usuario.getId());
+        sesion.setAttribute("correo", usuario.getCorreo());
 
         GrantedAuthority rol = new SimpleGrantedAuthority("ROLE_" + usuario.getRol().getNombre());
 

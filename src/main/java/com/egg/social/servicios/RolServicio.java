@@ -23,6 +23,7 @@ public class RolServicio {
         return rolRepositorio.save(rol);
     }
 
+    @Transactional(readOnly = true)
     public List<Rol> buscarRoles() throws ExcepcionSpring {
         try {
             List<Rol> roles = rolRepositorio.findAll();
@@ -37,5 +38,10 @@ public class RolServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar roles");
         }
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        rolRepositorio.deleteById(id);
     }
 }

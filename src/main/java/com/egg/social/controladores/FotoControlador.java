@@ -25,7 +25,6 @@ public class FotoControlador {
             e.printStackTrace();
         }
 
-        // && o ||
         if (!recurso.exists() || !recurso.isReadable()) {
             throw new RuntimeException("Error al cargar la imagen");
         }

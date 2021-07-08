@@ -14,107 +14,127 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InvitacionServicio {
-    
-    @Autowired
-    InvitacionRepositorio invitacionRepositorio;
-    @Autowired
-    PerfilRepositorio perfilrepositorio;
-    @Autowired
-    PerfilServicio perfilServicio;
-    
-    
-    @Transactional
-   public Invitacion crear (Perfil remitente, Perfil destinatario ){
-       
-       Invitacion invitacion = new Invitacion();
-       
-       invitacion.setRemitente(remitente);
-       invitacion.setDestinatario(destinatario);
-       invitacion.setAceptada(false);
-       
-       remitente.getInvitacionesEnviadas().add(invitacion);
-       destinatario.getInvitacionesRecibidas().add(invitacion);
-       
-       
-       perfilrepositorio.save(remitente);
-       perfilrepositorio.save(destinatario);
-       
-       invitacionRepositorio.save(invitacion);
-       return invitacion;
-   }
-    
-//   @Transactional
-//   public void eliminar (Long idInvitacion) throws ExcepcionSpring{
-//       Invitacion invitacion = invitacionRepositorio.findById(idInvitacion).orElse(null);
-//       
-//       if (invitacion != null) {
-//           invitacionRepositorio.deleteById(idInvitacion);
-//       }else{
-//           throw new ExcepcionSpring ("No se encontro Invitación");
-//       }
-//       
-//   }
-   
-   @Transactional
-   public void aceptarInvitacion (Long idInvitacion) throws ExcepcionSpring{
-       
-       Invitacion invitacion = invitacionRepositorio.findById(idInvitacion).orElse(null);
-       
-       if(invitacion!=null){
-           invitacion.setAceptada(true);
-           
-       }else {
-           throw new ExcepcionSpring ("invitacion no se encontro");
-       }
-       
-       invitacionRepositorio.save(invitacion);
-       
-   }
-   
-   @Transactional
-   public void rechazarInvitacion(Long idInvitacion) throws ExcepcionSpring{
-       
-       Invitacion invitacion = invitacionRepositorio.findById(idInvitacion).orElse(null);
-       
-        if(invitacion!=null){
-            invitacion.setFechaDeBaja(new Date());
-           
-       }else {
-           throw new ExcepcionSpring ("invitacion no se encontro");
-       }
-       
-        invitacionRepositorio.save(invitacion);
-   }
-   
-       
-    @Transactional
-    public List <Invitacion> invitacionesRecibidasPendientes(Long idPerfil){
-        List<Invitacion> recibidasPendientes = new ArrayList();
-        for (Invitacion i : perfilServicio.buscarPorId(idPerfil).getInvitacionesRecibidas()) {
-            if (i.getAceptada()==false) {
-                recibidasPendientes.add(i);
-            }
-            
-        }
-         return recibidasPendientes;
-        
-    }
-    
-    @Transactional
-    public List <Invitacion> invitacionesEnviadasPendientes(Long id){
-        List<Invitacion> enviadasPendientes = new ArrayList();
-        for (Invitacion i : perfilServicio.buscarPorId(id).getInvitacionesEnviadas()) {
-        
-            if (i.getAceptada()== false) {
-                enviadasPendientes.add(i);
-            }
-            
-        }
-         return enviadasPendientes;
-        
-    }
-   
-   }
-   
-  
 
+    @Autowired
+    private InvitacionRepositorio invitacionRepositorio;
+
+    @Autowired
+    private PerfilRepositorio perfilRepositorio;
+
+    @Transactional
+    public Invitacion crearInvitacion(Perfil remitente, Perfil destinatario) throws ExcepcionSpring {
+        try {
+            if (remitente != null && destinatario != null) {
+                Invitacion invitacion = new Invitacion();
+
+                invitacion.setRemitente(remitente);
+                invitacion.setDestinatario(destinatario);
+                invitacion.setAceptada(false);
+
+                remitente.getInvitacionesEnviadas().add(invitacion);
+                destinatario.getInvitacionesRecibidas().add(invitacion);
+
+                perfilRepositorio.save(remitente);
+                perfilRepositorio.save(destinatario);
+
+                invitacionRepositorio.save(invitacion);
+
+                return invitacion;
+            } else {
+                throw new ExcepcionSpring("Es necesario que exista tanto un remitente como un destinatario");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al crear invitación");
+        }
+    }
+
+    @Transactional
+    public void aceptarInvitacion(Long idInvitacion) throws ExcepcionSpring {
+        try {
+            Invitacion invitacion = invitacionRepositorio.buscarInvitacionPorId(idInvitacion);
+
+            if (invitacion != null) {
+                invitacion.setAceptada(true);
+
+                invitacionRepositorio.save(invitacion);
+            } else {
+                throw new ExcepcionSpring("No existe una invitación con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al aceptar invitación");
+        }
+    }
+
+    @Transactional
+    public void rechazarInvitacion(Long idInvitacion) throws ExcepcionSpring {
+        try {
+            Invitacion invitacion = invitacionRepositorio.buscarInvitacionPorId(idInvitacion);
+
+            if (invitacion != null) {
+                invitacion.setFechaDeBaja(new Date());
+
+                invitacionRepositorio.save(invitacion);
+            } else {
+                throw new ExcepcionSpring("No existe una invitación con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al rechazar invitación");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Invitacion> invitacionesRecibidasPendientes(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+
+            if (perfil != null) {
+                List<Invitacion> recibidasPendientes = new ArrayList();
+
+                for (Invitacion invitacion : perfil.getInvitacionesRecibidas()) {
+                    if (invitacion.getAceptada() == false) {
+                        recibidasPendientes.add(invitacion);
+                    }
+                }
+
+                return recibidasPendientes;
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar invitaciones recibidas");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Invitacion> invitacionesEnviadasPendientes(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+
+            if (perfil != null) {
+                List<Invitacion> enviadasPendientes = new ArrayList<>();
+
+                for (Invitacion invitacion : perfil.getInvitacionesEnviadas()) {
+                    if (invitacion.getAceptada() == false) {
+                        enviadasPendientes.add(invitacion);
+                    }
+                }
+
+                return enviadasPendientes;
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar invitaciones enviadas");
+        }
+    }
+}

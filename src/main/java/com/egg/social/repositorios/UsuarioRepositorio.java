@@ -15,4 +15,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT u FROM Usuario u WHERE u.fechaDeBaja IS NULL")
     List<Usuario> buscarUsuarios();
+
+    @Query("SELECT u FROM Usuario u WHERE u.id = :id")
+    Usuario buscarUsuarioPorId(@Param("id") Long id);
 }

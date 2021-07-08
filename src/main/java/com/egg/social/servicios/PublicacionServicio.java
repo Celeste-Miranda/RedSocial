@@ -1,16 +1,14 @@
 package com.egg.social.servicios;
 
-import com.egg.social.entidades.Comentario;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import com.egg.social.entidades.Publicacion;
-import com.egg.social.repositorios.ComentarioRepositorio;
+import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.InvitacionRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,118 +18,114 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class PublicacionServicio {
 
-    //Importar repositorios a utilizar
     @Autowired
     private PublicacionRepositorio publicacionRepositorio;
+
     @Autowired
     private PerfilRepositorio perfilRepositorio;
-    @Autowired
-    private ComentarioRepositorio comentarioRepositorio;
+
     @Autowired
     private InvitacionRepositorio invitacionRepositorio;
 
     @Autowired
     private FotoServicio fotoServicio;
-    @Autowired
-    private PerfilServicio perfilservicio;
 
-    //Metodo para mostrar todas las publiciones
-    @Transactional(readOnly = true)
-    public List<Publicacion> buscarTodas( Long idUsuario) {
-        Perfil perfil=perfilservicio.buscarPorIdUsuario(idUsuario);
-        
-        List<Long> amigos = invitacionRepositorio.listaDestinatario(perfil.getId());
-        amigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
-        
-        List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdIn(amigos);
-        
-        //List<Publicacion> publicaciones = publicacionRepositorio.findByFechaDeBajaIsNull();
-          List<Publicacion> publicacionesRetorno = new ArrayList<>();
-
-//        List<Comentario> comentarios = new ArrayList<>();
-
-        for (Publicacion publicacion : publicaciones) {
-            publicacion.setComentarios(publicacion.getComentarios().stream()
-                    .filter(c -> c.getFechaDeBaja()==null).collect(Collectors.toList()));
-//            for (Comentario comentario : publicacion.getComentarios()) {
-//
-//                if (comentario.getFechaDeBaja() == null) {
-//
-//                    comentarios.add(comentario);
-//
-//                }
-//            }
-//
-//            publicacion.setComentarios(comentarios);
-            publicacionesRetorno.add(publicacion);
-
-//            comentarios.clear();
-        }
-
-        return publicacionesRetorno;
-    }
-
-    //Metodo para crear una publicacion
     @Transactional
-    public void crearNueva(Long idPerfil, String descripcion, MultipartFile foto, Date fecha) throws Exception {
-        Publicacion publicacion = new Publicacion();
-        if (perfilRepositorio.getById(idPerfil) == null) {
-            throw new Exception("No se ha encontrado a ningun perfil con ese identificador.");
-        }
+    public void crearPublicacion(Long idUsuario, String descripcion, MultipartFile foto) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
 
-        publicacion.setPerfil(perfilRepositorio.getById(idPerfil));  //Obtener perfil
-        publicacion.setComentarios(null);
-        publicacion.setVotos(null);
+            if (perfil != null) {
+                Publicacion publicacion = new Publicacion();
 
-        publicacion.setDescripcion(descripcion);
+                publicacion.setPerfil(perfil);
+                publicacion.setDescripcion(descripcion);
+                publicacion.setFechaDePublicacion(new Date());
 
-        if (!foto.isEmpty()) {
+                if (!foto.isEmpty()) {
+                    publicacion.setFoto(fotoServicio.guardarFoto(foto));
+                }
 
-            publicacion.setFoto(fotoServicio.guardarFoto(foto));
-
-        } else {
-            publicacion.setFoto(null);
-        }
-
-        publicacion.setFechaDePublicacion(fecha);
-        publicacion.setFechaDeBaja(null);
-        publicacionRepositorio.save(publicacion);
-    }
-
-    //Metodo para modificar una publicacion
-    @Transactional
-    public Publicacion buscarPorId(Long dni) throws Exception {
-        if (perfilRepositorio.getById(dni) == null) {
-            throw new Exception("No se ha encontrado a ningun perfil con ese identificador.");
-        }
-        return publicacionRepositorio.getById(dni);
-    }
-
-    //Metodo para crear una publicacion
-    @Transactional
-    public void Modificar(Long idPublicacion, String descripcion, MultipartFile foto) throws Exception {
-
-        Optional<Publicacion> respuesta = publicacionRepositorio.findById(idPublicacion);
-
-        if (respuesta.isPresent()) {
-
-            Publicacion publicacion = respuesta.get();
-
-            publicacion.setDescripcion(descripcion);
-
-            if (!foto.isEmpty()) {
-
-                publicacion.setFoto(fotoServicio.guardarFoto(foto));
-
+                publicacionRepositorio.save(publicacion);
             } else {
-                publicacion.setFoto(null);
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
             }
-
-            publicacionRepositorio.save(publicacion);
-        } else {
-            throw new Exception("No se ha encontrado a ningun publicacion para editar.");
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al crear publicación");
         }
-
     }
 
+    @Transactional
+    public void modificarPublicacion(Long idPublicacion, String descripcion, MultipartFile foto) throws ExcepcionSpring {
+        try {
+            Publicacion publicacion = publicacionRepositorio.buscarPublicacionPorId(idPublicacion);
+
+            if (publicacion != null) {
+                publicacion.setDescripcion(descripcion);
+
+                if (!foto.isEmpty()) {
+                    publicacion.setFoto(fotoServicio.guardarFoto(foto));
+                }
+
+                publicacionRepositorio.save(publicacion);
+            } else {
+                throw new ExcepcionSpring("No se ha encontrado a ningun publicacion para editar");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al modificar publicacion");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Publicacion> buscarPublicaciones(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+
+            if (perfil != null) {
+                List<Long> listaDeAmigos = invitacionRepositorio.listaDestinatario(perfil.getId());
+                listaDeAmigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
+
+                List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdIn(listaDeAmigos);
+
+                List<Publicacion> publicacionesRetorno = new ArrayList<>();
+
+                for (Publicacion publicacion : publicaciones) {
+                    publicacion.setComentarios(publicacion.getComentarios().stream()
+                            .filter(c -> c.getFechaDeBaja() == null).collect(Collectors.toList()));
+                    publicacionesRetorno.add(publicacion);
+                }
+
+                return publicacionesRetorno;
+            } else {
+                throw new ExcepcionSpring("No existen un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar publicaciones");
+        }
+    }
+
+    @Transactional
+    public void eliminarPublicacion(Long idPublicacion) throws ExcepcionSpring {
+        try {
+            Publicacion publicacion = publicacionRepositorio.buscarPublicacionPorId(idPublicacion);
+
+            if (publicacion != null) {
+                publicacion.setFechaDeBaja(new Date());
+
+                publicacionRepositorio.save(publicacion);
+            } else {
+                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al eliminar publicación");
+        }
+    }
 }

@@ -48,7 +48,6 @@ public class Voto implements Serializable {
 
     public void setPublicacion(Publicacion publicacion) {
         this.publicacion = publicacion;
-        
     }
 
     public Date getFechaDeBaja() {

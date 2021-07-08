@@ -9,10 +9,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InvitacionRepositorio extends JpaRepository<Invitacion, Long> {
-    
+
     @Query("SELECT i.remitente.id FROM Invitacion i WHERE i.aceptada = true AND i.fechaDeBaja is NULL AND i.destinatario.id =:id")
-    List<Long> listaRemitente(@Param ("id") Long id);
-    
+    List<Long> listaRemitente(@Param("id") Long id);
+
     @Query("SELECT i.destinatario.id FROM Invitacion i WHERE i.aceptada = true AND i.fechaDeBaja is NULL AND i.remitente.id =:id")
-    List<Long> listaDestinatario(@Param ("id") Long id);
+    List<Long> listaDestinatario(@Param("id") Long id);
+
+    @Query("SELECT i FROM Invitacion i WHERE i.id = :idInvitacion")
+    Invitacion buscarInvitacionPorId(@Param("idInvitacion") Long idInvitacion);
 }

@@ -24,19 +24,6 @@ public class FotoServicio {
             throw new ExcepcionSpring("Error al subir la foto del perfil en la base de datos");
         }
 
-        /*
-        String nombreDeFotoAnterior = perfil.getFoto();
-
-        if (nombreDeFotoAnterior != null && nombreDeFotoAnterior.length() > 0) {
-            Path rutaDeFotoAnterior = Paths.get("src//main//resources//static").resolve(nombreDeFotoAnterior).toAbsolutePath();
-            File archivoDeFotoAnterior = rutaDeFotoAnterior.toFile();
-
-            if (archivoDeFotoAnterior.exists() || archivoDeFotoAnterior.canRead()) {
-                archivoDeFotoAnterior.delete();
-            }
-        }
-         */
-        
         return nombreDelArchivo;
     }
 }

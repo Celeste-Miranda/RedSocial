@@ -17,44 +17,17 @@ public class Comentario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String descripcion;
     @ManyToOne
     private Perfil perfil;
     @ManyToOne
     private Publicacion publicacion;
     @Temporal(TemporalType.DATE)
     private Date fechaDeComentario;
-    
     @Temporal(TemporalType.DATE)
     private Date fechaDeBaja;
-    
-
-    @PrePersist
-    public void prePersist() {
-        fechaDeComentario = new Date();
-    }
-
-    private String descripcion;
 
     public Comentario() {
-    }
-
-    public Date getFechaDeBaja() {
-        return fechaDeBaja;
-    }
-
-    public void setFechaDeBaja(Date fechaDeBaja) {
-        this.fechaDeBaja = fechaDeBaja;
-    }
-
-    
-    
-    
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -63,6 +36,14 @@ public class Comentario implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Perfil getPerfil() {
@@ -87,5 +68,18 @@ public class Comentario implements Serializable {
 
     public void setFechaDeComentario(Date fechaDeComentario) {
         this.fechaDeComentario = fechaDeComentario;
+    }
+
+    public Date getFechaDeBaja() {
+        return fechaDeBaja;
+    }
+
+    public void setFechaDeBaja(Date fechaDeBaja) {
+        this.fechaDeBaja = fechaDeBaja;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        fechaDeComentario = new Date();
     }
 }

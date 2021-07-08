@@ -1,6 +1,7 @@
 package com.egg.social.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -32,6 +33,8 @@ public class Publicacion implements Serializable {
     private Date fechaDeBaja;
 
     public Publicacion() {
+        comentarios = new ArrayList<>();
+        votos = new ArrayList<>();
     }
 
     public Long getId() {
@@ -57,8 +60,6 @@ public class Publicacion implements Serializable {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
-
-   
 
     public String getDescripcion() {
         return descripcion;
@@ -99,5 +100,4 @@ public class Publicacion implements Serializable {
     public void setVotos(List<Voto> votos) {
         this.votos = votos;
     }
-    
 }
