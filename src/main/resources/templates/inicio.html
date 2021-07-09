@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.83.1">
+
+  <link rel="icon" href="./iconos/iconoEgg.svg">
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <title>Inicio</title>
+  <style>
+    /* Boton flotante TOP */
+    .flotante {
+      position: fixed;
+      bottom: 70px;
+      right: 30px;
+    }
+
+    .huevo-gris {
+      filter: grayscale(100%);
+    }
+
+    .huevo-gris:hover {
+      filter: grayscale(0);
+    }
+  </style>
+</head>
+
+
+<!-- <div th:if="${autor.portada != null}" class="card-body text-center my-2">
+  <img class="shadow rounded-circle" th:src="@{|/portada/autor-imagen/${autor.id}|}" width="165">
+</div>
+<div th:unless="${autor.portada != null}" class="card-body text-center my-2">
+  <img class="rounded-circle" th:src="@{/foto-no-disponible.png}" width="165">
+</div> -->
+
+
+
+<body style="background-color: #F2F4F4;">
+  <!-- INICIO NAVBAR -->
+  <div th:replace="fragments :: header"></div>
+  <!-- FIN NAVBAR -->
+  <!-- INICIO MAIN -->
+  <main class="container my-4">
+    <div class="row container-fluid" th:object="${usuario}">
+      <!-- INICIO COLUMNA PERFIL -->
+      <div class="d-none d-md-block col-md-4 col-lg-3 me-auto rounded-start">
+        <div class="d-flex flex-column bg-white p-3">
+          <div class="bg-warning mx-0 rounded-3">
+            <div class="text-center">
+              <div th:if="${perfil.foto != null}">
+
+                <img th:src="@{|/obtener-foto/${perfil.foto}|}" alt="Perfil" id="fotoPerfil"
+                  class="img-fluid rounded-circle w-50 mt-3">
+
+
+              </div>
+              <div th:unless="${perfil.foto != null}">
+                <img th:src="@{/foto/FotoPorDefecto.jpg}" class="img-fluid rounded-circle w-50 mt-3">
+
+              </div>
+
+              <p class="text-capitalize mt-3"> <span th:text="|${perfil.nombre} ${perfil.apellido}|"> </span> <br>
+                <small th:text="${usuario.correo}"></small>
+              </p>
+            </div>
+          </div>
+          <div class="list-group mt-3">
+            <button type="button" class="list-group-item list-group-item-action">The current button</button>
+            <button type="button" class="list-group-item list-group-item-action">A second item</button>
+            <button type="button" class="list-group-item list-group-item-action">A third button item</button>
+            <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
+            <button type="button" class="list-group-item list-group-item-action">A disabled button item</button>
+          </div>
+        </div>
+       
+          <!-- AMIGOS -->
+
+          <!--   <div     class="ms-auto rounded-end d-none d-lg-block col-lg-3 ">
+           <div th:replace="fragments::listaAmigos">
+
+           </div>
+
+          </div> -->
+          <!-- RAMDON -->
+
+          <!-- FIN COLUMNA PERFIL -->
+
+          <!-- INICIO COLUMNA PRINCIPAL -->
+          <!--    <div class="col-md-8 col-lg-6"> -->
+          <!-- INICIO FORMULARIO DE NUEVA PUBLICACION -->
+          <!--  <form action="" method="post" class="bg-white d-flex flex-column mb-3">
+              <textarea name="" id="" rows="3" class="form-control form-control-sm border-0"
+                placeholder="¿Que estas pensando?"></textarea>
+              <div class="d-flex justify-content-between px-3 py-3 rounded-bottom" style="background-color: #EAEDED;">
+                <label for="foto" id="labelFoto" class="btn btn-sm btn-warning">FOTO</label>
+                <input type="file" name="foto" id="foto" accept="image/*" hidden>
+                <button class="btn btn-sm btn-warning">Publicar</button>
+
+
+              </div>
+            </form> -->
+        <!--   <div class="ms-auto rounded-end col-md-9 col-lg-8">
+
+            <div th:replace="fragments ::crearPublicacion">
+
+            </div>
+
+            <div th:replace="fragments ::publicaciones"></div>
+
+
+
+          </div> -->
+
+
+          <!-- FIN FORMULARIO DE NUEVA PUBLICACION -->
+          <!-- INICIO PUBLICACIONES -->
+
+          <!-- <div class="ratio ratio-16x9">
+          <iframe src="./publicaciones.html" title="Publicaciones" allowfullscreen></iframe>
+        </div> <br> -->
+          <!-- Publicacion 1 -->
+          <!--         <div class="card text-center mb-3 border border-warning"> -->
+          <!--     <div class="card-header clearfix"> -->
+          <!-- quien es el usuario -->
+          <!--      <div class="float-start">
+              <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="40" class="img-fluid rounded-circle">
+            </div>
+            <div class="float-start ms-2">
+              <h5 class="mt-1 mb-0 text-capitalize">nombre apellido</h5>
+              <p class="text-muted my-0">publicado: 2021-07-02</p>
+            </div>
+          </div> -->
+          <!--           <img src="../Static/img/errores-en-la-programacion.png" class="card-img-top img-fluid w-75 mx-auto" alt=""> -->
+          <!-- si hay imagen ponerla -->
+          <!--  <div class="card-body"> -->
+          <!-- texto y reacciones -->
+          <!--    <p class="card-text text-start">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor maxime dicta voluptatibus sunt quas. Ducimus soluta libero animi deserunt distinctio!</p>
+            <hr class="w-75 mx-auto mb-0 mt-2 text-muted">
+            <div class="clearfix">
+              <form action="" method="post" class="float-start">
+                <button type="submit" class="btn btn-sm p-0 m-0"><img src="../Static/img/iconoEgg.svg" alt="" class="huevo-gris" width="20"></button>
+              </form>
+              <p class="float-end small text-muted">3 eggs</p>
+            </div>
+          </div> -->
+          <!--  <div class="card-footer"> -->
+          <!-- Comentarios -->
+          <!--  <ul class="list-group list-group-flush"> -->
+          <!-- Comentario -->
+          <!--    <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Comentario -->
+          <!--       <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Publicar comentario -->
+          <!--        <li class="list-group-item">
+                <div class="row">
+                  <div class="col">
+                    <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                  </div>
+                  <div class="col-11">
+                    <form action="" method="post">
+                      <input type="text" class="form-control form-control-sm" placeholder="Presione enter para publicar">
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+          <!-- Publicacion 2 -->
+          <!--         <div class="card text-center mb-3 border border-warning"> -->
+          <!--   <div class="card-header clearfix"> -->
+          <!-- quien es el usuario -->
+          <!--         <div class="float-start">
+              <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="40" class="img-fluid rounded-circle">
+            </div>
+            <div class="float-start ms-2">
+              <h5 class="mt-1 mb-0 text-capitalize">nombre apellido</h5>
+              <p class="text-muted my-0">publicado: 2021-07-02</p>
+            </div>
+          </div> -->
+          <!-- <img src="../Static/img/ class="card-img-top img-fluid w-75 mx-auto  alt=""> -->
+          <!-- si hay imagen ponerla -->
+          <!--       <div class="card-body"> -->
+          <!-- texto y reacciones -->
+          <!--       <p class="card-text text-start">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor maxime dicta voluptatibus sunt quas. Ducimus soluta libero animi deserunt distinctio!</p>
+            <hr class="w-75 mx-auto mb-0 mt-2 text-muted">
+            <div class="clearfix">
+              <form action="" method="post" class="float-start">
+                <button type="submit" class="btn btn-sm p-0 m-0"><img src="../Static/img/iconoEgg.svg" alt="" class="huevo-gris" width="20"></button>
+              </form>
+              <p class="float-end small text-muted">3 eggs</p>
+            </div>
+          </div> -->
+          <!--  <div class="card-footer"> -->
+          <!-- Comentarios -->
+          <!--        <ul class="list-group list-group-flush"> -->
+          <!-- Comentario -->
+          <!--            <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Comentario -->
+          <!--          <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Publicar comentario -->
+          <!--            <li class="list-group-item">
+                <div class="row">
+                  <div class="col">
+                    <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                  </div>
+                  <div class="col-11">
+                    <form action="" method="post">
+                      <input type="text" class="form-control form-control-sm" placeholder="Presione enter para publicar">
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+          <!-- Publicacion 3 -->
+          <!--         <div class="card text-center mb-3 border border-warning"> -->
+          <!--        <div class="card-header clearfix"> -->
+          <!-- quien es el usuario -->
+          <!--         <div class="float-start">
+              <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="40" class="img-fluid rounded-circle">
+            </div>
+            <div class="float-start ms-2">
+              <h5 class="mt-1 mb-0 text-capitalize">nombre apellido</h5>
+              <p class="text-muted my-0">publicado: 2021-07-02</p>
+            </div>
+          </div> -->
+          <!--  <img src="../Static/img/que-es-html.png" class="card-img-top img-fluid w-75 mx-auto" alt=""> -->
+          <!-- si hay imagen ponerla -->
+          <!-- <div class="card-body"> -->
+          <!-- texto y reacciones -->
+          <!--      <p class="card-text text-start">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor maxime dicta voluptatibus sunt quas. Ducimus soluta libero animi deserunt distinctio!</p>
+            <hr class="w-75 mx-auto mb-0 mt-2 text-muted">
+            <div class="clearfix">
+              <form action="" method="post" class="float-start">
+                <button type="submit" class="btn btn-sm p-0 m-0"><img src="../Static/img/iconoEgg.svg" alt="" class="huevo-gris" width="20"></button>
+              </form>
+              <p class="float-end small text-muted">3 eggs</p>
+            </div>
+          </div> -->
+          <!--  <div class="card-footer"> -->
+          <!-- Comentarios -->
+          <!--  <ul class="list-group list-group-flush"> -->
+          <!-- Comentario -->
+          <!--   <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Comentario -->
+          <!--    <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Publicar comentario -->
+          <!--      <li class="list-group-item">
+                <div class="row">
+                  <div class="col">
+                    <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                  </div>
+                  <div class="col-11">
+                    <form action="" method="post">
+                      <input type="text" class="form-control form-control-sm" placeholder="Presione enter para publicar">
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+          <!-- Publicacion 4 -->
+          <!--      <div class="card text-center mb-3 border border-warning"> -->
+          <!-- <div class="card-header clearfix"> -->
+          <!-- quien es el usuario -->
+          <!--  <div class="float-start">
+              <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="40" class="img-fluid rounded-circle">
+            </div>
+            <div class="float-start ms-2">
+              <h5 class="mt-1 mb-0 text-capitalize">nombre apellido</h5>
+              <p class="text-muted my-0">publicado: 2021-07-02</p>
+            </div>
+          </div>
+          <img src="../Static/img/conoce-spring.png" class="card-img-top img-fluid w-75 mx-auto" alt=""> -->
+          <!-- si hay imagen ponerla -->
+          <!--      <div class="card-body"> -->
+          <!-- texto y reacciones -->
+          <!--     <p class="card-text text-start">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolor maxime dicta voluptatibus sunt quas. Ducimus soluta libero animi deserunt distinctio!</p>
+            <hr class="w-75 mx-auto mb-0 mt-2 text-muted">
+            <div class="clearfix">
+              <form action="" method="post" class="float-start">
+                <button type="submit" class="btn btn-sm p-0 m-0"><img src="../Static/img/iconoEgg.svg" alt="" class="huevo-gris" width="20"></button>
+              </form>
+              <p class="float-end small text-muted">3 eggs</p>
+            </div>
+          </div> -->
+          <!--    <div class="card-footer"> -->
+          <!-- Comentarios -->
+          <!--  <ul class="list-group list-group-flush"> -->
+          <!-- Comentario -->
+          <!--      <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Comentario -->
+          <!--       <li class="list-group-item clearfix d-flex align-items-center bg-light">
+                <div class="float-start">
+                  <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                </div>
+                <div class="float-start ms-2 w-75">
+                  <p class="mb-0 text-start fw-bold">Nombre Apellido</p>
+                  <p class="my-0 text-start fw-light lh-1">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Asperiores, esse!</p>
+                </div>
+              </li> -->
+          <!-- Publicar comentario -->
+          <!--      <li class="list-group-item">
+                <div class="row">
+                  <div class="col">
+                    <img src="../Static/img/perfil.jpg" alt="Perfil" id="fotoPerfil" width="30" class="img-fluid rounded-circle">
+                  </div>
+                  <div class="col-11">
+                    <form action="" method="post">
+                      <input type="text" class="form-control form-control-sm" placeholder="Presione enter para publicar">
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+
+          <!-- FIN PUBLICACIONES -->
+          <!--    </div> -->
+          <!-- FIN COLUMNA PRINCIPAL -->
+
+          <!-- INICIO COLUMNA AMIGOS -->
+          <!--      <div class="d-none d-lg-block col-lg-3 ms-auto rounded-end"> -->
+          <!-- AMIGOS -->
+          <!--  <div class="bg-white">
+          <p class="pt-3 ps-3">Tus amigos</p>
+          <hr class="bg-warning" style="height: 5px;">
+          <div class="list-group list-group-flush mx-2">
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div> -->
+          <!-- RAMDON -->
+          <!-- <div class="bg-white mt-4">
+          <p class="pt-3 ps-3">Gente que quiz&aacute;s conozcas</p>
+          <hr class="bg-warning" style="height: 5px;">
+          <div class="list-group list-group-flush mx-2">
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+            <button class="list-group-item list-group-item-action">
+              <div class="clearfix">
+                <img src="../Static/img/perfil.jpg" alt="asdf" width="50" class="float-start">
+                <div class="float-end">
+                  <h6 class="mt-1 mb-0 text-capitalize me-3">nombre apellido</h6>
+                  <p class="text-muted my-0 small">Direccion local</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div> -->
+          <!-- FIN COLUMNA AMIGOS -->
+          <!-- </div> -->
+  </main>
+  <!-- FIN MAIN -->
+  <!-- INICIO FOOTER -->
+  <div th:replace="fragments :: footer"></div>
+  <!-- FIN FOOTER -->
+  <script src="./js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

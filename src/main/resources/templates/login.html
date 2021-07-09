@@ -17,7 +17,7 @@
     
 
     <!-- Bootstrap core CSS -->
-<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{./css/bootstrap.min.css}" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -52,11 +52,11 @@
         <h1 class="h3 mb-3 fw-normal">EggSocial</h1>
     
         <div class="form-floating mb-3" >
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <input type="correo" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com">
           <label for="floatingInput">Correo</label>
         </div>
         <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password1">
+          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password1">
           <label for="floatingPassword">Ingrese Contraseña</label>
         </div>
         
@@ -76,7 +76,7 @@
     </main>
     
     
-      <script th:src="@{/jss/bootstrap.bundle.min.js}"></script>    
+      <script th:src="@{/js/bootstrap.bundle.min.js}"></script>    
       </body>
     </html>
     

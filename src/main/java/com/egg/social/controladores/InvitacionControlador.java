@@ -26,10 +26,10 @@ public class InvitacionControlador {
     InvitacionServicio invitacionService;
 
     @GetMapping("/lista")
-    public ModelAndView mostrarInvitacionPerdinete(HttpSession session) {
+    public ModelAndView mostrarInvitacionPerdinete(HttpSession session) throws ExcepcionSpring {
         ModelAndView mav = new ModelAndView("lista-invitaciones");
 
-        Perfil perfil = perfilService.buscarPorIdUsuario((Long) session.getAttribute("idUsuadio"));
+        Perfil perfil = perfilService.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuadio"));
 
         List<Invitacion> invitacionesPendientes = invitacionService.invitacionesRecibidasPendientes(perfil.getId());
 

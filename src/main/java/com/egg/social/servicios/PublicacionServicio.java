@@ -110,6 +110,21 @@ public class PublicacionServicio {
         }
     }
 
+    @Transactional(readOnly = true) // Poner TRY - CATCH
+    public List<Publicacion> buscarPublicacionesPorPerfil(Perfil perfil) {
+
+        List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil(perfil);
+
+        return publicaciones;
+    }
+
+    @Transactional(readOnly = true)
+    public Publicacion buscarPublicacionPorId(Long idPublicacion) {
+        
+        return publicacionRepositorio.findById(idPublicacion).orElse(null);
+
+    }
+
     @Transactional
     public void eliminarPublicacion(Long idPublicacion) throws ExcepcionSpring {
         try {

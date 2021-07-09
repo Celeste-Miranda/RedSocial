@@ -2,6 +2,7 @@ package com.egg.social.controladores;
 
 import com.egg.social.servicios.PublicacionServicio;
 import com.egg.social.entidades.Publicacion;
+import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
 import java.util.List;
 import java.util.Date;
@@ -30,10 +31,10 @@ public class PublicacionControlador {
 
     //Metodo para mostrar todas las publicaciones
     @GetMapping("/mostrar-publicaciones")
-    public ModelAndView buscarTodos(HttpSession session) {
+    public ModelAndView buscarTodos(HttpSession session) throws ExcepcionSpring {
                 
         ModelAndView mav = new ModelAndView("publicaciones");
-        List<Publicacion> publicaciones = publicacionServicio.buscarTodas((Long)session.getAttribute("idUsuario"));
+        List<Publicacion> publicaciones = publicacionServicio.buscarPublicaciones((Long)session.getAttribute("idUsuario"));
         mav.addObject("publicaciones", publicaciones);
         return mav;
     }
@@ -50,7 +51,7 @@ public class PublicacionControlador {
     public RedirectView guardar(@RequestParam Long dni, @RequestParam(required = false) String descripcion, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) {
 
         try {
-            publicacionServicio.crearNueva(dni, descripcion, foto, new Date());
+            publicacionServicio.crearPublicacion(dni, descripcion, foto);
             redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -65,7 +66,7 @@ public class PublicacionControlador {
     public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
         ModelAndView mav = new ModelAndView("publicacion-formulario");
         try {
-            Publicacion publicacion = publicacionServicio.buscarPorId(id);
+            Publicacion publicacion = publicacionServicio.buscarPublicacionPorId(id);
             Long idUsuario = publicacion.getPerfil().getUsuario().getId();
             if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
                 return new ModelAndView("/");
@@ -86,7 +87,7 @@ public class PublicacionControlador {
 
         try {
 
-            publicacionServicio.Modificar(idPublicacion, descripcion, foto);
+            publicacionServicio.modificarPublicacion(idPublicacion, descripcion, foto);
             //mandar mensaje de cambio exitoso
         } catch (Exception e) {
 

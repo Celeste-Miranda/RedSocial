@@ -1,8 +1,11 @@
 package com.egg.social.controladores;
 
 import com.egg.social.entidades.Perfil;
+import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
+import com.egg.social.servicios.PublicacionServicio;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +26,39 @@ public class PerfilControlador {
     @Autowired
     private PerfilServicio perfilServicio;
 
-    
+    @Autowired
+    private PublicacionServicio publicacionServicio;
 
-    @GetMapping  
-    public ModelAndView buscarTodos() {
+    @GetMapping
+    public ModelAndView mostrarPerfil(HttpSession sesion) throws ExcepcionSpring {
+
         ModelAndView mav = new ModelAndView("perfil");
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
-        mav.addObject("perfiles", perfiles);
+
+        List<Publicacion> publicaciones = publicacionServicio.buscarPublicacionesPorPerfil(perfil);
+
+        mav.addObject("publicacion", new Publicacion());
+        mav.addObject("publicaciones", publicaciones);
+        mav.addObject("perfil", perfil);
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles));
+
         return mav;
+
     }
 
+//    @GetMapping  
+//    public ModelAndView buscarTodos() throws ExcepcionSpring {
+//        ModelAndView mav = new ModelAndView("perfil");
+//        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+//        mav.addObject("perfiles", perfiles);
+//        return mav;
+//    }
     @GetMapping("/editar/{id}")
     public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
         ModelAndView mav = new ModelAndView("perfil-formulario");
 
-        Perfil perfil = perfilServicio.buscarPorIdUsuario((Long) session.getAttribute("idUsuario"));
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuario"));
         Long idUsuario = perfil.getUsuario().getId();
 
         if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
@@ -47,14 +68,15 @@ public class PerfilControlador {
 
         mav.addObject("title", "Cargando Perfil");
         mav.addObject("perfil", perfil);
+        mav.addObject("listaTecnologia", perfilServicio.obtenerTecnologias());
         mav.addObject("accion", "modificar");
 
         return mav;
     }
 
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) MultipartFile foto, HttpSession session) throws ExcepcionSpring {
-        perfilServicio.modificar(id, nombre, apellido, residencia, foto);
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia,  @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
+        perfilServicio.modificar(id, nombre, apellido, residencia, new ArrayList<>(), foto);
 
         return new RedirectView("/");
     }

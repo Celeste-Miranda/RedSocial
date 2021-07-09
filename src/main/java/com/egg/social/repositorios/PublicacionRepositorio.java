@@ -1,5 +1,6 @@
 package com.egg.social.repositorios;
 
+import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface PublicacionRepositorio extends JpaRepository<Publicacion, Long>
 
     @Query("SELECT p FROM Publicacion p WHERE p.id = :idPublicacion")
     Publicacion buscarPublicacionPorId(@Param("idPublicacion") Long idPublicacion);
+    
+    List<Publicacion> findByPerfil(Perfil perfil);
 }

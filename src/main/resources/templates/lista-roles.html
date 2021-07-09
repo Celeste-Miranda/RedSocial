@@ -36,54 +36,36 @@
 
     
     <!-- Custom styles for this template -->
-    <link href="./css/signin.css" rel="stylesheet">
+ 
+    
+ 
 </head>
+
 <body >
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark btn-sm sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Inicio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div id="navbarSupportedContent" class="collapse navbar-collapse">
-            <ul class="navbar-nav mb-2 mb-md-0 w-100 ">
-                 DROPDOWN Libro
-          <li class="nav-item dropdown">
-            <a id="dropdown-libro" class="nav-link dropdown-toggle" href="#" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                libro
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdown-libro">
-                <li>
-                    <a class="dropdown-item" th:href="@{/}">Mostrar todos</a>
-                </li>
-                <li sec:authorize="hasRole('ADMIN')">
-                    <a class="dropdown-item" th:href="@{/}">Crear libro</a>
-                </li>
-            </ul>
-        </li>
-      
+
+ <!-- INICIO NAVBAR -->
+ <div th:replace="fragments :: header"></div>
+ <!-- FIN NAVBAR --> 
+ <main >
 
 
-            <a class="btn btn-outline-success" type="submit" th:href="@{/logout}">Cerrar sesión</a>
+
+
+ <div class="container mt-5 ">
+
+        
    
-        </div>
-    </div>
-</nav>
-
-<div class="container mt-5 main">
-   <h1 style="color:rgb(255, 255, 253)">Listado de roles</h1>
+   <h1 style="color:rgb(0, 0, 0)">Listado de roles</h1>
     <hr class="mb-5"/>
-    <div > <!-- th:if="${roles.isEmpty()}" -->
-        <h5 style="color:rgb(255, 255, 253)">Todavía no hay ningun usuario cargado. </h5>  <!--  <a th:href="@{/rol/crear}">Crear un Rol.</a> -->
+    <div th:if="${roles.isEmpty()}"> 
+        <h5 style="color:rgb(0, 0, 0)" >Todavía no hay ningun usuario cargado. </h5> <a th:href="@{/roles/crear-rol}">Crear un Rol.</a> 
     </div>
 
-    <!-- <div th:if="${mensaje != null}" class="alert alert-success" th:text="${mensaje}"></div>
-    <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div> -->
+    <div th:if="${mensaje != null}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
 
 
-    <div  class="table-responsive"> <!--  th:unless="${roles.isEmpty()}" -->
+    <div  class="table-responsive" th:unless="${roles.isEmpty()}"> 
         <table class="table table-hover table-sm table-bordered">
             <thead class="table-secondary text-center">
             <tr>
@@ -96,10 +78,10 @@
             </thead>
             <tbody>
             <tr th:each="rol : ${roles}">
-                <th class="col-md-1 px-md-2 text-center" scope="row" style="color:rgb(255, 255, 253)"
+                <th class="col-md-1 px-md-2 text-center" scope="row" style="color:rgb(0, 0, 0)"
                     th:text="${rol.id}"></th>
                
-                <td class="col-md-3 px-md-2" style="color:rgb(255, 255, 253)" th:text="${rol.nombre}"></td>
+                <td class="col-md-3 px-md-2" style="color:rgb(0, 0, 0)" th:text="${rol.nombre}"></td>
                
                 <td sec:authorize="hasRole('ADMIN')" class="col-md-3 px-md-2 d-flex justify-content-around w-100">
                     <a class="btn btn-secondary btn-sm" th:href="@{/rol/editar/__${rol.id}__}">Editar</a>
@@ -113,6 +95,8 @@
     </div>
 </div>
 
+</main>
+
 <footer class="footer py-3 bg-dark fixed-bottom">
     <div class="container d-flex justify-content-center">
         <span class="text-muted">&copy; EggSocial - 2021</span>
@@ -120,6 +104,6 @@
     </div>
 </footer>
 
-<script src="./jss/bootstrap.bundle.min.js"></script>    
+<script src="./js/bootstrap.bundle.min.js"></script>    
 </body>
 </html>

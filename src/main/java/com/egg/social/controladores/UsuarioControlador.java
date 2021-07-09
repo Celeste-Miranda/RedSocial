@@ -75,7 +75,7 @@ public class UsuarioControlador {
 
         try {
             Usuario usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
-            Perfil perfil = perfilServicio.crear(usuario);
+            Perfil perfil = perfilServicio.crearPerfil(usuario);
 
             redirectAttributes.addFlashAttribute("exito", "El registro ha sido realizado satisfactoriamente");
 

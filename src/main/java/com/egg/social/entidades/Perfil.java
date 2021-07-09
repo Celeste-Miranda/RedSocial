@@ -3,6 +3,8 @@ package com.egg.social.entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +21,9 @@ public class Perfil implements Serializable {
     private String nombre;
     private String apellido;
     private String residencia;
-    private List<String> tecnologias;
+    @Column
+    @ElementCollection(targetClass = String.class)
+    private List<String> tecnologias ;
     @OneToOne
     private Usuario usuario;
     @OneToMany(mappedBy = "perfil")
@@ -31,10 +35,10 @@ public class Perfil implements Serializable {
     private String foto;
 
     public Perfil() {
-        tecnologias = new ArrayList<>();
-        publicaciones = new ArrayList<>();
-        invitacionesRecibidas = new ArrayList<>();
-        invitacionesEnviadas = new ArrayList<>();
+//        tecnologias = new ArrayList<>();
+//        publicaciones = new ArrayList<>();
+//        invitacionesRecibidas = new ArrayList<>();
+//        invitacionesEnviadas = new ArrayList<>();
     }
 
     public Long getId() {

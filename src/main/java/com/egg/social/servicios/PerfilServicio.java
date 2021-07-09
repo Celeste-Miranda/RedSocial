@@ -8,6 +8,7 @@ import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.validaciones.Validacion;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,8 @@ public class PerfilServicio {
                 perfil.setNombre(nombre);
                 perfil.setApellido(apellido);
                 perfil.setResidencia(residencia);
+                
+                
                 perfil.getTecnologias().addAll(tecnologías);
 
                 if (!foto.isEmpty()) {
@@ -95,6 +98,21 @@ public class PerfilServicio {
     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombre, String apellido) {
         return perfilRepositorio.buscarPorNombreYApellido(apellido, nombre);
+    }
+
+    @Transactional(readOnly = true)
+    public Perfil buscarPerfilPorIdUsuario(Long idUsuario) {
+        return perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Perfil> listaDeCuatro(List<Perfil> listaPerfil) {
+
+        Collections.shuffle(listaPerfil);
+
+        List<Perfil> listaCuatro = listaPerfil.subList(0, 4);
+
+        return listaCuatro;
     }
 
     @Transactional(readOnly = true)

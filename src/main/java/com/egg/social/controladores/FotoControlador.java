@@ -16,7 +16,7 @@ public class FotoControlador {
 
     @GetMapping("/obtener-foto/{foto:.+}")
     public ResponseEntity<Resource> obtenerFoto(@PathVariable String foto) {
-        Path rutaDeArchivo = Paths.get("src//main//resources//Static//foto").resolve(foto).toAbsolutePath();
+        Path rutaDeArchivo = Paths.get("src//main//resources//static//foto").resolve(foto).toAbsolutePath();
         Resource recurso = null;
 
         try {
