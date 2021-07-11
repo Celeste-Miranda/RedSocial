@@ -3,21 +3,28 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Hugo 0.83.1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="">
+  <meta name="author"
+    content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator"
+    content="Hugo 0.83.1">
 
-  <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
+  <link rel="icon"
+    th:href="@{/iconos/iconoEgg.svg}">
 
   <title th:text="|${title} - SocialEgg|"></title>
 
-  <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/checkout/">
+  <link rel="canonical"
+    href="https://getbootstrap.com/docs/5.0/examples/checkout/">
 
 
 
   <!-- Bootstrap core CSS -->
-  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/bootstrap.min.css}"
+    rel="stylesheet">
 
   <style>
     .bd-placeholder-img {
@@ -35,9 +42,15 @@
     }
   </style>
 
+  <link rel="stylesheet"
+    th:href="@{/css/select2.min.css}">
+
 
   <!-- Custom styles for this template -->
-  <link th:href="@{/css/signin.css}" rel="stylesheet">
+  <link th:href="@{/css/signin.css}"
+    rel="stylesheet">
+
+
 </head>
 
 <body class="bg-light">
@@ -46,7 +59,11 @@
   <div class="container">
 
     <div class="row py-5 text-center">
-      <img class="d-block mx-auto mb-4" th:src="@{/iconos/logoFraseEgg.svg}" alt="" width="230" height="57">
+      <img class="d-block mx-auto mb-4"
+        th:src="@{/iconos/logoFraseEgg.svg}"
+        alt=""
+        width="230"
+        height="57">
       <h2>Bienvenido </h2>
       <p class="lead">Somos una organización que busca conectar personas a través de la cooperación.
         Pusimos en marcha un laboratorio social y aplicamos principios científicos de la Cooperación Humana.
@@ -64,25 +81,44 @@
 
 
 
-      <form class="needs-validation" enctype="multipart/form-data" novalidate th:action="@{/perfil/__${accion}__}"
-        method="POST" th:object="${perfil}" autocomplete="off">
+      <form class="needs-validation"
+        enctype="multipart/form-data"
+        novalidate
+        th:action="@{/perfil/__${accion}__}"
+        method="POST"
+        th:object="${perfil}"
+        autocomplete="off">
         <div class="row g-3">
 
-          <input type="hidden" th:field="*{id}" />
+          <input type="hidden"
+            th:field="*{id}" />
 
 
 
           <div class="col-sm-6">
-            <label for="Nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="Nombre" placeholder="" th:field="*{nombre}" value="" required>
+            <label for="Nombre"
+              class="form-label">Nombre</label>
+            <input type="text"
+              class="form-control"
+              id="Nombre"
+              placeholder=""
+              th:field="*{nombre}"
+              value=""
+              required>
             <div class="invalid-feedback">
               Valid first name is required.
             </div>
           </div>
 
           <div class="col-sm-6">
-            <label for="Apellido" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="Apellido" placeholder="" th:field="*{apellido}" value=""
+            <label for="Apellido"
+              class="form-label">Apellido</label>
+            <input type="text"
+              class="form-control"
+              id="Apellido"
+              placeholder=""
+              th:field="*{apellido}"
+              value=""
               required>
             <div class="invalid-feedback">
               Valid last name is required.
@@ -93,9 +129,16 @@
 
 
           <div class="col-md-5">
-            <label for="country" class="form-label">Provincia</label>
-            <select class="form-select" id="provincias" name="residencia" required th:field="*{residencia}">
-              <option value="" disabled selected>Elegi provincia</option>
+            <label for="country"
+              class="form-label">Provincia</label>
+            <select class="form-select"
+              id="provincias"
+              name="residencia"
+              required
+              th:field="*{residencia}">
+              <!-- <option value=""
+                disabled
+                selected>Elegi provincia</option> -->
 
             </select>
             <div class="invalid-feedback">
@@ -107,55 +150,54 @@
 
 
 
-          
+
           <div class="col-md-5">
-            <label for="country" class="form-label">Tecnologias</label>
-            <select class="form-select" id="tecnologias" name="tecnologias" required th:field="*{tecnologias}">
-              <option  value="" disabled selected>Elegir</option>
+            <label for="tecnologias"
+              class="form-label">Tecnologias</label>
+            <select class="form-select"
+              id="tecnologias"
+              name="tecnologias"
+              multiple="multiple"
+              th:field="*{tecnologias}">
+              <!--  <option value=""
+                disabled
+                selected>Elegir</option> -->
 
-              <option th:each="nombre : ${listaTecnologias}" th:value="" th:text="nombre">
+              <option th:each="nombre : ${listaTecnologia}"
+                th:value="${nombre}"
+                th:text="${nombre}">
 
 
-                
+
               </option>
             </select>
-            
 
 
-          </div>
-
-          <!-- div class="col-md-7">
-
-            <div class="ms-auto">
-
-
-            <p>Tecnologias
-
-
-            </p>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-              <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
-            </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" >
-              <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
-            </div>
 
           </div>
-          </div> -->
+
+
           <br><br>
 
 
-          <div class="d-flex justify-content-between px-3 py-3 rounded-bottom" style="background-color: #EAEDED;">
-            <label for="foto" id="labelFoto" class="btn btn-sm btn-warning">Cargar Foto Perfil</label>
-            <input type="file" name="foto" id="foto" th:field="*{foto}" accept="image/*" hidden>
+          <div class="d-flex justify-content-between px-3 py-3 rounded-bottom"
+            style="background-color: #EAEDED;">
+            <label for="foto"
+              id="labelFoto"
+              class="btn btn-sm btn-warning">Cargar Foto Perfil</label>
+            <input type="file"
+              name="foto"
+              id="foto"
+              th:field="*{foto}"
+              accept="image/*"
+              hidden>
 
           </div>
 
 
 
-          <button class="w-100 btn btn-yellow btn-lg" type="submit">Guardar</button>
+          <button class="w-100 btn btn-yellow btn-lg"
+            type="submit">Guardar</button>
       </form>
 
     </div>
@@ -179,10 +221,12 @@
   </footer>
   </div>
 
-  <script th:src="@{/jss/bootstrap.bundle.min.js}">  </script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}">  </script>
 
-  <script th:src="@{/form-validation.js}"></script>
+  <script th:src="@{/js/form-validation.js}"></script>
 
+  <script th:src="@{/js/jquery.js}"></script>
+  <script th:src="@{/js/select2.min.js}"></script>
   <script th:inline="javascript">
 
 
@@ -226,7 +270,18 @@
 
 
   <script>
-
+    $(document).ready(function () {
+      $("#tecnologias").select2({
+        placeholder: "Selecciona algo",
+        allowClear: true,
+        tokenSeparators: [',', ' ']
+      });
+      $("#provincias").select2({
+        placeholder: "selecciona una provincia",
+        maximumSelectionLength: 1,
+        allowClear: true
+      });
+    });
 
 
 

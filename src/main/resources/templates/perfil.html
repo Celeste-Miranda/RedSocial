@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.83.1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="">
+    <meta name="author"
+        content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator"
+        content="Hugo 0.83.1">
 
-    <link rel="icon" href="./iconos/iconoEgg.svg">
+    <link rel="icon"
+        href="./iconos/iconoEgg.svg">
     <title>Perfil</title>
 
 
@@ -19,7 +26,8 @@
 
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}"
+        rel="stylesheet">
 
 
     <style>
@@ -67,31 +75,39 @@
 
 
             <div class="me-auto rounded-start d-none d-md-block col-lg-4 col-md-3 ">
-                <div class="bg-white mt-4" th:object="${perfil}">
+                <div class="bg-white mt-4"
+                    th:object="${perfilFeed}">
                     <p class="pt-3 ps-3"> Datos Personales</p>
-                    <hr class="bg-warning" style="height: 5px;">
+                    <hr class="bg-warning"
+                        style="height: 5px;">
                     <dl class="px-4">
                         <div class="row ">
                             <dt class="col-6 ">Nombre </dt>
-                            <dd class="col-6" th:text="${perfil.nombre}"></dd>
+                            <dd class="col-6"
+                                th:text="${perfilFeed.nombre}"></dd>
 
                         </div>
                         <div class="row ">
                             <dt class="col-6">Apellido</dt>
-                            <dd class="col-6" th:text="${perfil.apellido}"></dd>
+                            <dd class="col-6"
+                                th:text="${perfilFeed.apellido}"></dd>
                         </div>
                         <div class="row ">
                             <dt class="col-6">Correo</dt>
-                            <dd class="col-6" th:text="${perfil.usuario.correo}"></dd>
+                            <dd class="col-6"
+                                th:text="${perfilFeed.usuario.correo}"></dd>
                         </div>
 
                         <div class="row ">
                             <dt class="col-6">Lugar</dt>
-                            <dd class="col-6" th:text="${perfil.residencia}"></dd>
+                            <dd class="col-6"
+                                th:text="${perfilFeed.residencia}"></dd>
                         </div>
                         <div class="row ">
                             <dt class="col-6">Tecnologías</dt>
-                            <dd class="col-6"></dd>
+                            <dd class="col-6"><span th:each=" tec: ${perfilFeed.tecnologias}"
+                                    th:text="|${tec} |"></span>
+                            </dd>
                         </div>
 
                     </dl>
@@ -114,10 +130,11 @@
 
 
 
+
+
+
+
             </div>
-
-
-
         </div>
 
 

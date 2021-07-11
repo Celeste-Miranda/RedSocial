@@ -1,102 +1,126 @@
 <!doctype html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org/">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.83.1">
+<html lang="es"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org/">
 
-    <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="">
+  <meta name="author"
+    content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator"
+    content="Hugo 0.83.1">
 
-    <title>Cargar Rol</title>
+  <link rel="icon"
+    th:href="@{/iconos/iconoEgg.svg}">
 
-    <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/"> -->
+  <title>Cargar Rol</title>
 
-    
+  <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/"> -->
 
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
-    <style>
-  
-  .flotante {
+
+  <!-- Bootstrap core CSS -->
+  <link th:href="@{/css/bootstrap.min.css}"
+    rel="stylesheet">
+
+  <style>
+    .flotante {
       position: fixed;
       bottom: 70px;
       right: 30px;
     }
 
-    .formRol{
+    .formRol {
 
       height: 75vh;
-      
+
 
     }
-  .formRol form{
-    width: 250px;
-  }
 
-    
-    
-.btn-yellow{
-  background: #ffcd00;
-  color: #37474f;
-  padding: 20px 85px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border-radius: 10px;
-  border: 4px solid #ffcd00;
-  cursor: pointer;
-  transition: all .2s ease-in-out;
-}
-    </style>
-
-    
-    <!-- Custom styles for this template -->
-    <!-- <link th:href="@{/css/signin.css}" rel="stylesheet"> -->
-
-
-    
- 
-  
-  </head>
+    .formRol form {
+      width: 250px;
+    }
 
 
 
-  <body >
-    
+    .btn-yellow {
+      background: #ffcd00;
+      color: #37474f;
+      padding: 20px 85px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 10px;
+      border: 4px solid #ffcd00;
+      cursor: pointer;
+      transition: all .2s ease-in-out;
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+  <!-- <link th:href="@{/css/signin.css}" rel="stylesheet"> -->
+
+
+
+
+
+</head>
+
+
+
+<body>
+
   <!-- INICIO NAVBAR -->
-  <div th:replace="fragments :: header"></div>
+  <!--<div th:replace="fragments :: header"></div> -->
   <!-- FIN NAVBAR -->
 
-    
-    <main class="d-flex justify-content-center align-items-center formRol">
-    
-      <form th:action="@{/rol/__${action}__}" method="POST"
-      th:object="${rol}" autocomplete="off" novalidate  class="mt-3  d-flex flex-column justify-content-center align-items-center" >
 
-        <img class="mb-4 " th:src="@{/iconos/iconoEgg.svg}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal ">Cargar Rol</h1>
-    
-        <div class="form-floating mb-3 w-100" >
-          <input  type="rol" class="form-control  " id="floatingInput" placeholder="Escribir Rol" >
-          <label for="floatingInput" >Ingresar rol</label>
-        </div>
-        
-    
-        
-        <button class="btn btn-warning btn-lg fs-5 w-100" type="submit" style="margin-bottom: 10px;"
+  <main class="d-flex justify-content-center align-items-center formRol">
+
+    <form th:action="@{/roles/guardar-rol}"
+      method="POST"
+      th:object="${rol}"
+      autocomplete="off"
+      novalidate
+      class="mt-3  d-flex flex-column justify-content-center align-items-center">
+
+      <img class="mb-4 "
+        th:src="@{/iconos/iconoEgg.svg}"
+        alt=""
+        width="72"
+        height="57">
+      <h1 class="h3 mb-3 fw-normal ">Cargar Rol</h1>
+
+      <div class="form-floating mb-3 w-100">
+        <input type="rol"
+          class="form-control  "
+          id="floatingInput"
+          placeholder="Escribir Rol"
+          th:field="*{nombre}"
+          name="nombre">
+        <label for="floatingInput">Ingresar rol</label>
+      </div>
+
+
+
+      <button class="btn btn-warning btn-lg fs-5 w-100"
+        type="submit"
+        style="margin-bottom: 10px;"
         th:text="${action == 'guardar'} ? 'Crear Rol' : 'Guardar Rol'"></button>
 
-        
-      </form>
-    </main>
-    
-     <!-- INICIO FOOTER -->
+
+    </form>
+  </main>
+
+  <!-- INICIO FOOTER -->
   <div th:replace="fragments :: footer"></div>
   <!-- FIN FOOTER -->
-    
-  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  
-      </body>
-    </html>
-    
+
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>
