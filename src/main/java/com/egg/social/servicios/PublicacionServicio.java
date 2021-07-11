@@ -31,9 +31,10 @@ public class PublicacionServicio {
     private FotoServicio fotoServicio;
 
     @Transactional
-    public void crearPublicacion(Long idUsuario, String descripcion, MultipartFile foto) throws ExcepcionSpring {
+    public void crearPublicacion(Long idPerfil, String descripcion, MultipartFile foto) throws ExcepcionSpring {
         try {
-            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+           // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+            Perfil perfil = perfilRepositorio.getById(idPerfil);
 
             if (perfil != null) {
                 Publicacion publicacion = new Publicacion();

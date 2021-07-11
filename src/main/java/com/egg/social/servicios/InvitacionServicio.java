@@ -21,6 +21,7 @@ public class InvitacionServicio {
     @Autowired
     private PerfilRepositorio perfilRepositorio;
 
+    // crear metodo boolean para comporobar si dos perfiles son amigos
     @Transactional
     public Invitacion crearInvitacion(Perfil remitente, Perfil destinatario) throws ExcepcionSpring {
         try {

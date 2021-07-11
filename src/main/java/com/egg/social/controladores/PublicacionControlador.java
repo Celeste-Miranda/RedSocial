@@ -5,7 +5,7 @@ import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.PerfilServicio;
 import java.util.List;
-import java.util.Date;
+
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,17 +48,19 @@ public class PublicacionControlador {
 
     //Metodo que lo guarda y redirige
     @PostMapping("/guardar-publicacion")
-    public RedirectView guardar(@RequestParam Long dni, @RequestParam(required = false) String descripcion, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) {
+    public RedirectView guardar(@RequestParam  Long id, @RequestParam(required = false) String descripcion,
+            @RequestParam(required = false) MultipartFile foto) {
 
         try {
-            publicacionServicio.crearPublicacion(dni, descripcion, foto);
-            redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
+            publicacionServicio.crearPublicacion(id, descripcion, foto);
+          //  redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+           // redirectAttributes.addFlashAttribute("error", e.getMessage());
             // enviar a pag personalizada por Astor return new RedirectView("/publicaciones");
+            
         }
 
-        return new RedirectView("/publicaciones");
+        return new RedirectView("/");
     }
 
     //Metodo para editar una publicacion

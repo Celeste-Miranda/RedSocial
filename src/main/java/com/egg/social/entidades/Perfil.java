@@ -35,10 +35,10 @@ public class Perfil implements Serializable {
     private String foto;
 
     public Perfil() {
-//        tecnologias = new ArrayList<>();
-//        publicaciones = new ArrayList<>();
-//        invitacionesRecibidas = new ArrayList<>();
-//        invitacionesEnviadas = new ArrayList<>();
+        tecnologias = new ArrayList<>();
+        publicaciones = new ArrayList<>();
+        invitacionesRecibidas = new ArrayList<>();
+        invitacionesEnviadas = new ArrayList<>();
     }
 
     public Long getId() {

@@ -1,9 +1,8 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Rol;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.RolServicio;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("/roles")
+/*@PreAuthorize("hasRole('ADMIN')")*/
 public class RolControlador {
 
     @Autowired
@@ -34,12 +34,16 @@ public class RolControlador {
     }
 
     @GetMapping("/crear-rol")
-    /*@PreAuthorize("hasRole('ADMIN')")*/
+    
     public ModelAndView crearRol() {
-        return new ModelAndView("rol-formulario");
+        ModelAndView mav = new ModelAndView("rol-formulario");
+        mav.addObject("rol", new Rol() );
+        mav.addObject("action", "guardar-rol");
+        
+        return mav;
     }
 
-    @PostMapping("guardar-rol")
+    @PostMapping("/guardar-rol")
     /*@PreAuthorize("hasRole('ADMIN')")*/
     public RedirectView guardarRol(@RequestParam String nombre) {
         rolServicio.crearRol(nombre);

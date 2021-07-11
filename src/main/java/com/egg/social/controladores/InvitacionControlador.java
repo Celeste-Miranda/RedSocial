@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -52,4 +53,15 @@ public class InvitacionControlador {
 
         return new RedirectView("/invitaciones/lista");
     }
+    
+   @PostMapping("/invitar")
+   public RedirectView invitarAmigo (@RequestParam ("idRemitente") Long idPerfil, @RequestParam ("idDestinatario") Long idPerfil2) throws ExcepcionSpring{
+       Perfil perfil = perfilService.obtenerPerfil(idPerfil);
+       Perfil perfil2 = perfilService.obtenerPerfil(idPerfil2);
+       invitacionService.crearInvitacion(perfil, perfil2);
+       
+       return new RedirectView("/perfil");
+       
+   }
+   
 }

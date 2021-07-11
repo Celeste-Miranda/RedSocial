@@ -56,7 +56,7 @@ public class PerfilServicio {
                 perfil.setResidencia(residencia);
                 
                 
-                perfil.getTecnologias().addAll(tecnologías);
+                perfil.setTecnologias(tecnologías);
 
                 if (!foto.isEmpty()) {
                     perfil.setFoto(fotoServicio.guardarFoto(foto));
@@ -106,13 +106,30 @@ public class PerfilServicio {
     }
 
     @Transactional(readOnly = true)
-    public List<Perfil> listaDeCuatro(List<Perfil> listaPerfil) {
+    public List<Perfil> listaDeCuatro(List<Perfil> listaPerfil, Long idPerfil) {
 
         Collections.shuffle(listaPerfil);
-
-        List<Perfil> listaCuatro = listaPerfil.subList(0, 4);
+        Perfil perfil = buscarPerfilPorIdUsuario(idPerfil);
+        
+        
+        List<Perfil> listaCuatro = new ArrayList();
+        
+        if (listaPerfil.size()>4) {
+            listaCuatro = listaPerfil.subList(0, 4);
+        }else{
+            listaCuatro =listaPerfil;
+        }
+        
+        listaCuatro.remove(perfil);
+        
 
         return listaCuatro;
+    }
+    
+    @Transactional (readOnly= true)
+    public Perfil obtenerPerfil (Long idPerfil){
+        return perfilRepositorio.findById(idPerfil).orElse(null);
+        
     }
 
     @Transactional(readOnly = true)

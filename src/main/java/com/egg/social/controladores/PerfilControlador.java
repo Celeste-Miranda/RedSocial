@@ -3,6 +3,7 @@ package com.egg.social.controladores;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
 import java.util.ArrayList;
@@ -41,7 +42,8 @@ public class PerfilControlador {
         mav.addObject("publicacion", new Publicacion());
         mav.addObject("publicaciones", publicaciones);
         mav.addObject("perfil", perfil);
-        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles));
+        mav.addObject("perfilFeed",perfil);
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
 
         return mav;
 
@@ -73,10 +75,27 @@ public class PerfilControlador {
 
         return mav;
     }
+    
+    @GetMapping ("/mostrar/{id}")
+    
+    public ModelAndView mostrarPerfil (@PathVariable Long id , HttpSession sesion) throws ExcepcionSpring{
+        
+        ModelAndView mav = new ModelAndView ("perfil");
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+        Perfil perfil2 = perfilServicio.obtenerPerfil(id);
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        mav.addObject("perfil", perfil);
+        mav.addObject("perfilFeed", perfil2);
+        mav.addObject("publicaciones", publicacionServicio.buscarPublicacionesPorPerfil(perfil2));
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        
+        return mav;
+        
+    }
 
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia,  @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
-        perfilServicio.modificar(id, nombre, apellido, residencia, new ArrayList<>(), foto);
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia,@RequestParam List<String> tecnologias , @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
+        perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
 
         return new RedirectView("/");
     }
