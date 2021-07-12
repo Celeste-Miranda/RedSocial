@@ -54,8 +54,7 @@ public class PerfilServicio {
                 perfil.setNombre(nombre);
                 perfil.setApellido(apellido);
                 perfil.setResidencia(residencia);
-                
-                
+
                 perfil.setTecnologias(tecnologías);
 
                 if (!foto.isEmpty()) {
@@ -101,35 +100,61 @@ public class PerfilServicio {
     }
 
     @Transactional(readOnly = true)
-    public Perfil buscarPerfilPorIdUsuario(Long idUsuario) {
-        return perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+    public Perfil buscarPerfilPorIdUsuario(Long idUsuario) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+
+            if (perfil != null) {
+                return perfil;
+            } else {
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar perfil");
+        }
     }
 
     @Transactional(readOnly = true)
-    public List<Perfil> listaDeCuatro(List<Perfil> listaPerfil, Long idPerfil) {
+    public List<Perfil> listaDeCuatro(List<Perfil> listaPerfil, Long idPerfil) throws ExcepcionSpring {
+        try {
+            Collections.shuffle(listaPerfil);
+            Perfil perfil = buscarPerfilPorIdUsuario(idPerfil);
 
-        Collections.shuffle(listaPerfil);
-        Perfil perfil = buscarPerfilPorIdUsuario(idPerfil);
-        
-        
-        List<Perfil> listaCuatro = new ArrayList();
-        
-        if (listaPerfil.size()>4) {
-            listaCuatro = listaPerfil.subList(0, 4);
-        }else{
-            listaCuatro =listaPerfil;
+            List<Perfil> listaCuatro = new ArrayList();
+
+            if (listaPerfil.size() > 4) {
+                listaCuatro = listaPerfil.subList(0, 4);
+            } else {
+                listaCuatro = listaPerfil;
+            }
+
+            listaCuatro.remove(perfil);
+
+            return listaCuatro;
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al listar perfiles");
         }
-        
-        listaCuatro.remove(perfil);
-        
-
-        return listaCuatro;
     }
-    
-    @Transactional (readOnly= true)
-    public Perfil obtenerPerfil (Long idPerfil){
-        return perfilRepositorio.findById(idPerfil).orElse(null);
-        
+
+    @Transactional(readOnly = true)
+    public Perfil obtenerPerfil(Long idPerfil) throws ExcepcionSpring {
+        try {
+            Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
+
+            if (perfil != null) {
+                return perfil;
+            } else {
+                throw new ExcepcionSpring("No existe un perfil con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar perfil");
+        }
     }
 
     @Transactional(readOnly = true)
