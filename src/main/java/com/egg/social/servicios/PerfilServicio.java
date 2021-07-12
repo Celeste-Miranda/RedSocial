@@ -93,10 +93,35 @@ public class PerfilServicio {
         }
     }
 
-    /* Método de Celeste */
     @Transactional(readOnly = true)
-    public List<Perfil> buscarPorNombreYApellido(String nombre, String apellido) {
-        return perfilRepositorio.buscarPorNombreYApellido(apellido, nombre);
+    public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
+        try {
+            String nombre = "";
+            String apellido = "";
+
+            for (int i = 0; i < nombreYApellido.length(); i++) {
+                nombre += nombreYApellido.substring(i, i + 1);
+                if (nombreYApellido.substring(i, i + 1).equalsIgnoreCase(" ")) {
+                    break;
+                }
+            }
+
+            for (int i = nombre.length(); i < nombreYApellido.length(); i++) {
+                apellido += nombreYApellido.substring(i, i + 1);
+            }
+
+            List<Perfil> perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
+
+            if (!perfiles.isEmpty()) {
+                return perfiles;
+            } else {
+                throw new ExcepcionSpring("No existen coincidencias en la búsqueda");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar perfiles por nombre y apellido");
+        }
     }
 
     @Transactional(readOnly = true)

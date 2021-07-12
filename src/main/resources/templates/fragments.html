@@ -37,9 +37,10 @@
                     </button>
                     <div class="collapse navbar-collapse"
                         id="navbarHome">
-                        <form class="d-flex mx-auto">
+                        <form class="d-flex mx-auto" method="GET" action="@{/perfil}">
                             <input class="form-control me-2"
-                                type="search"
+                                type="text"
+                                name="nombreYApellido"
                                 placeholder="Buscar"
                                 aria-label="Search">
                             <button class="btn btn-outline-success px-1 py-0"
