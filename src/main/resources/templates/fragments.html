@@ -37,11 +37,10 @@
                     </button>
                     <div class="collapse navbar-collapse"
                         id="navbarHome">
-                        <form class="d-flex mx-auto" method="GET" action="@{/perfil}">
+                        <form class="d-flex mx-auto">
                             <input class="form-control me-2"
-                                type="text"
-                                name="nombreYApellido"
-                                placeholder="Buscar"
+                                type="search"
+                                placeholder="nombre y apellido"
                                 aria-label="Search">
                             <button class="btn btn-outline-success px-1 py-0"
                                 type="submit"><svg xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +159,7 @@
         <!-- INICIO COLUMNA AMIGOS -->
 
         <!-- AMIGOS -->
-        <div class="bg-white">
+        <div class="bg-white ">
             <p class="pt-3 ps-3">Tus amigos</p>
             <hr class="bg-warning"
                 style="height: 5px;">
@@ -236,11 +235,13 @@
 
                         </div>
                         <div th:unless="${perfil.foto != null}">
-                            <img th:src="@{/foto/FotoPorDefecto.jpg}"
+                            <a th:href="@{/perfil/mostrar/__${perfil.id}__}">
+                                <img th:src="@{/foto/FotoPorDefecto.jpg}"
                                 alt="Perfil"
                                 id="fotoPerfil"
                                 width="50"
                                 class="float-start">
+                            </a>
                         </div>
                         <div class="float-start">
                             <h5 class="mt-1 mb-0 text-capitalize me-3"
@@ -262,7 +263,7 @@
     <div th:fragment="perfil-header">
         <div class="container col-12">
             <div class="position-relative ">
-                <img th:src="@{/foto/fotoPortadaProvi.jpeg}"
+                <img th:src="@{/foto/fotoPortadaPorDefecto.jpg}"
                     class="w-100"
                     alt=""
                     height="400">
@@ -289,7 +290,7 @@
                     <div th:unless="${perfilFeed.foto != null}"
                         class="">
                         <img th:src="@{/foto/FotoPorDefecto.jpg}"
-                            class="img-fluid img-thumbnail w-100 mt-3"
+                            class="img-fluid img-thumbnail  mt-3"
                             width="150">
 
 
@@ -308,8 +309,17 @@
                 th:if="${perfil.id}==${perfilFeed.id}">
                 <button type="button"
                     class=" boton btn ">Mis Publicaciones</button>
-                <button type="button"
-                    class="boton btn ">Mis Amigos</button>
+                <a th:href="@{/perfil/amigos}"  type="button"
+                    class="boton btn " >Mis Amigos</a>
+
+                    <a th:href="@{/invitaciones/lista}" type="button"
+                    class="boton btn " >Invitaciones  
+                    <p class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" >
+                        <span th:text="${cantidadInvitaciones}"> </span>
+                        
+                        <span class="visually-hidden">unread messages</span>
+                        </p>
+                </a>
 
             </div>
 
@@ -336,7 +346,7 @@
     </div>
 
     <!-- INICIO FORMULARIO DE NUEVA PUBLICACION -->
-    <div th:fragment="crearPublicacion"
+    <div th:fragment="crearPublicacion" 
         th:if="${perfil.id}==${perfilFeed.id}">
         <form th:action="@{/publicaciones/guardar-publicacion}"
             th:object="${publicacion}"
@@ -371,8 +381,11 @@
     </div>
     <!-- FIN FORMULARIO DE NUEVA PUBLICACION -->
 
+
+    
+
     <!-- Publicacion 1 -->
-    <div th:fragment="publicaciones">
+    <div th:fragment="publicaciones" > 
         <div th:if="${publicaciones.isEmpty()}">
             <p class="fs-5">No tiene Publicaciones</p>
         </div>
@@ -383,16 +396,16 @@
                 <!-- quien es el usuario -->
                 <div class="float-start">
 
-                    <div th:if="${perfilFeed.foto != null}"
+                    <div th:if="${publicacion.perfil.foto != null}"
                         class="">
 
-                        <img th:src="@{|/obtener-foto/${perfilFeed.foto}|}"
+                        <img th:src="@{|/obtener-foto/${publicacion.perfil.foto}|}"
                             alt="Perfil"
                             id="fotoPerfil"
                             class="img-fluid rounded-circle"
                             width="40">
                     </div>
-                    <div th:unless="${perfilFeed.foto != null}"
+                    <div th:unless="${publicacion.perfil.foto != null}"
                         class="">
                         <img th:src="@{/foto/FotoPorDefecto.jpg}"
                             class="img-fluid rounded-circle"
@@ -401,9 +414,9 @@
                 </div>
                 <div class="float-start ms-2">
                     <h5 class="mt-1 mb-0 text-capitalize"
-                        th:text="|${perfilFeed.nombre} ${perfilFeed.apellido}|"></h5>
+                        th:text="|${publicacion.perfil.nombre} ${publicacion.perfil.apellido}|"> </h5>
                     <p class="text-muted my-0"
-                        th:text="${#dates.format(publicacion.fechaDePublicacion, 'dd/MM/yyyy')}"></p>
+                        th:text="${#dates.format(publicacion.fechaDePublicacion, 'dd/MM/yyyy HH:mm')}"></p>
                 </div>
             </div>
             <div th:if="${publicacion.foto != null}"

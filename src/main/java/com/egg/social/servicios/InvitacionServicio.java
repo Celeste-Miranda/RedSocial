@@ -89,23 +89,18 @@ public class InvitacionServicio {
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<Invitacion> invitacionesRecibidasPendientes(Long idUsuario) throws ExcepcionSpring {
+
+    
+     @Transactional(readOnly = true)
+    public List<Invitacion> invitacionesRecibidasPendientes(Perfil perfil) throws ExcepcionSpring {
         try {
-            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+//            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
 
             if (perfil != null) {
-                List<Invitacion> recibidasPendientes = new ArrayList();
 
-                for (Invitacion invitacion : perfil.getInvitacionesRecibidas()) {
-                    if (invitacion.getAceptada() == false) {
-                        recibidasPendientes.add(invitacion);
-                    }
-                }
-
-                return recibidasPendientes;
+                return invitacionRepositorio.invitacionesPendiente(perfil.getId());
             } else {
-                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado en Invitaciones");
             }
         } catch (ExcepcionSpring e) {
             throw e;

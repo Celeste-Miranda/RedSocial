@@ -4,6 +4,7 @@ import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.repositorios.InvitacionRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.validaciones.Validacion;
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ public class PerfilServicio {
 
     @Autowired
     private FotoServicio fotoServicio;
+
+    @Autowired
+    private InvitacionRepositorio invitacionRepositorio;
 
     @Transactional
     public Perfil crearPerfil(Usuario usuario) throws ExcepcionSpring {
@@ -93,7 +97,8 @@ public class PerfilServicio {
         }
     }
 
-    @Transactional(readOnly = true)
+    /* Método de Celeste */
+     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
         try {
             String nombre = "";
@@ -124,7 +129,7 @@ public class PerfilServicio {
         }
     }
 
-    @Transactional(readOnly = true)
+   @Transactional(readOnly = true)
     public Perfil buscarPerfilPorIdUsuario(Long idUsuario) throws ExcepcionSpring {
         try {
             Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
@@ -182,31 +187,19 @@ public class PerfilServicio {
         }
     }
 
+
     @Transactional(readOnly = true)
     public List<Perfil> obtenerAmigos(Long idUsuario) throws ExcepcionSpring {
         try {
-            List<Perfil> listaDeAmigos = new ArrayList();
+
             Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
 
-            if (perfil != null) {
-                for (Invitacion i : perfil.getInvitacionesEnviadas()) {
-                    if (i.getAceptada() == true) {
-                        listaDeAmigos.add(i.getDestinatario());
-                    }
-                }
+            List<Perfil> listaDeAmigos = invitacionRepositorio.listaDestinatarioPerfil(perfil.getId());
+            listaDeAmigos.addAll(invitacionRepositorio.listaRemitentePerfil(perfil.getId()));
 
-                for (Invitacion i : perfil.getInvitacionesRecibidas()) {
-                    if (i.getAceptada() == true) {
-                        listaDeAmigos.add(i.getRemitente());
-                    }
-                }
+            return listaDeAmigos;
 
-                return listaDeAmigos;
-            } else {
-                throw new ExcepcionSpring("No exite un usuario con el ID indicado");
-            }
-        } catch (ExcepcionSpring e) {
-            throw e;
+            
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar amigos de usuario");
         }

@@ -1,10 +1,14 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.repositorios.PerfilRepositorio;
+import com.egg.social.servicios.InvitacionServicio;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -29,25 +32,47 @@ public class PerfilControlador {
     @Autowired
     private PublicacionServicio publicacionServicio;
 
+    @Autowired
+    private InvitacionServicio invitacionServicio;
+
     @GetMapping
-    public ModelAndView mostrarPerfil(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
+    public ModelAndView mostrarPerfil(HttpSession sesion) throws ExcepcionSpring {
+
         ModelAndView mav = new ModelAndView("perfil");
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
 
         List<Publicacion> publicaciones = publicacionServicio.buscarPublicacionesPorPerfil(perfil);
 
-        if (nombreYApellido != null) {
-            mav.addObject("perfilesBuscados", perfilServicio.buscarPorNombreYApellido(nombreYApellido));
-        }
+        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("publicacion", new Publicacion());
         mav.addObject("publicaciones", publicaciones);
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil);
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
 
         return mav;
+
+    }
+
+    @GetMapping("/amigos")
+    public ModelAndView listaAmigos(HttpSession sesion) throws ExcepcionSpring {
+
+        ModelAndView mav = new ModelAndView("lista-amigos");
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        
+        
+        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+
+        mav.addObject("perfil", perfil);
+        mav.addObject("perfilFeed", perfil);
+        mav.addObject("perfiles", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
+        mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+        return mav;
+
     }
 
 //    @GetMapping  

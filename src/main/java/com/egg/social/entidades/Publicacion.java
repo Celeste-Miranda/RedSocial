@@ -27,7 +27,7 @@ public class Publicacion implements Serializable {
     private List<Voto> votos;
     private String descripcion;
     private String foto;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDePublicacion;
     @Temporal(TemporalType.DATE)
     private Date fechaDeBaja;

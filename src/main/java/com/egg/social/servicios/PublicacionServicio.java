@@ -90,7 +90,7 @@ public class PublicacionServicio {
                 List<Long> listaDeAmigos = invitacionRepositorio.listaDestinatario(perfil.getId());
                 listaDeAmigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
 
-                List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdIn(listaDeAmigos);
+                List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdInOrderByFechaDePublicacionDesc(listaDeAmigos);
 
                 List<Publicacion> publicacionesRetorno = new ArrayList<>();
 
@@ -100,7 +100,8 @@ public class PublicacionServicio {
                     publicacionesRetorno.add(publicacion);
                 }
 
-                return publicacionesRetorno;
+                
+                return publicacionesRetorno ;
             } else {
                 throw new ExcepcionSpring("No existen un usuario con el ID indicado");
             }
@@ -114,7 +115,7 @@ public class PublicacionServicio {
     @Transactional(readOnly = true) // Poner TRY - CATCH
     public List<Publicacion> buscarPublicacionesPorPerfil(Perfil perfil) {
 
-        List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil(perfil);
+        List<Publicacion> publicaciones = publicacionRepositorio.publicacionesPorPerfil(perfil.getId());
 
         return publicaciones;
     }
@@ -123,6 +124,13 @@ public class PublicacionServicio {
     public Publicacion buscarPublicacionPorId(Long idPublicacion) {
         
         return publicacionRepositorio.findById(idPublicacion).orElse(null);
+
+    }
+    
+     @Transactional(readOnly = true)
+    public List<Publicacion> buscarTodas() {
+        
+        return  publicacionRepositorio.findAll();
 
     }
 
