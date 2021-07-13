@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.83.1">
+  <link rel="shortcut icon" href="../Static/iconos/iconoEgg.svg" type="image/x-icon">
+  <!-- <link rel="icon" th:href="@{/iconos/iconoEgg.svg}"> -->
+  <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
+  <!-- <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"> -->
+  <link rel="stylesheet" href="../Static/css/select2.min.css">
+  <!-- <link rel="stylesheet" th:href="@{/css/select2.min.css}"> -->
+  <link rel="stylesheet" href="../Static/css/signin.css">
+  <!-- <link th:href="@{/css/signin.css}" rel="stylesheet"> -->
+
+  <link rel="stylesheet" href="../Static/css/croppr.min.css">
+
+  <title>SocialEgg</title>
+  <!-- <title th:text="|${title} - SocialEgg|"></title> -->
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <div class="container">
+    <div class="text-center">
+      <img class="d-block mx-auto mb-4" th:src="@{/iconos/logoFraseEgg.svg}" alt="" width="230" height="57">
+      <h2>Bienvenido </h2>
+      <p class="lead">Somos una organización que busca conectar personas a través de la cooperación.
+        Pusimos en marcha un laboratorio social y aplicamos principios científicos de la Cooperación Humana.
+        Así, creamos una tecnología que transforma grupos en verdaderos equipos. Hoy estamos listos para que
+        el mundo la ponga en práctica.</p>
+    </div>
+    <div class="row">
+      <div class="col-md-7 col-lg-8">
+        <h4 class="">Datos Personales</h4>
+        <form class="needs-validation" enctype="multipart/form-data" novalidate th:action="@{/perfil/__${accion}__}"
+          method="POST" th:object="${perfil}" autocomplete="off">
+          <div class="row g-3">
+            <input type="hidden" th:field="*{id}" />
+            <!-- Nombre -->
+            <div class="col-12 col-md-6">
+              <label for="Nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="Nombre" placeholder="" th:field="*{nombre}" value="" required>
+              <div class="invalid-feedback">¡El nombre es obligatorio!</div>
+            </div>
+            <!-- Apellido -->
+            <div class="col-12 col-md-6">
+              <label for="Apellido" class="form-label">Apellido</label>
+              <input type="text" class="form-control" id="Apellido" placeholder="" th:field="*{apellido}" value=""
+                required>
+              <div class="invalid-feedback">¡El apellido es obligatorio!</div>
+            </div>
+            <!-- Provincia -->
+            <div class="col-12 col-md-5">
+              <label for="country" class="form-label">Provincia</label>
+              <select class="form-select" id="provincias" name="residencia" required th:field="*{residencia}">
+              </select>
+              <div class="invalid-feedback">Por favor seleccione una Residencia.</div>
+            </div>
+            <!-- Tecnologias -->
+            <div class="col-12 col-md-5">
+              <label for="tecnologias" class="form-label">Tecnologias</label>
+              <select class="form-select" id="tecnologias" name="tecnologias" multiple="multiple" th:field="*{tecnologias}">
+                <!--  <option value=""
+                  disabled
+                  selected>Elegir</option> -->
+                <option th:each="nombre : ${listaTecnologia}" th:value="${nombre}" th:text="${nombre}">
+                </option>
+              </select>
+            </div>
+            <br><br>
+            <!-- Foto -->
+            <div class="col-12  d-flex justify-content-between px-3 py-3 rounded-bottom" style="background-color: #EAEDED;">
+              <label for="foto" id="labelFoto" class="btn btn-sm btn-warning">Cargar Foto Perfil</label>
+              <input type="file" name="foto" id="foto" th:field="*{foto}" accept="image/*" hidden>
+              <input type="hidden" name="foto2" value="" id="base64">
+            </div>
+            <button class="col-12 w-100 btn btn-yellow btn-lg" type="submit">Guardar</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-5 col-lg-4 d-flex align-items-center justify-content-center">
+        <div id="editor" class="w-100"></div>
+        <canvas id="preview" class="d-none"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <!-- <p id="base64a" class="col-12 text-wrap"></p> -->
+    </div>
+    <footer class="my-5 pt-5 text-muted text-center text-small"><p class="mb-1">&copy; 2021 EggSocial</p></footer>
+  </div>
+  <script src="../Static/js/bootstrap.bundle.min.js"></script>
+  <!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script> -->
+  <script src="../Static/js/form-validation.js"></script>
+  <!-- <script th:src="@{/js/form-validation.js}"></script> -->
+  <script src="../Static/js/jquery.js"></script>
+  <!-- <script th:src="@{/js/jquery.js}"></script> -->
+  <script src="../Static/js/select2.min.js"></script>
+  <!-- <script th:src="@{/js/select2.min.js}"></script> -->
+
+  <script src="../Static/js/croppr.min.js"></script>
+
+  <script th:inline="javascript">  /* Script para poner las provincias automaticamente */
+    const provincias = document.getElementById("provincias");
+    /* let perfil = [[${ perfil }]]; */
+    let perfil = '';
+    (() => {
+      const buscar = async () => {
+        const url = "https://apis.datos.gob.ar/georef/api/provincias?campos=nombre&orden=nombre";
+        const response = await fetch(url);
+        return response.json();
+      };
+      buscar().then(data => {
+        for (const provincia of data["provincias"]) {
+          const option = document.createElement("option");
+          option.value = provincia["nombre"];
+          option.innerText = provincia["nombre"];
+          provincias.appendChild(option);
+          if (perfil["residencia"] == option.value) {
+            option.setAttribute("selected", "");
+          }
+        }
+      })
+    })();
+  </script>
+  <script>  /* Script para que se vean bonitos los selec */
+    $(document).ready(function () {
+      $("#tecnologias").select2({
+        placeholder: "Selecciona algo",
+        allowClear: true,
+        tokenSeparators: [',', ' ']
+      });
+      $("#provincias").select2({
+        placeholder: "selecciona una provincia",
+        maximumSelectionLength: 1,
+        allowClear: true
+      });
+    });
+  </script>
+  <script>  /* Script para que se pueda editar la imagen */
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputImage = document.querySelector('#foto');  // Input File
+      const editor = document.querySelector('#editor');  // Nodo donde estará el editor
+      // El canvas donde se mostrará la previa
+      const miCanvas = document.querySelector('#preview');
+      // Contexto del canvas
+      const contexto = miCanvas.getContext('2d');
+      // Ruta de la imagen seleccionada
+      let urlImage = undefined;
+      // Evento disparado cuando se adjunte una imagen
+      inputImage.addEventListener('change', abrirEditor, false);
+
+      /**
+       * Método que abre el editor con la imagen seleccionada
+       */
+      function abrirEditor(e) {
+        urlImage = URL.createObjectURL(e.target.files[0]);  // Obtiene la imagen
+
+        // Borra editor en caso que existiera una imagen previa
+        editor.innerHTML = '';
+        let cropprImg = document.createElement('img');
+        cropprImg.setAttribute('id', 'croppr');
+        editor.appendChild(cropprImg);
+
+        // Limpia la previa en caso que existiera algún elemento previo
+        contexto.clearRect(0, 0, miCanvas.width, miCanvas.height);
+
+        // Envia la imagen al editor para su recorte
+        document.querySelector('#croppr').setAttribute('src', urlImage);
+
+        // Crea el editor
+        new Croppr('#croppr', {
+          aspectRatio: 1,
+          startSize: [20, 20],
+          onCropEnd: recortarImagen
+        })
+      }
+
+      /**
+       * Método que recorta la imagen con las coordenadas proporcionadas con croppr.js
+       */
+      function recortarImagen(data) {
+        // Variables
+        const inicioX = data.x;
+        const inicioY = data.y;
+        const nuevoAncho = data.width;
+        const nuevaAltura = data.height;
+        const zoom = 1;
+        let imagenEn64 = '';
+        // La imprimo
+        miCanvas.width = nuevoAncho;
+        miCanvas.height = nuevaAltura;
+        // La declaro
+        let miNuevaImagenTemp = new Image();
+        // Cuando la imagen se carge se procederá al recorte
+        miNuevaImagenTemp.onload = function () {
+          // Se recorta
+          contexto.drawImage(miNuevaImagenTemp, inicioX, inicioY, nuevoAncho * zoom, nuevaAltura * zoom, 0, 0, nuevoAncho, nuevaAltura);
+          // Se transforma a base64
+          imagenEn64 = miCanvas.toDataURL("image/jpeg");
+          // Mostramos el código generado
+          /* document.querySelector('#base64').textContent = imagenEn64; */
+          document.getElementById('base64').setAttribute('value', imagenEn64);
+          document.getElementById('base64a').innerHTML = imagenEn64;
+        }
+        // Proporciona la imagen cruda, sin editarla por ahora
+        miNuevaImagenTemp.src = urlImage;
+      }
+    });
+  </script>
+</body>
+
+</html>
