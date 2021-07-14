@@ -236,32 +236,57 @@
 
             </div>
 
-            <div th:unless="${perfil.id}== ${perfilFeed.id} " class="btn-group " role="group">
+          <div th:unless="${perfil.id}== ${perfilFeed.id} "
+                class="btn-group "
+                role="group">
 
-                <div th:if="${amigos}">
-                    <form th:action="@{/invitaciones/invitar}" method="post">
+                <div th:if="${invitar}">
+                    <form th:action="@{/invitaciones/invitar}"
+                        method="post">
 
-                        <input type="hidden" name="idRemitente" th:value="${perfil.id}">
-                        <input type="hidden" name="idDestinatario" th:value="${perfilFeed.id}">
+                        <input type="hidden"
+                            name="idRemitente"
+                            th:value="${perfil.id}">
+                        <input type="hidden"
+                            name="idDestinatario"
+                            th:value="${perfilFeed.id}">
 
-                        <button type="submit" class=" boton btn ">Añadir Amigo</button>
+                        <button type="submit"
+                            class=" boton btn ">Añadir Amigo</button>
                     </form>
                 </div>
 
-                <div th:unless="${amigos}">
+                <div th:unless="${invitar}">
+                    <div th:if="${amigos}">
 
-                    <form th:action="@{/invitaciones/eliminar}" method="post">
+                        <form th:action="@{/invitaciones/eliminar}"
+                            method="post">
 
-                        <input type="hidden" name="idRemitente" th:value="${perfil.id}">
-                        <input type="hidden" name="idDestinatario" th:value="${perfilFeed.id}">
+                            <input type="hidden"
+                                name="idRemitente"
+                                th:value="${perfil.id}">
+                            <input type="hidden"
+                                name="idDestinatario"
+                                th:value="${perfilFeed.id}">
 
-                        <button type="submit" class=" boton btn ">Eliminar Amigo</button>
-                    </form>
+                            <button type="submit"
+                                class=" boton btn ">Eliminar Amigo</button>
+                        </form>
+                    </div>
+                    <div th:unless="${amigos}">
+                        <form>
+
+
+                            <button type="submit"
+                                class=" boton btn ">Eliminar invitacion</button>
+                        </form>
+                    </div>
                 </div>
 
 
                 <!--crear mensaje que ya se envio solicitud-->
             </div>
+        
         </div>
     </div>
 

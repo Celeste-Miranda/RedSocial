@@ -46,8 +46,17 @@ public class InvitacionServicio {
 
                     return invitacion;
                 } else {
+                    Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
                     
-                    return null;
+                    if (invitacion.getFechaDeBaja()== null) {
+                        return null;
+                    } else {
+                        invitacion.setFechaDeBaja(null);
+                        invitacionRepositorio.save(invitacion);
+                        
+                        return invitacion;
+                    }
+                        
 
                 }
 
@@ -71,6 +80,20 @@ public class InvitacionServicio {
         }
         return true;
     }
+    
+    public boolean sonAmigos (Perfil remitente,Perfil destinatario){
+        
+        if (!comprobarInvitacion(remitente,destinatario)) {
+            Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
+            if (invitacion.getAceptada()==true) {
+                return true;
+            }
+        }
+        return false;
+        
+    }
+
+    
 
     @Transactional
     public void aceptarInvitacion(Long idInvitacion) throws ExcepcionSpring {

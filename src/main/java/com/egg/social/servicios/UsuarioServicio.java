@@ -33,6 +33,9 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+    
+     @Autowired
+    private RolServicio rolServicio;
 
     @Transactional
     public Usuario crearUsuario(String correo, String clave, String clave2) throws ExcepcionSpring {
@@ -46,6 +49,7 @@ public class UsuarioServicio implements UserDetailsService {
                 usuario.setClave(encoder.encode(clave));
 
                 if (usuarioRepositorio.findAll().isEmpty()) {
+                    rolServicio.crearRol("ADMIN");
                     usuario.setRol(rolRepositorio.buscarRolAdministrador());
                 } else {
                     usuario.setRol(rolRepositorio.buscarRolUsuario());

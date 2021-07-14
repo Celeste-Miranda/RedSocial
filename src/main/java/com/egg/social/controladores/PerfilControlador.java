@@ -138,11 +138,13 @@ public class PerfilControlador {
         mav.addObject("perfilFeed", perfil2);
         mav.addObject("publicaciones", publicacionServicio.buscarPublicacionesPorPerfil(perfil2));
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
-        mav.addObject("amigos",invitacionServicio.comprobarInvitacion(perfil, perfil2));
+        mav.addObject("invitar",invitacionServicio.comprobarInvitacion(perfil, perfil2));
+        mav.addObject("amigos", invitacionServicio.sonAmigos(perfil, perfil2));
 
         return mav;
 
     }
+
 
     @PostMapping("/modificar")
     public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam List<String> tecnologias, @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
