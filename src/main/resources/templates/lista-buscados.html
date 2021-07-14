@@ -8,7 +8,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.83.1">
 
-    <link rel="icon" href="./iconos/iconoEgg.svg">
+    <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
     <title>Perfil</title>
 
 
@@ -79,7 +79,7 @@
                         <div class="card mb-4 shadow">
                             <a th:href="@{/perfil/mostrar/__${perfilFeed.id}__}">
                                 <div th:if="${perfilFeed.foto != null}" class="card-body text-center my-2">
-                                    <img class="shadow rounded-circle" th:src="@{|/obtener-foto/${perfil.foto}|}"
+                                    <img class="shadow rounded-circle" th:src="@{|/obtener-foto/${perfilFeed.foto}|}"
                                         width="165">
                                 </div>
 

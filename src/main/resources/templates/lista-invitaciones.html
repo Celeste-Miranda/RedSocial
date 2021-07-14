@@ -8,7 +8,7 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.83.1">
 
-    <link rel="icon" href="./iconos/iconoEgg.svg">
+    <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
     <title>Perfil</title>
 
 
@@ -92,13 +92,13 @@
                                     <form th:action="@{/invitaciones/aceptar}"  method="POST">
                                         <input type="hidden" name="id" th:value="${invitacion.id}"> 
 
-                                        <button class="btn btn-success btn-sm" type="submit"><img th:src="@{/iconos/egg.svg}" width="24" role="img"/>ACEPTAR </button>
+                                        <button class="btn btn-success btn-sm" type="submit"><img th:src="@{/iconos/egg.svg}" width="24" role="img"/> ACEPTAR </button>
                                     </form>
                                     
                                     <form th:action="@{/invitaciones/rechazar}" method="POST">
                                         <input type="hidden" name="id" th:value="${invitacion.id}"> 
 
-                                        <button class="btn btn-danger btn-sm" type="submit"><img th:src="@{/iconos/egg-fried.svg}" width="24" role="img"/>RECHAZAR</button>
+                                        <button class="btn btn-warning btn-sm" type="submit"><img th:src="@{/iconos/egg-fried.svg}" width="24" role="img"/> RECHAZAR</button>
                                     </form>
                                 </div>
                             </div>
