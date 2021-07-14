@@ -25,22 +25,32 @@ public class InvitacionServicio {
     @Transactional
     public Invitacion crearInvitacion(Perfil remitente, Perfil destinatario) throws ExcepcionSpring {
         try {
+
             if (remitente != null && destinatario != null) {
-                Invitacion invitacion = new Invitacion();
+                
+                
+                if (comprobarInvitacion(remitente, destinatario)) {
+                    
+                    Invitacion invitacion = new Invitacion();
+                    invitacion.setRemitente(remitente);
+                    invitacion.setDestinatario(destinatario);
+                    invitacion.setAceptada(false);
 
-                invitacion.setRemitente(remitente);
-                invitacion.setDestinatario(destinatario);
-                invitacion.setAceptada(false);
+                    remitente.getInvitacionesEnviadas().add(invitacion);
+                    destinatario.getInvitacionesRecibidas().add(invitacion);
 
-                remitente.getInvitacionesEnviadas().add(invitacion);
-                destinatario.getInvitacionesRecibidas().add(invitacion);
+                    perfilRepositorio.save(remitente);
+                    perfilRepositorio.save(destinatario);
 
-                perfilRepositorio.save(remitente);
-                perfilRepositorio.save(destinatario);
+                    invitacionRepositorio.save(invitacion);
 
-                invitacionRepositorio.save(invitacion);
+                    return invitacion;
+                } else {
+                    
+                    return null;
 
-                return invitacion;
+                }
+
             } else {
                 throw new ExcepcionSpring("Es necesario que exista tanto un remitente como un destinatario");
             }
@@ -49,6 +59,17 @@ public class InvitacionServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al crear invitación");
         }
+    }
+
+    
+    public boolean comprobarInvitacion(Perfil remitente, Perfil destinatario) {
+
+        Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
+
+        if (invitacion != null) {
+            return false;
+        }
+        return true;
     }
 
     @Transactional
@@ -89,9 +110,7 @@ public class InvitacionServicio {
         }
     }
 
-
-    
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<Invitacion> invitacionesRecibidasPendientes(Perfil perfil) throws ExcepcionSpring {
         try {
 //            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);

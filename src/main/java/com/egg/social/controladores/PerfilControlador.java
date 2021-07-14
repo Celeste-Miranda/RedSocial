@@ -48,6 +48,7 @@ public class PerfilControlador {
 
         mav.addObject("publicacion", new Publicacion());
         mav.addObject("publicaciones", publicaciones);
+
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil);
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
@@ -63,8 +64,7 @@ public class PerfilControlador {
         ModelAndView mav = new ModelAndView("lista-amigos");
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
-        
-        
+
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("perfil", perfil);
@@ -72,6 +72,30 @@ public class PerfilControlador {
         mav.addObject("perfiles", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
         return mav;
+
+    }
+
+    @GetMapping("/buscados")
+    public ModelAndView listaBuscados(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
+
+        ModelAndView mav = new ModelAndView("lista-buscados");
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+
+        if (nombreYApellido != null) {
+            List<Perfil> perfilesBuscados = perfilServicio.buscarPorNombreYApellido(nombreYApellido);
+            mav.addObject("perfiles", perfilesBuscados);
+            
+        }else {
+            mav.addObject("perfiles", new ArrayList<>());
+        }
+        
+        
+            mav.addObject("perfil", perfil);
+            mav.addObject("perfilFeed", perfil);
+            mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+            return mav;
 
     }
 
@@ -114,6 +138,7 @@ public class PerfilControlador {
         mav.addObject("perfilFeed", perfil2);
         mav.addObject("publicaciones", publicacionServicio.buscarPublicacionesPorPerfil(perfil2));
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        mav.addObject("amigos",invitacionServicio.comprobarInvitacion(perfil, perfil2));
 
         return mav;
 

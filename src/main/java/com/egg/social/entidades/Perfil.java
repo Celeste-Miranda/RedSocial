@@ -2,6 +2,7 @@ package com.egg.social.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -11,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Perfil implements Serializable {
@@ -21,6 +24,10 @@ public class Perfil implements Serializable {
     private String nombre;
     private String apellido;
     private String residencia;
+    
+    @Temporal(TemporalType.DATE)
+    private Date fechaDeBaja;
+    
     @Column
     @ElementCollection(targetClass = String.class)
     private List<String> tecnologias ;
@@ -49,6 +56,15 @@ public class Perfil implements Serializable {
         this.id = id;
     }
 
+    public Date getFechaDeBaja() {
+        return fechaDeBaja;
+    }
+
+    public void setFechaDeBaja(Date fechaDeBaja) {
+        this.fechaDeBaja = fechaDeBaja;
+    }
+    
+    
     public String getNombre() {
         return nombre;
     }

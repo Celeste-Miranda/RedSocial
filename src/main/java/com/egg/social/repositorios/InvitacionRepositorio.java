@@ -29,5 +29,9 @@ public interface InvitacionRepositorio extends JpaRepository<Invitacion, Long> {
 
     @Query("SELECT i FROM Invitacion i WHERE i.destinatario.id  = :idPerfil AND i.aceptada = false AND i.fechaDeBaja is NULL")
     List<Invitacion> invitacionesPendiente(@Param("idPerfil") Long idPerfil);
+    
+    @Query("SELECT i FROM Invitacion i WHERE ( (i.remitente.id = :idRemitente AND i.destinatario.id = :idDestinatario) OR (i.remitente.id = :idDestinatario AND i.destinatario.id = :idRemitente) ) and i.fechaDeBaja is NULL")
+    Invitacion buscarInvitacionEntreDosPerfiles(@Param("idRemitente") Long idRemitente, @Param("idDestinatario") Long idDestinatario);
+    
 
 }
