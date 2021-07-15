@@ -28,6 +28,8 @@ public class RolControlador {
             mav.addObject("roles", rolServicio.buscarRoles());
         } catch (ExcepcionSpring e) {
             mav.addObject("error", e.getMessage());
+            mav.setViewName("redirect:/error");
+
         }
 
         return mav;

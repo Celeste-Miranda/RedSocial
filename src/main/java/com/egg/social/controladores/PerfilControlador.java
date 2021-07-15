@@ -52,6 +52,7 @@ public class PerfilControlador {
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil);
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
 
         return mav;
@@ -66,6 +67,7 @@ public class PerfilControlador {
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
 
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+        
 
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil);
@@ -79,24 +81,29 @@ public class PerfilControlador {
     public ModelAndView listaBuscados(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
 
         ModelAndView mav = new ModelAndView("lista-buscados");
-        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-        List<Perfil> perfiles = perfilServicio.mostrarTodos();
-        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
-        if (nombreYApellido != null) {
+        try {
+            Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+            List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+
             List<Perfil> perfilesBuscados = perfilServicio.buscarPorNombreYApellido(nombreYApellido);
+
+            mav.addObject("perfil", perfil);
             mav.addObject("perfiles", perfilesBuscados);
-            
-        }else {
-            mav.addObject("perfiles", new ArrayList<>());
-        }
-        
-        
+            mav.addObject("perfilFeed", perfil);
+            mav.addObject("exito", "busqueda exitosa");
+            mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+        } catch (ExcepcionSpring e) {
+            Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+            List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+            mav.addObject("error", e.getMessage());
             mav.addObject("perfil", perfil);
             mav.addObject("perfilFeed", perfil);
+            mav.addObject("perfiles", new ArrayList<>());
             mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
-            return mav;
 
+        }
+        return mav;
     }
 
 //    @GetMapping  
@@ -134,20 +141,24 @@ public class PerfilControlador {
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         Perfil perfil2 = perfilServicio.obtenerPerfil(id);
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        Invitacion invitacion = invitacionServicio.invitacionesEntreDosPerfiles(perfil, perfil2);
+        
+        
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil2);
         mav.addObject("publicaciones", publicacionServicio.buscarPublicacionesPorPerfil(perfil2));
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
-        mav.addObject("invitar",invitacionServicio.comprobarInvitacion(perfil, perfil2));
-        mav.addObject("amigos", invitacionServicio.sonAmigos(perfil, perfil2));
+        mav.addObject("invitar", invitacionServicio.comprobarInvitacion(perfil, perfil2));
+        mav.addObject("invitacion",invitacion);
+        mav.addObject("amistad", invitacionServicio.sonAmigos(perfil, perfil2));
+        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
 
         return mav;
 
     }
 
-
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam List<String> tecnologias, @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
         perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
 
         return new RedirectView("/");

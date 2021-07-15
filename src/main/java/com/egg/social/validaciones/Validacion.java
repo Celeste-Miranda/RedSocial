@@ -17,7 +17,7 @@ public class Validacion {
             throw new ExcepcionSpring("La repetición de la contraseña no puede ser nula");
         }
 
-        if (!clave2.equals(clave2)) {
+        if (!clave.equals(clave2)) {
             throw new ExcepcionSpring("Ambas contraseñas deben ser iguales");
         }
     }

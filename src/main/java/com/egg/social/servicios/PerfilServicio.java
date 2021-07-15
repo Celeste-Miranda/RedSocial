@@ -98,7 +98,7 @@ public class PerfilServicio {
     }
 
     /* Método de Celeste */
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
         try {
             String nombre = "";
@@ -115,7 +115,19 @@ public class PerfilServicio {
                 apellido += nombreYApellido.substring(i, i + 1);
             }
 
-            List<Perfil> perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
+            if (nombre.equals("")) {
+                throw new ExcepcionSpring("No ingreso ningun dato en la búsqueda");
+            }
+
+            List<Perfil> perfiles = new ArrayList<>();
+
+            if (apellido.equals("")) {
+                perfiles = perfilRepositorio.buscarPerfilesPorNombreOApellido(nombre);
+            } else {
+
+                perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
+
+            }
 
             if (!perfiles.isEmpty()) {
                 return perfiles;
@@ -129,7 +141,7 @@ public class PerfilServicio {
         }
     }
 
-   @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Perfil buscarPerfilPorIdUsuario(Long idUsuario) throws ExcepcionSpring {
         try {
             Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
@@ -187,7 +199,6 @@ public class PerfilServicio {
         }
     }
 
-
     @Transactional(readOnly = true)
     public List<Perfil> obtenerAmigos(Long idUsuario) throws ExcepcionSpring {
         try {
@@ -199,7 +210,6 @@ public class PerfilServicio {
 
             return listaDeAmigos;
 
-            
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar amigos de usuario");
         }

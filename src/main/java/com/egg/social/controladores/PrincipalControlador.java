@@ -31,16 +31,16 @@ public class PrincipalControlador {
         ModelAndView mav = new ModelAndView("inicio");
 
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+         List<Perfil> perfiles = perfilServicio.mostrarTodos();
 
-        mav.addObject("perfiles", perfiles);
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
         mav.addObject("perfil", perfil);
         mav.addObject("publicacion", new Publicacion());
         mav.addObject("publicaciones", publicacionServicio.buscarPublicaciones((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("perfilFeed", perfil);
         mav.addObject("usuario", perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario")).getUsuario());
-        
-        
+        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
+
         return mav;
     }
 

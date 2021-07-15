@@ -27,10 +27,9 @@ public class InvitacionServicio {
         try {
 
             if (remitente != null && destinatario != null) {
-                
-                
+
                 if (comprobarInvitacion(remitente, destinatario)) {
-                    
+
                     Invitacion invitacion = new Invitacion();
                     invitacion.setRemitente(remitente);
                     invitacion.setDestinatario(destinatario);
@@ -46,17 +45,8 @@ public class InvitacionServicio {
 
                     return invitacion;
                 } else {
-                    Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
-                    
-                    if (invitacion.getFechaDeBaja()== null) {
-                        return null;
-                    } else {
-                        invitacion.setFechaDeBaja(null);
-                        invitacionRepositorio.save(invitacion);
-                        
-                        return invitacion;
-                    }
-                        
+
+                    throw new ExcepcionSpring("La invitacion Ya Existe");
 
                 }
 
@@ -70,7 +60,7 @@ public class InvitacionServicio {
         }
     }
 
-    
+    @Transactional(readOnly = true)
     public boolean comprobarInvitacion(Perfil remitente, Perfil destinatario) {
 
         Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
@@ -80,20 +70,19 @@ public class InvitacionServicio {
         }
         return true;
     }
-    
-    public boolean sonAmigos (Perfil remitente,Perfil destinatario){
-        
-        if (!comprobarInvitacion(remitente,destinatario)) {
+
+    @Transactional(readOnly = true)
+    public boolean sonAmigos(Perfil remitente, Perfil destinatario) {
+
+        if (!comprobarInvitacion(remitente, destinatario)) {
             Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
-            if (invitacion.getAceptada()==true) {
+            if (invitacion.getAceptada() == true) {
                 return true;
             }
         }
         return false;
-        
-    }
 
-    
+    }
 
     @Transactional
     public void aceptarInvitacion(Long idInvitacion) throws ExcepcionSpring {
@@ -175,4 +164,15 @@ public class InvitacionServicio {
             throw new ExcepcionSpring("Error al buscar invitaciones enviadas");
         }
     }
+    
+     @Transactional(readOnly = true)
+    public Invitacion invitacionesEntreDosPerfiles(Perfil remitente,Perfil destinatario) throws ExcepcionSpring {
+        
+        Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
+        
+        return invitacion;
+        
+    }
+    
+   
 }

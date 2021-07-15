@@ -34,7 +34,7 @@
 
 
         main {
-            margin-bottom: 80px;
+            margin-bottom: 90px;
         }
 
         .boton {
@@ -65,39 +65,40 @@
 
         <div class="container mt-4">
             <h2>Listado de Amigos</h2>
-            <hr class="mb-4"/>
+            <hr class="mb-4" />
             <div class="alert alert-danger" th:if="${excepcion != null}" th:text="${excepcion}"></div>
             <div class="alert alert-success" th:if="${exito != null}" th:text="${exito}"></div>
             <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
             <div th:if="${perfiles.isEmpty()}">
-              <h5>No Tenes amigos :( </h5>
+                <h5>No Tenes amigos :( </h5>
             </div>
             <div th:unless="${perfiles.isEmpty()}">
                 <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
                     <div class="col-3" th:each="perfil : ${perfiles}">
                         <div class="card mb-4 shadow">
+
                             <div th:if="${perfil.foto != null}" class="card-body text-center my-2">
-                                <img class="shadow rounded-circle" th:src="@{|/obtener-foto/${perfil.foto}|}" width="165">
+                                <a th:href="@{/perfil/mostrar/__${perfil.id}__}">
+                                    <img class="shadow rounded-circle" th:src="@{|/obtener-foto/${perfil.foto}|}"
+                                        width="165">
+                                </a>
                             </div>
                             <div th:unless="${perfil.foto != null}" class="card-body text-center my-2">
+                                <a th:href="@{/perfil/mostrar/__${perfil.id}__}"></a>
                                 <img class="rounded-circle" th:src="@{/Foto/FotoPorDefecto.jpg}" width="165">
+                                </a>
                             </div>
                             <div class="card-footer">
                                 <div th:text="|Perfil: ${perfil}|"></div>
                                 <div th:text="|Residencia: ${perfil.residencia}|"></div>
-                                <div class="d-flex justify-content-start my-2">
-                                    <a th:href="@{/perfil/modificar-perfil/_${perfil.id}_}" class="btn btn-sm me-2"><img th:src="@{/iconos/iconoEgg.svg}" width="24" role="img"/>+</a>
-                                    <form th:action="@{/perfil/eliminar-perfil/_${perfil.id}_}" method="POST">
-                                        <button class="btn btn-danger btn-sm" type="submit"><img th:src="@{/eliminar.svg}" width="24" role="img"/></button>
-                                    </form>
-                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
-          </div>
+        </div>
+        </div>
 
 
     </main>
