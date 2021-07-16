@@ -1,8 +1,11 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Invitacion;
+import com.egg.social.entidades.Perfil;
 import com.egg.social.servicios.PublicacionServicio;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.servicios.InvitacionServicio;
 import com.egg.social.servicios.PerfilServicio;
 import java.util.List;
 
@@ -29,12 +32,15 @@ public class PublicacionControlador {
     @Autowired
     private PerfilServicio perfilServicio;
 
+    @Autowired
+    private InvitacionServicio invitacionServicio;
+
     //Metodo para mostrar todas las publicaciones
     @GetMapping("/mostrar-publicaciones")
     public ModelAndView buscarTodos(HttpSession session) throws ExcepcionSpring {
-                
+
         ModelAndView mav = new ModelAndView("publicaciones");
-        List<Publicacion> publicaciones = publicacionServicio.buscarPublicaciones((Long)session.getAttribute("idUsuario"));
+        List<Publicacion> publicaciones = publicacionServicio.buscarPublicaciones((Long) session.getAttribute("idUsuario"));
         mav.addObject("publicaciones", publicaciones);
         return mav;
     }
@@ -48,31 +54,38 @@ public class PublicacionControlador {
 
     //Metodo que lo guarda y redirige
     @PostMapping("/guardar-publicacion")
-    public RedirectView guardar(@RequestParam  Long id, @RequestParam(required = false) String descripcion,
-            @RequestParam(required = false) MultipartFile foto) {
-
+    public RedirectView guardar(@RequestParam Long id, @RequestParam(required = false) String descripcion, @RequestParam(required = false) MultipartFile foto) {
         try {
             publicacionServicio.crearPublicacion(id, descripcion, foto);
-          //  redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
+            //  redirectAttributes.addFlashAttribute("publicacionExitosa", "La publicación se ha realizado satisfactoriamente");
         } catch (Exception e) {
-           // redirectAttributes.addFlashAttribute("error", e.getMessage());
+            // redirectAttributes.addFlashAttribute("error", e.getMessage());
             // enviar a pag personalizada por Astor return new RedirectView("/publicaciones");
-            
+
         }
 
-        return new RedirectView("/");
+        return new RedirectView("/perfil");
     }
 
     //Metodo para editar una publicacion
     @GetMapping("/editar/{id}")
     public ModelAndView modificar(@PathVariable Long id, HttpSession session) {
-        ModelAndView mav = new ModelAndView("publicacion-formulario");
+        ModelAndView mav = new ModelAndView("publicacion-editar");
         try {
+
             Publicacion publicacion = publicacionServicio.buscarPublicacionPorId(id);
             Long idUsuario = publicacion.getPerfil().getUsuario().getId();
             if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
-                return new ModelAndView("/");
+                return new ModelAndView("/perfil");
             }
+            Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuario"));
+
+            List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+
+            mav.addObject("perfil", perfil);
+            mav.addObject("perfilFeed", perfil);
+            mav.addObject("perfiles", perfilServicio.obtenerAmigos((Long) session.getAttribute("idUsuario")));
+            mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
             mav.addObject("publicacion", publicacion);
             mav.addObject("action", "guardar-modificado");
             return mav;
@@ -80,22 +93,30 @@ public class PublicacionControlador {
             mav = new ModelAndView("/");
             mav.addObject("error", "Error en buscar publicacion por id. --- Mensaje: " + e.getMessage());
         }
-        return new ModelAndView("/");
+        return new ModelAndView("/perfil");
 
     }
 
     @PostMapping("/guardar-modificado")
-    public RedirectView guardarModificado(@RequestParam Long idPublicacion, @RequestParam String descripcion, @RequestParam MultipartFile foto)  {
+    public RedirectView guardarModificado(@RequestParam("id") Long id, @RequestParam String descripcion, @RequestParam(required = false) MultipartFile foto) {
 
         try {
 
-            publicacionServicio.modificarPublicacion(idPublicacion, descripcion, foto);
+            publicacionServicio.modificarPublicacion(id, descripcion, foto);
             //mandar mensaje de cambio exitoso
         } catch (Exception e) {
 
             //mandar mensaje de error al modificar
         }
 
-        return new RedirectView("/publicacion/ver-todos");
+        return new RedirectView("/perfil");
+    }
+
+    @PostMapping("/eliminar/{id}")
+    public RedirectView eliminarPublicacion(@PathVariable Long id) throws ExcepcionSpring {
+
+        publicacionServicio.eliminarPublicacion(id);
+
+        return new RedirectView("/perfil");
     }
 }

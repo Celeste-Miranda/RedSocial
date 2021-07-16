@@ -26,17 +26,17 @@
 
 </head>
 
-<body th:background="@{imagenes/FondoError.jpeg}">
+<body th:background="@{imagenes/FondoError.jpeg}" class="d-flex justify-content-center align-items-center " style="height: 100vh;">
 
 
-  <section class="container text-center  ">
+  <section class="container text-center bg-white shadow-lg py-5  w-50 rounded-3" >
 
     <div th:if="${error != null}"
-      class="alert alert-danger"
+      class="alert alert-danger mx-auto"
       th:text="${error}"></div>
 
     <a th:href="@{/}"
-      class="btn btn-warning"><img fill="currentColor" th:src="@{/iconos/home3.svg}"
+      class="btn btn-warning mt-5"><img fill="currentColor" th:src="@{/iconos/home3.svg}"
         width="25">  Home</a>
 
   </section>

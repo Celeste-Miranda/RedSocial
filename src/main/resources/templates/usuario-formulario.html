@@ -45,21 +45,30 @@
     <main class="form-signin">
      
      
-      <form th:action="@{/signup-post}" method="post" >
+     
+      <form th:action="@{/signup-post}" method="post" class="needs-validation" novalidate >
+
+
         
         <img class="mb-4" th:src="@{/iconos/iconoEgg.svg}" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Formulario de Registro EggSocial</h1>
+
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${error}">
+          <strong>¡Error!</strong> <span th:text="${error}"></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
     
         <div class="form-floating mb-3" >
-          <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com" required>
           <label for="floatingInput">Correo</label>
         </div>
         <div class="form-floating">
-          <input type="password" name="clave" class="form-control" id="floatingPassword" placeholder="Password1">
+          <input type="password" name="clave" class="form-control" id="floatingPassword" placeholder="Password1" required>
           <label for="floatingPassword">Ingrese Contraseña</label>
         </div>
         <div class="form-floating">
-          <input type="password" name="clave2" class="form-control" id="floatingPassword" placeholder="Password2">
+          <input type="password" name="clave2" class="form-control" id="floatingPassword" placeholder="Password2" required>
           <label for="floatingPassword">Repetir Contraseña</label>
         </div>
     
@@ -70,7 +79,30 @@
     </main>
     
     
-    <script th:src="@{/jss/bootstrap.bundle.min.js}"></script>  
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>  
+
+    <script>
+
+      (function () {
+        'use strict'
+  
+       
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+          .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+              form.classList.add('was-validated')
+            }, false)
+          })
+      })()
+  
+  
+  
+    </script>
       </body>
     </html>
     

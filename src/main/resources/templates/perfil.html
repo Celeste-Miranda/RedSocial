@@ -1,21 +1,14 @@
 <!DOCTYPE html>
-<html lang="es"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1">
-    <meta name="description"
-        content="">
-    <meta name="author"
-        content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator"
-        content="Hugo 0.83.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.83.1">
 
-    <link rel="icon"
-        href="./iconos/iconoEgg.svg">
+    <link rel="icon" href="./iconos/iconoEgg.svg">
     <title>Perfil</title>
 
 
@@ -26,8 +19,7 @@
 
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{/css/bootstrap.min.css}"
-        rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
 
     <style>
@@ -75,33 +67,27 @@
 
 
             <div class="me-auto rounded-start d-none d-md-block col-lg-4 col-md-3 ">
-                <div class="bg-white mt-4"
-                    th:object="${perfilFeed}">
+                <div class="bg-white mt-4" th:object="${perfilFeed}">
                     <p class="pt-3 ps-3"> Datos Personales</p>
-                    <hr class="bg-warning"
-                        style="height: 5px;">
+                    <hr class="bg-warning" style="height: 5px;">
                     <dl class="px-4">
                         <div class="row ">
                             <dt class="col-6 ">Nombre </dt>
-                            <dd class="col-6"
-                                th:text="${perfilFeed.nombre}"></dd>
+                            <dd class="col-6" th:text="${perfilFeed.nombre}"></dd>
 
                         </div>
                         <div class="row ">
                             <dt class="col-6">Apellido</dt>
-                            <dd class="col-6"
-                                th:text="${perfilFeed.apellido}"></dd>
+                            <dd class="col-6" th:text="${perfilFeed.apellido}"></dd>
                         </div>
                         <div class="row ">
                             <dt class="col-6">Correo</dt>
-                            <dd class="col-6"
-                                th:text="${perfilFeed.usuario.correo}"></dd>
+                            <dd class="col-6" th:text="${perfilFeed.usuario.correo}"></dd>
                         </div>
 
                         <div class="row ">
                             <dt class="col-6">Lugar</dt>
-                            <dd class="col-6"
-                                th:text="${perfilFeed.residencia}"></dd>
+                            <dd class="col-6" th:text="${perfilFeed.residencia}"></dd>
                         </div>
                         <div class="row ">
                             <dt class="col-6">Tecnologías</dt>
@@ -148,8 +134,46 @@
 
 
 
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Estas Seguro </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    si eliminas no hay vuelta atras :O ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancelar</button>
+
+
+                    <form class="px-3 rounded-bottom" 
+                        method="post" id="formularioEliminar">
+
+                        <button type="submit" class="btn btn-danger" >eliminar </button>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    
 </body>
+
+
+
+
+
+
+
+
 
 </html>

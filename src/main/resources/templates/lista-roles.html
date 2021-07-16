@@ -73,7 +73,7 @@
                 
                 <th class="col-md-3 px-md-2" scope="col">Nombre</th>
  
-                <th sec:authorize="hasRole('ADMIN')" class="col-md-3 px-md-2" scope="col">Acciones</th>
+                
             </tr>
             </thead>
             <tbody>
@@ -83,12 +83,7 @@
                
                 <td class="col-md-3 px-md-2" style="color:rgb(0, 0, 0)" th:text="${rol.nombre}"></td>
                
-                <td sec:authorize="hasRole('ADMIN')" class="col-md-3 px-md-2 d-flex justify-content-around w-100">
-                    <a class="btn btn-secondary btn-sm" th:href="@{/rol/editar/__${rol.id}__}">Editar</a>
-                    <form th:action="@{/rol/eliminar/__${rol.id}__}" method="post">
-                        <button class="btn btn-danger btn-sm" type="submit">Eliminar</button>
-                    </form>
-                </td>
+                
             </tr>
             </tbody>
         </table>
@@ -97,12 +92,9 @@
 
 </main>
 
-<footer class="footer py-3 bg-dark fixed-bottom">
-    <div class="container d-flex justify-content-center">
-        <span class="text-muted">&copy; EggSocial - 2021</span>
-       
-    </div>
-</footer>
+ <!-- INICIO FOOTER -->
+ <div th:replace="fragments :: footer"></div>
+ <!-- FIN FOOTER -->
 
 <script src="./js/bootstrap.bundle.min.js"></script>    
 </body>

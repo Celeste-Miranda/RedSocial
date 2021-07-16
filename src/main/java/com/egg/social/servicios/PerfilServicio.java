@@ -28,6 +28,9 @@ public class PerfilServicio {
     @Autowired
     private InvitacionRepositorio invitacionRepositorio;
 
+    @Autowired
+    private InvitacionServicio invitacionServicio;
+
     @Transactional
     public Perfil crearPerfil(Usuario usuario) throws ExcepcionSpring {
         try {
@@ -100,7 +103,12 @@ public class PerfilServicio {
     /* Método de Celeste */
     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
+        
+        
         try {
+            
+            nombreYApellido = nombreYApellido.trim();
+            
             String nombre = "";
             String apellido = "";
 
@@ -115,6 +123,9 @@ public class PerfilServicio {
                 apellido += nombreYApellido.substring(i, i + 1);
             }
 
+            nombre = nombre.trim();
+            
+            apellido = apellido.trim();
             if (nombre.equals("")) {
                 throw new ExcepcionSpring("No ingreso ningun dato en la búsqueda");
             }
@@ -125,7 +136,16 @@ public class PerfilServicio {
                 perfiles = perfilRepositorio.buscarPerfilesPorNombreOApellido(nombre);
             } else {
 
-                perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
+//                perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
+
+
+                for (Perfil perfil : perfilRepositorio.buscarPerfiles()) {
+                    if ((nombre.equalsIgnoreCase(perfil.getNombre())&& apellido.equalsIgnoreCase(perfil.getApellido())) || nombre.equalsIgnoreCase(perfil.getApellido()) && apellido.equalsIgnoreCase(perfil.getNombre())) {
+                         
+                        perfiles.add(perfil);
+                    }
+                            
+                }
 
             }
 
@@ -166,13 +186,17 @@ public class PerfilServicio {
 
             List<Perfil> listaCuatro = new ArrayList();
 
-            if (listaPerfil.size() > 4) {
-                listaCuatro = listaPerfil.subList(0, 4);
-            } else {
-                listaCuatro = listaPerfil;
+            for (Perfil p : listaPerfil) {
+                if (!invitacionServicio.sonAmigos(perfil, p)) {
+                    listaCuatro.add(p);
+                }
             }
 
             listaCuatro.remove(perfil);
+
+            if (listaCuatro.size() > 4) {
+                listaCuatro = listaCuatro.subList(0, 4);
+            }
 
             return listaCuatro;
         } catch (ExcepcionSpring e) {

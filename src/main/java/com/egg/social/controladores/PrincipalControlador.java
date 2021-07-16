@@ -1,8 +1,10 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
+import com.egg.social.servicios.InvitacionServicio;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
 import com.egg.social.servicios.UsuarioServicio;
@@ -24,6 +26,9 @@ public class PrincipalControlador {
 
     @Autowired
     private PublicacionServicio publicacionServicio;
+    
+    @Autowired
+    private InvitacionServicio invitacionServicio;
 
     @GetMapping("/") //Editar bien el metodo de pasar Usuario y try
     public ModelAndView principal(HttpSession sesion) throws ExcepcionSpring {
@@ -31,7 +36,8 @@ public class PrincipalControlador {
         ModelAndView mav = new ModelAndView("inicio");
 
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-         List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
         mav.addObject("perfil", perfil);
@@ -40,6 +46,7 @@ public class PrincipalControlador {
         mav.addObject("perfilFeed", perfil);
         mav.addObject("usuario", perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario")).getUsuario());
         mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
+        mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
 
         return mav;
     }

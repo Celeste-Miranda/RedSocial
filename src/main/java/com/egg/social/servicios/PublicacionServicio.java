@@ -36,7 +36,7 @@ public class PublicacionServicio {
            // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
             Perfil perfil = perfilRepositorio.getById(idPerfil);
 
-            if (perfil != null) {
+            if (perfil != null && !descripcion.equals("") || !foto.isEmpty()) {
                 Publicacion publicacion = new Publicacion();
 
                 publicacion.setPerfil(perfil);
@@ -90,7 +90,7 @@ public class PublicacionServicio {
                 List<Long> listaDeAmigos = invitacionRepositorio.listaDestinatario(perfil.getId());
                 listaDeAmigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
 
-                List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdInOrderByFechaDePublicacionDesc(listaDeAmigos);
+                List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdInAndFechaDeBajaIsNullOrderByFechaDePublicacionDesc(listaDeAmigos);
 
                 List<Publicacion> publicacionesRetorno = new ArrayList<>();
 

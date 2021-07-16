@@ -1,82 +1,119 @@
 <!doctype html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.83.1">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-    <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.83.1">
 
-    <title th:text="|${title} - SocialEgg|"></title>
-    
+  <link rel="icon" th:href="@{/iconos/iconoEgg.svg}">
 
-    <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/"> -->
+  <title th:text="|${title} - SocialEgg|"></title>
 
-    
 
-    <!-- Bootstrap core CSS -->
-<link th:href="@{./css/bootstrap.min.css}" rel="stylesheet">
+  <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/"> -->
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
+
+
+  <!-- Bootstrap core CSS -->
+  <link th:href="@{./css/bootstrap.min.css}" rel="stylesheet">
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
       }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-
-    
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/signin.css}" rel="stylesheet">
-  </head>
+    }
+  </style>
 
 
-  <body class="text-center">
-    
-    <main class="form-signin">
-     
-      <form  th:action="@{/logincheck}" method="post" class="login">
-     
-     
-        <img class="mb-4" th:src="@{/iconos/iconoEgg.svg}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">EggSocial</h1>
-    
-        <div class="form-floating mb-3" >
-          <input type="correo" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Correo</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password1">
-          <label for="floatingPassword">Ingrese Contraseña</label>
-        </div>
+  <!-- Custom styles for this template -->
+  <link th:href="@{/css/signin.css}" rel="stylesheet">
+</head>
+
+
+<body class="text-center">
+
+  <main class="form-signin">
+
+    <form th:action="@{/logincheck}" method="post" class="login needs-validation" novalidate>
+
+
+      <img class="mb-4" th:src="@{/iconos/iconoEgg.svg}" alt="" width="72" height="57">
+      <h1 class="h3 mb-3 fw-normal">EggSocial</h1>
+
+      <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${error}">
+        <strong>¡Error!</strong> <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+
+
+      <div class="form-floating mb-3">
         
-    
-        <div class="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me"> Recordarme
-          </label>
-        </div>
-        <button class="btn-yellow" type="submit" style="margin-bottom: 10px;">Iniciar Sesión</button>
+        <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com"
+          required>
+               
 
-        <br><br>
 
-        <a th:href="@{/signup-get}" class="btn btn-gray" style="margin-bottom: 10px;">Registrarte</a>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-      </form>
-    </main>
-    
-    
-      <script th:src="@{/js/bootstrap.bundle.min.js}"></script>    
-      </body>
-    </html>
-    
+        <label for="floatingInput">Correo</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" name="password" class="form-control " id="floatingPassword" placeholder="Password1"
+          required>
+        <label for="floatingPassword">Ingrese Contraseña</label>
+      </div>
+
+
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Recordarme
+        </label>
+      </div>
+      <button class="btn-yellow" type="submit" style="margin-bottom: 10px;">Iniciar Sesión</button>
+
+      <br><br>
+
+      <a th:href="@{/signup-get}" class="btn btn-gray" style="margin-bottom: 10px;">Registrarte</a>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+    </form>
+  </main>
+
+
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <script>
+
+    (function () {
+      'use strict'
+
+     
+      var forms = document.querySelectorAll('.needs-validation')
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+          }, false)
+        })
+    })()
+
+
+
+  </script>
+</body>
+
+</html>

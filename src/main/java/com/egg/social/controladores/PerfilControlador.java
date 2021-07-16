@@ -10,6 +10,8 @@ import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -54,6 +58,7 @@ public class PerfilControlador {
         mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
         mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+        
 
         return mav;
 
@@ -64,7 +69,7 @@ public class PerfilControlador {
 
         ModelAndView mav = new ModelAndView("lista-amigos");
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        
 
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
         
@@ -106,17 +111,19 @@ public class PerfilControlador {
         return mav;
     }
 
-//    @GetMapping  
-//    public ModelAndView buscarTodos() throws ExcepcionSpring {
-//        ModelAndView mav = new ModelAndView("perfil");
-//        List<Perfil> perfiles = perfilServicio.mostrarTodos();
-//        mav.addObject("perfiles", perfiles);
-//        return mav;
-//    }
+
     @GetMapping("/editar/{id}")
-    public ModelAndView modificar(@PathVariable Long id, HttpSession session) throws ExcepcionSpring {
+    public ModelAndView modificar(@PathVariable Long id, HttpSession session , HttpServletRequest request) throws ExcepcionSpring {
         ModelAndView mav = new ModelAndView("perfil-formulario");
 
+        
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+     
+        
+        if (flashMap != null) {
+            mav.addObject("error", flashMap.get("error"));
+        }
+        
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuario"));
         Long idUsuario = perfil.getUsuario().getId();
 
@@ -126,7 +133,7 @@ public class PerfilControlador {
         }
 
         mav.addObject("title", "Cargando Perfil");
-        mav.addObject("perfil", perfil);
+        mav.addObject("perfil", perfil);        
         mav.addObject("listaTecnologia", perfilServicio.obtenerTecnologias());
         mav.addObject("accion", "modificar");
 
@@ -144,6 +151,7 @@ public class PerfilControlador {
         Invitacion invitacion = invitacionServicio.invitacionesEntreDosPerfiles(perfil, perfil2);
         
         
+        
         mav.addObject("perfil", perfil);
         mav.addObject("perfilFeed", perfil2);
         mav.addObject("publicaciones", publicacionServicio.buscarPublicacionesPorPerfil(perfil2));
@@ -158,8 +166,19 @@ public class PerfilControlador {
     }
 
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto) throws ExcepcionSpring {
-        perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto , RedirectAttributes redirectAttributes) throws ExcepcionSpring {
+      
+        try {
+             perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
+        } catch (Exception e) {
+            
+             redirectAttributes.addFlashAttribute("error", e.getMessage());
+             return new RedirectView("/perfil/editar/"+id);
+
+
+        }
+        
+       
 
         return new RedirectView("/");
     }
