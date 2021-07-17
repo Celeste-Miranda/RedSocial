@@ -14,13 +14,19 @@ public class RolServicio {
     @Autowired
     private RolRepositorio rolRepositorio;
 
-    @Transactional
-    public Rol crearRol(String nombre) {
-        Rol rol = new Rol();
+    @Transactional(rollbackFor = Exception.class)
+    public Rol crearRol(String nombre) throws ExcepcionSpring {
 
-        rol.setNombre(nombre);
+        try {
+            Rol rol = new Rol();
+                       
+            rol.setNombre(nombre);
 
-        return rolRepositorio.save(rol);
+            return rolRepositorio.save(rol);
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Ya existe " + nombre + " en la lista de Roles no se puede guardar");
+        }
+
     }
 
     @Transactional(readOnly = true)

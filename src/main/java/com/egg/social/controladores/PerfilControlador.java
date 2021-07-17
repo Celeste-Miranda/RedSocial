@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +65,34 @@ public class PerfilControlador {
 
         return mav;
 
+    }    
+    
+    
+    @GetMapping("/mostrarTodos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ModelAndView mostrarPerfiles(HttpSession sesion) throws ExcepcionSpring {
+
+        ModelAndView mav = new ModelAndView("lista-perfiles-admin");
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
+        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+
+        List<Publicacion> publicaciones = publicacionServicio.buscarPublicacionesPorPerfil(perfil);
+
+        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
+
+        mav.addObject("perfil", perfil);
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        mav.addObject("perfilFeed", perfil);
+        mav.addObject("publicacion", new Publicacion());
+        mav.addObject("publicaciones", publicaciones);
+        mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
+        mav.addObject("comentario", new Comentario());
+        mav.addObject("amistad", true);
+
+
+        return mav;
+
     }
 
     @GetMapping("/amigos")
@@ -82,7 +111,7 @@ public class PerfilControlador {
 
     }
 
-    @GetMapping("/buscados")
+    @GetMapping("/buscados")    
     public ModelAndView listaBuscados(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
 
         ModelAndView mav = new ModelAndView("lista-buscados");
