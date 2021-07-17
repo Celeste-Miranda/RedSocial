@@ -1,5 +1,6 @@
 package com.egg.social.servicios;
 
+import com.egg.social.entidades.Comentario;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import com.egg.social.entidades.Publicacion;
@@ -33,14 +34,20 @@ public class PublicacionServicio {
     @Transactional
     public void crearPublicacion(Long idPerfil, String descripcion, MultipartFile foto) throws ExcepcionSpring {
         try {
-           // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
+            // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
             Perfil perfil = perfilRepositorio.getById(idPerfil);
 
             if (perfil != null && !descripcion.equals("") || !foto.isEmpty()) {
+
+                if (descripcion.trim().equals("")) {
+                    throw new ExcepcionSpring("No pongas espacio Astor");
+
+                }
+
                 Publicacion publicacion = new Publicacion();
 
                 publicacion.setPerfil(perfil);
-                publicacion.setDescripcion(descripcion);
+                publicacion.setDescripcion(descripcion.trim());
                 publicacion.setFechaDePublicacion(new Date());
 
                 if (!foto.isEmpty()) {
@@ -89,6 +96,7 @@ public class PublicacionServicio {
             if (perfil != null) {
                 List<Long> listaDeAmigos = invitacionRepositorio.listaDestinatario(perfil.getId());
                 listaDeAmigos.addAll(invitacionRepositorio.listaRemitente(perfil.getId()));
+                listaDeAmigos.add(perfil.getId());
 
                 List<Publicacion> publicaciones = publicacionRepositorio.findByPerfil_IdInAndFechaDeBajaIsNullOrderByFechaDePublicacionDesc(listaDeAmigos);
 
@@ -100,8 +108,7 @@ public class PublicacionServicio {
                     publicacionesRetorno.add(publicacion);
                 }
 
-                
-                return publicacionesRetorno ;
+                return publicacionesRetorno;
             } else {
                 throw new ExcepcionSpring("No existen un usuario con el ID indicado");
             }
@@ -122,15 +129,15 @@ public class PublicacionServicio {
 
     @Transactional(readOnly = true)
     public Publicacion buscarPublicacionPorId(Long idPublicacion) {
-        
+
         return publicacionRepositorio.findById(idPublicacion).orElse(null);
 
     }
-    
-     @Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     public List<Publicacion> buscarTodas() {
-        
-        return  publicacionRepositorio.findAll();
+
+        return publicacionRepositorio.findAll();
 
     }
 

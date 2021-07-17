@@ -2,13 +2,14 @@ package com.egg.social.controladores;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ErrorControlador {
+public class ErrorControlador implements ErrorController {
 
     @RequestMapping(value = "/error", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView paginaDeError(HttpServletRequest respuestaHTTP, HttpServletResponse response) {
@@ -37,6 +38,12 @@ public class ErrorControlador {
             }
             case 500: {
                 mensajeDeError = "Ocurrió un error interno.";
+                break;
+            }
+            
+            default: {
+                
+                mensajeDeError = "Se produjo un Error Inesperado.";
                 break;
             }
         }

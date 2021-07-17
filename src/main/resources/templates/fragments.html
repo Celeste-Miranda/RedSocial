@@ -47,8 +47,8 @@
 
                                 <li class="nav-item">
 
-                                    <a th:href="@{/perfil/amigos}" type="button"
-                                        class="nav-link d-md-none ">Mis Amigos</a>
+                                    <a th:href="@{/perfil/amigos}" type="button" class="nav-link d-md-none ">Mis
+                                        Amigos</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -57,7 +57,7 @@
                                         class="nav-link d-md-none  ">Invitaciones
                                         <p class="badge rounded-pill bg-danger">
                                             <span th:text="${cantidadInvitaciones}"> </span>
-                    
+
                                             <span class="visually-hidden">unread messages</span>
                                         </p>
                                     </a>
@@ -74,7 +74,7 @@
                                         alt="Perfil" width="32" height="32" id="fotoPerfil" class="rounded-circle me-2">
 
                                     <img th:unless="${perfil.foto != null}" th:src="@{/foto/FotoPorDefecto.jpg}"
-                                        alt="mdo" width="32" height="32" class="rounded-circle me-2">
+                                        alt="mdo" width="32" height="32" id="fotoPerfil" class="rounded-circle me-2">
                                 </a>
                                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
 
@@ -324,6 +324,9 @@
 
 
 
+
+
+
     <!-- Publicacion 1 -->
     <div th:fragment="publicaciones">
         <div th:if="${publicaciones.isEmpty()}">
@@ -338,10 +341,10 @@
                     <div th:if="${publicacion.perfil.foto != null}" class="">
 
                         <img th:src="@{|/obtener-foto/${publicacion.perfil.foto}|}" alt="Perfil" id="fotoPerfil"
-                            class="img-fluid rounded-circle" width="40">
+                            class="img-fluid rounded-circle" width="50">
                     </div>
                     <div th:unless="${publicacion.perfil.foto != null}" class="">
-                        <img th:src="@{/foto/FotoPorDefecto.jpg}" class="img-fluid rounded-circle" width="40">
+                        <img th:src="@{/foto/FotoPorDefecto.jpg}" class="img-fluid rounded-circle" width="50">
                     </div>
                 </div>
                 <div class="float-start ms-2">
@@ -396,22 +399,201 @@
             <!-- si hay imagen ponerla -->
             <div class="card-body">
                 <!-- texto y reacciones -->
-                <p class="card-text text-start" th:text="${publicacion.descripcion}"></p>
+                <p class="card-text text-start"  th:text="${publicacion.descripcion}"
+                ></p>
                 <hr class="w-75 mx-auto mb-0 mt-2 text-muted">
 
             </div>
+
+            <div class="card-footer">
+                <!-- Comentarios -->
+                <div th:if="${publicacion.comentarios.isEmpty()}"></div>
+                <div th:unless="${publicacion.comentarios.isEmpty()}">
+
+                    <div  th:each="comentario : ${publicacion.comentarios}">
+
+                        <div th:if="${comentario.fechaDeBaja} == null">
+
+                            <ul class="list-group list-group-flush w-100">
+                                <!-- Comentario -->
+                                <li class="list-group-item clearfix bg-light ">
+
+                                    <div class=" d-flex justify-content-between">
+                                        <p class="mb-0 text-start fw-bold"
+                                            th:text="|${comentario.perfil.nombre} ${comentario.perfil.apellido}|"></p>
+                                        <div class="d-flex align-items-center">
+
+                                            <p class="text-muted my-0 ms-auto"
+                                                th:text="${#dates.format(comentario.fechaDeComentario, 'dd/MM/yyyy HH:mm')}">
+                                            </p>
+
+                                            <button class="btn btn-sm text-danger "
+                                                th:if="${comentario.perfil.id} == ${perfil.id}" data-bs-toggle="modal"
+                                                data-bs-target="#modalComentario" type="button"
+                                                th:onclick="|eliminarModalesComentario('${comentario.id}');|"> <svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="25" fill="currentColor"
+                                                    class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                </svg></button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center ">
+                                        <img th:if="${comentario.perfil.foto != null}"
+                                            th:src="@{|/obtener-foto/${comentario.perfil.foto}|}" width="40" id="fotoPerfil"
+                                            class="img-fluid rounded-circle flex-shrink-1 ">
+
+                                        <img th:unless="${comentario.perfil.foto != null}"
+                                            th:src="@{/foto/FotoPorDefecto.jpg}" width="40" id="fotoPerfil"
+                                            class="img-fluid rounded-circle flex-shrink-1 ">
+
+
+                                        <p th:utext="${#strings.replace(comentario.descripcion,'&#10;','&lt;br&gt;')}"  class="my-0 text-start fw-light lh-1 ms-2 pe-5 w-100 " >
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <!-- Publicar comentario -->
+                <div class="list-group-item d-flex align-items-center " th:if="${amistad}">
+
+                    <div class="flex-shrink-1 ">
+
+
+                        <img th:if="${perfil.foto != null}" th:src="@{|/obtener-foto/${perfil.foto}|}" width="40"
+                            id="fotoPerfil" class="img-fluid rounded-circle">
+
+                        <img th:unless="${perfil.foto != null}" th:src="@{/foto/FotoPorDefecto.jpg}" width="40"
+                            id="fotoPerfil" class="img-fluid rounded-circle">
+
+
+                    </div>
+                    <div class="w-100 ms-3 ">
+                        <form th:action="@{/comentario/crear-comentario}" th:object="${comentario}" method="post"
+                            enctype="multipart/form-data" class="bg-white d-flex " th:if="@{amistad}">
+                            <textarea th:field="*{descripcion}" name="descripcion" id="descripcion" rows="2"
+                                class="form-control form-control-sm border-0"
+                                placeholder="Agregar comentario"></textarea>
+
+                            <input type="hidden" name="idPerfil" id="id" th:value="${perfil.id}">
+                            <input type="hidden" name="idPublicacion" id="id" th:value="${publicacion.id}">
+
+                            <button type="submit" class="btn btn-sm btn-warning my-2 ms-1">Comentar</button>
+
+                        </form>
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Estas Seguro de Eliminar la Publicacion
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            si eliminas no hay vuelta atras :O ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancelar</button>
+
+
+                            <form class="px-3 rounded-bottom" method="post" id="formularioEliminar">
+
+                                <button type="submit" class="btn btn-danger">eliminar </button>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="modalComentario" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="modalComentarioLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalComentarioLabel">Estas Seguro de Eliminar comentario </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            si eliminas no hay vuelta atras :O ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancelar</button>
+
+
+                            <form class="px-3 rounded-bottom" method="post" id="formularioElimarComentario">
+
+                                <button type="submit" class="btn btn-danger">eliminar </button>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
+
+
+
+
+
+
 
         <script>
 
 
             function eliminarModales(id) {
                 var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), { keyboard: true });
-                console.log(id);
+
 
                 document.getElementById('formularioEliminar').setAttribute("action", "/publicaciones/eliminar/" + id);
 
-                console.log(document.getElementById('formularioEliminar'));
+
+
+            }
+
+            function eliminarModalesComentario(id) {
+                var myModal = new bootstrap.Modal(document.getElementById('modalComentario'), { keyboard: true });
+
+
+                document.getElementById('formularioElimarComentario').setAttribute("action", "/comentario/eliminar/" + id);
+
+
 
             }
 
@@ -422,6 +604,8 @@
 
 
     </div>
+
+
 
 
 

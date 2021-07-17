@@ -21,8 +21,13 @@
 
     main {
       margin-bottom: 100px;
+      
     }
 
+    header{
+      margin-bottom: 2rem;
+
+    }
     .huevo-gris {
       filter: grayscale(100%);
     }
@@ -39,7 +44,7 @@
   <!-- FIN NAVBAR -->
 
   <!-- INICIO MAIN -->
-  <main class="container my-4">
+  <main class="container ">
 
     <div class="row container-fluid" th:object="${usuario}">
 
@@ -114,7 +119,7 @@
   <!-- INICIO FOOTER -->
   <div th:replace="fragments :: footer"></div>
   <!-- FIN FOOTER -->
-  <script src="./js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 
 </html>

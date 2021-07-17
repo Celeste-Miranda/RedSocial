@@ -1,5 +1,6 @@
 package com.egg.social.controladores;
 
+import com.egg.social.entidades.Comentario;
 import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
@@ -26,7 +27,7 @@ public class PrincipalControlador {
 
     @Autowired
     private PublicacionServicio publicacionServicio;
-    
+
     @Autowired
     private InvitacionServicio invitacionServicio;
 
@@ -39,14 +40,16 @@ public class PrincipalControlador {
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
-        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
         mav.addObject("perfil", perfil);
+        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
+        mav.addObject("perfilFeed", perfil);
         mav.addObject("publicacion", new Publicacion());
         mav.addObject("publicaciones", publicacionServicio.buscarPublicaciones((Long) sesion.getAttribute("idUsuario")));
-        mav.addObject("perfilFeed", perfil);
         mav.addObject("usuario", perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario")).getUsuario());
-        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
+        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
+        mav.addObject("comentario", new Comentario());
+        mav.addObject("amistad", true);
 
         return mav;
     }

@@ -22,7 +22,7 @@ public class Comentario implements Serializable {
     private Perfil perfil;
     @ManyToOne
     private Publicacion publicacion;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDeComentario;
     @Temporal(TemporalType.DATE)
     private Date fechaDeBaja;
