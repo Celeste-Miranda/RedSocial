@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible"
+        content="ie=edge" />
+    <meta name="description"
+        content="Página de ejemplo de Spring Boot + Thymeleaf para el curso de Egg Educación" />
+    <meta name="author"
+        content="Rodrigo Olivera" />
+
+    <link rel="icon"
+        href="/iconos/iconoEgg.svg">
+
+
+    <title>Rol - Listado</title>
+
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .flotante {
+            position: fixed;
+            bottom: 70px;
+            right: 30px;
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+
+
+
+</head>
+
+<body>
+
+    <!-- INICIO NAVBAR -->
+    <div th:replace="fragments :: header"></div>
+    <!-- FIN NAVBAR -->
+    <main>
+
+
+
+
+        <div class="container mt-5 ">
+
+
+
+            <h1 style="color:rgb(0, 0, 0)">Listado de Perfiles</h1>
+            <hr class="mb-5" />
+
+            <div th:if="${mensaje != null}"
+                class="alert alert-success"
+                th:text="${mensaje}"></div>
+            <div th:if="${error != null}"
+                class="alert alert-danger"
+                th:text="${error}"></div>
+
+
+            <div class="table-responsive">
+                <table class="table table-hover table-sm table-bordered">
+                    <thead class="table-secondary text-center">
+                        <tr>
+
+                            <th class="col-md-1 ps-2"
+                                scope="col"></th>
+
+                            <th class="col-md-1 ps-2"
+                                scope="col">Nombre</th>
+
+                            <th class="col-md-1 ps-2"
+                                scope="col">Rol</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                            <td class="text-center"><img th:if="${perfil2.foto != null}"
+                                    th:src="@{|/obtener-foto/${perfil2.foto}|}"
+                                    alt="Perfil"
+                                    width="40"
+                                    height="40"
+                                    id="fotoPerfil"
+                                    class="rounded-circle me-2">
+
+                                <img th:unless="${perfil2.foto != null}"
+                                    th:src="@{/foto/FotoPorDefecto.jpg}"
+                                    alt="mdo"
+                                    width="40"
+                                    height="40"
+                                    id="fotoPerfil"
+                                    class="rounded-circle me-2">
+                            </td>
+
+                            <td class="col-md-3 px-md-2"
+                                style="color:rgb(0, 0, 0)"
+                                th:text="|${perfil2.nombre} ${perfil2.apellido}|"></td>
+                            <td class="col-md-3 px-md-2"
+                                style="color:rgb(0, 0, 0)">
+
+                                <form th:action="@{/perfil/editarRol}"
+                                    th:object="${perfil2}"
+                                    method="post">
+                                    <input type="hidden"
+                                        name="id"
+                                        th:value="${perfil2.id}">
+                                    <select class="form-select"
+                                        id="rol"
+                                        name="nombre"
+                                        th:value="*{usuario.rol.nombre}">
+                                        <option th:each="rol : ${roles}"
+                                            th:value="${rol.nombre}"
+                                            th:text="${rol.nombre}">
+
+                                        </option>
+                                    </select>
+                                    <button class="btn btn-yellow btn-lg"
+                                        type="submit">Guardar</button>
+
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
+    </main>
+
+    <!-- INICIO FOOTER -->
+    <div th:replace="fragments :: footer"></div>
+    <!-- FIN FOOTER -->
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>

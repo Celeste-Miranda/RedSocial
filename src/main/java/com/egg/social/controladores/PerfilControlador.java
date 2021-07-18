@@ -5,10 +5,11 @@ import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Publicacion;
 import com.egg.social.excepciones.ExcepcionSpring;
-import com.egg.social.repositorios.PerfilRepositorio;
+
 import com.egg.social.servicios.InvitacionServicio;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
+import com.egg.social.servicios.RolServicio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class PerfilControlador {
 
     @Autowired
     private InvitacionServicio invitacionServicio;
+    
+    @Autowired
+    private RolServicio rolServicio;
 
     @GetMapping
     public ModelAndView mostrarPerfil(HttpSession sesion) throws ExcepcionSpring {
@@ -68,28 +72,20 @@ public class PerfilControlador {
     }    
     
     
-    @GetMapping("/mostrarTodos")
+    @GetMapping("/todos")
     @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView mostrarPerfiles(HttpSession sesion) throws ExcepcionSpring {
 
         ModelAndView mav = new ModelAndView("lista-perfiles-admin");
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-        List<Perfil> perfiles = perfilServicio.mostrarTodos();
+        List<Perfil> perfiles = perfilServicio.mostrarTodosPerfiles();
 
-        List<Publicacion> publicaciones = publicacionServicio.buscarPublicacionesPorPerfil(perfil);
-
-        List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
-
+        
         mav.addObject("perfil", perfil);
-        mav.addObject("perfiles", perfilServicio.listaDeCuatro(perfiles, perfil.getId()));
         mav.addObject("perfilFeed", perfil);
-        mav.addObject("publicacion", new Publicacion());
-        mav.addObject("publicaciones", publicaciones);
-        mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
-        mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
-        mav.addObject("comentario", new Comentario());
-        mav.addObject("amistad", true);
-
+        mav.addObject("perfiles", perfiles);
+        
+       
 
         return mav;
 
@@ -188,6 +184,29 @@ public class PerfilControlador {
         return mav;
 
     }
+    
+      @GetMapping("/editarRolPerfil/{id}")
+    public ModelAndView modificarRolPerfil(@PathVariable Long id, HttpSession session) {
+        ModelAndView mav = new ModelAndView("editarRolPerfil");
+        try {
+            
+            Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuario"));
+
+            Perfil perfilEditado = perfilServicio.obtenerPerfil(id);
+
+            mav.addObject("perfil", perfil);
+            mav.addObject("perfilFeed", perfil);
+            mav.addObject("perfil2", perfilEditado);
+            
+            mav.addObject("roles",rolServicio.buscarRoles());
+            return mav;
+        } catch (Exception e) {
+            mav = new ModelAndView("/");
+            mav.addObject("error", "Error en buscar publicacion por id. --- Mensaje: " + e.getMessage());
+        }
+        return new ModelAndView("/perfil");
+
+    }
 
     @PostMapping("/modificar")
     public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) throws ExcepcionSpring {
@@ -203,4 +222,31 @@ public class PerfilControlador {
 
         return new RedirectView("/");
     }
+    
+     @PostMapping("/eliminar/{id}")
+    public RedirectView eliminarPerfil(@PathVariable Long id) throws ExcepcionSpring {
+
+        perfilServicio.eliminarPerfil(id);
+
+        return new RedirectView("/perfil/todos");
+    }
+    
+       @PostMapping("/activar")
+    public RedirectView activarPerfil(@RequestParam ("id") Long id) throws ExcepcionSpring {
+
+        perfilServicio.activarPerfil(id);
+
+        return new RedirectView("/perfil/todos");
+    }
+    
+        @PostMapping("/editarRol")
+    public RedirectView editarRolPerfil(@RequestParam ("id") Long id, @RequestParam("nombre") String nombre) throws ExcepcionSpring {
+
+        perfilServicio.editarRolDePerfil(id, nombre);
+
+        return new RedirectView("/perfil/todos");
+    }
+    
+    
 }
+

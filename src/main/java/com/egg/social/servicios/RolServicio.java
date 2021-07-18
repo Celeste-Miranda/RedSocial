@@ -50,4 +50,21 @@ public class RolServicio {
     public void eliminar(Long id) {
         rolRepositorio.deleteById(id);
     }
+    
+     @Transactional(readOnly = true)
+    public Rol buscarRol(String nombre) throws ExcepcionSpring {
+        try {
+            Rol rol = rolRepositorio.findByNombre(nombre);
+
+            if (rol!= null) {
+                return rol;
+            } else {
+                throw new ExcepcionSpring("No existe ese rol");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar roles");
+        }
+    }
 }

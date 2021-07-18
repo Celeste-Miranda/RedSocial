@@ -2,14 +2,17 @@ package com.egg.social.servicios;
 
 import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
+import com.egg.social.entidades.Rol;
 import com.egg.social.entidades.Usuario;
 import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.repositorios.InvitacionRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
+import com.egg.social.repositorios.UsuarioRepositorio;
 import com.egg.social.validaciones.Validacion;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,12 @@ public class PerfilServicio {
 
     @Autowired
     private InvitacionServicio invitacionServicio;
+    
+    @Autowired
+    private RolServicio rolServicio;
+    
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
     public Perfil crearPerfil(Usuario usuario) throws ExcepcionSpring {
@@ -87,6 +96,23 @@ public class PerfilServicio {
     public List<Perfil> mostrarTodos() throws ExcepcionSpring {
         try {
             List perfiles = perfilRepositorio.buscarPerfiles();
+
+            if (!perfiles.isEmpty()) {
+                return perfiles;
+            } else {
+                throw new ExcepcionSpring("No existen usuarios registrados en la plataforma");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al buscar usuarios");
+        }
+    }
+    
+        @Transactional(readOnly = true)
+    public List<Perfil> mostrarTodosPerfiles() throws ExcepcionSpring {
+        try {
+            List perfiles = perfilRepositorio.findAll();
 
             if (!perfiles.isEmpty()) {
                 return perfiles;
@@ -237,5 +263,72 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar amigos de usuario");
         }
+    }
+    @Transactional
+    public void eliminarPerfil(Long idPerfil) throws ExcepcionSpring{
+         try {
+            Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
+
+            if (perfil != null) {
+                perfil.setFechaDeBaja(new Date());
+
+                perfilRepositorio.save(perfil);
+            } else {
+                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al eliminar publicación");
+        }
+        
+        
+        
+    }
+    
+        @Transactional
+    public void activarPerfil(Long idPerfil) throws ExcepcionSpring{
+         try {
+            Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
+
+            if (perfil != null) {
+                perfil.setFechaDeBaja(null);
+
+                perfilRepositorio.save(perfil);
+            } else {
+                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al eliminar publicación");
+        }
+        
+        
+        
+    }
+    
+    public void editarRolDePerfil (Long idPerfil, String nombre) throws ExcepcionSpring{
+        
+         try {
+            Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
+            Rol rol = rolServicio.buscarRol(nombre);
+
+            if (perfil != null && rol!=null) {
+                perfil.getUsuario().setRol(rol);
+
+                usuarioRepositorio.save(perfil.getUsuario());
+                perfilRepositorio.save(perfil);
+            } else {
+                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+            }
+        } catch (ExcepcionSpring e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ExcepcionSpring("Error al eliminar publicación");
+        }
+        
+        
+        
     }
 }
