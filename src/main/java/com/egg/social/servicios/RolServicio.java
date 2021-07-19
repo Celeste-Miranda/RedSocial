@@ -14,17 +14,23 @@ public class RolServicio {
     @Autowired
     private RolRepositorio rolRepositorio;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Rol crearRol(String nombre) throws ExcepcionSpring {
 
         try {
+            if (rolRepositorio.findByNombre(nombre) != null) {
+                throw new ExcepcionSpring("Ya existe " + nombre + " en la lista de Roles no se puede guardar");
+            }
+
             Rol rol = new Rol();
-                       
+
             rol.setNombre(nombre);
 
             return rolRepositorio.save(rol);
+        } catch (ExcepcionSpring e) {
+            throw e;
         } catch (Exception e) {
-            throw new ExcepcionSpring("Ya existe " + nombre + " en la lista de Roles no se puede guardar");
+            throw new ExcepcionSpring("Error al crear rol");
         }
 
     }
@@ -50,13 +56,14 @@ public class RolServicio {
     public void eliminar(Long id) {
         rolRepositorio.deleteById(id);
     }
-    
-     @Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     public Rol buscarRol(String nombre) throws ExcepcionSpring {
         try {
+            /*Probar sentencia simplificada*/
             Rol rol = rolRepositorio.findByNombre(nombre);
 
-            if (rol!= null) {
+            if (rol != null) {
                 return rol;
             } else {
                 throw new ExcepcionSpring("No existe ese rol");

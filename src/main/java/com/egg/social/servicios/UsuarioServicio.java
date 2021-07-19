@@ -33,8 +33,8 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Autowired
     private BCryptPasswordEncoder encoder;
-    
-     @Autowired
+
+    @Autowired
     private RolServicio rolServicio;
 
     @Transactional
@@ -149,6 +149,9 @@ public class UsuarioServicio implements UserDetailsService {
             throw new UsernameNotFoundException("No existe un usuario registrado con el correo electrónico ingresado");
         }
 
+        if (usuario.getFechaDeBaja() != null) {
+            throw new UsernameNotFoundException("No existe un usuario dado de baja");
+        }
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 
         HttpSession sesion = attr.getRequest().getSession(true);

@@ -71,7 +71,7 @@
       <h1 style="color:rgb(0, 0, 0)">Listado de Perfiles</h1>
       <hr class="mb-5" />
       <div th:if="${perfiles.isEmpty()}">
-        <h5 style="color:rgb(0, 0, 0)">Todavía no hay ningun perfil cargado. </h5>
+        <h5 style="color:rgb(0, 0, 0)">No se encontro ningun Perfil con ese nombre y apellido :( </h5>
 
       </div>
 
@@ -155,7 +155,7 @@
                         d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                     </svg> </a>
 
-                  <button class="btn btn-sm text-danger "
+                  <button class="btn btn-sm text-danger " th:unless="${p.usuario.rol.nombre} == 'ADMIN'"
                     data-bs-toggle="modal"
                     data-bs-target="#modalPerfil"
                     type="button"
@@ -233,7 +233,7 @@
           <div class="modal-body">
             si eliminas no hay vuelta atras :O ...
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer" >
             <button type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal">cancelar</button>
@@ -241,10 +241,10 @@
 
             <form class="px-3 rounded-bottom"
               method="post"
-              id="formularioElimarPerfil">
+              id="formularioElimarPerfil"  >
 
               <button type="submit"
-                class="btn btn-danger">eliminar </button>
+                class="btn btn-danger" >eliminar </button>
 
             </form>
 

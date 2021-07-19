@@ -16,8 +16,7 @@ public class ErrorControlador implements ErrorController {
         ModelAndView mav = new ModelAndView("error");
         String mensajeDeError = "";
 
-        // int codigoDeError = (Integer) respuestaHTTP.getAttribute("javax.servlet.error.status_code");
-        int codigoDeError = response.getStatus(); // Probar
+        int codigoDeError = response.getStatus();
 
         switch (codigoDeError) {
             case 400: {

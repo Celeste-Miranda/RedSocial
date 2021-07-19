@@ -27,6 +27,9 @@ public interface PerfilRepositorio extends JpaRepository<Perfil, Long> {
 
     @Query("SELECT p FROM Perfil p WHERE p.usuario.fechaDeBaja IS NULL")
     List<Perfil> buscarPerfiles();
+    
+     @Query("SELECT p FROM Perfil p ORDER BY p.usuario.rol.nombre")
+     List<Perfil> buscarTodos();
 
     @Query("SELECT p FROM Perfil p WHERE (p.nombre LIKE CONCAT('%', :nombre, '%') AND p.apellido LIKE CONCAT('%', :apellido, '%')) AND p.fechaDeBaja IS NULL")
     List<Perfil> buscarPerfilesPorNombreYApellido(@Param("nombre") String nombre, @Param("apellido") String apellido);

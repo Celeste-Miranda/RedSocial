@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ComentarioControlador {
 
     @Autowired
-    ComentarioServicio comentarioServicio;
+    private ComentarioServicio comentarioServicio;
 
     @PostMapping("/crear-comentario")
     public RedirectView guardar(@RequestParam("idPerfil") Long idPerfil, @RequestParam("idPublicacion") Long idPublicacion, @RequestParam String descripcion) throws ExcepcionSpring {
@@ -24,9 +24,8 @@ public class ComentarioControlador {
 
         return new RedirectView("/");
     }
-    
-    
-     @PostMapping("/eliminar/{id}")
+
+    @PostMapping("/eliminar/{id}")
     public RedirectView eliminarComentario(@PathVariable Long id) throws ExcepcionSpring {
 
         comentarioServicio.eliminarComentario(id);

@@ -37,10 +37,11 @@ public class PublicacionServicio {
             // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
             Perfil perfil = perfilRepositorio.getById(idPerfil);
 
-            if (perfil != null && !descripcion.equals("") || !foto.isEmpty()) {
+            if (perfil != null ) {
 
-                if (descripcion.trim().equals("")) {
-                    throw new ExcepcionSpring("No pongas espacio Astor");
+                if (descripcion.trim().equals("")&& foto.isEmpty()) {
+                    
+                    throw new ExcepcionSpring("No se puede crear una Publicación sin contenido");
 
                 }
 
@@ -58,7 +59,9 @@ public class PublicacionServicio {
             } else {
                 throw new ExcepcionSpring("No existe un usuario con el ID indicado");
             }
+            
         } catch (ExcepcionSpring e) {
+            System.out.println(e.getMessage());
             throw e;
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al crear publicación");

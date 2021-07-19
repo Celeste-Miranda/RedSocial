@@ -33,10 +33,10 @@ public class PerfilServicio {
 
     @Autowired
     private InvitacionServicio invitacionServicio;
-    
+
     @Autowired
     private RolServicio rolServicio;
-    
+
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
@@ -108,11 +108,11 @@ public class PerfilServicio {
             throw new ExcepcionSpring("Error al buscar usuarios");
         }
     }
-    
-        @Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     public List<Perfil> mostrarTodosPerfiles() throws ExcepcionSpring {
         try {
-            List perfiles = perfilRepositorio.findAll();
+            List perfiles = perfilRepositorio.buscarTodos();
 
             if (!perfiles.isEmpty()) {
                 return perfiles;
@@ -129,12 +129,11 @@ public class PerfilServicio {
     /* Método de Celeste */
     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
-        
-        
+
         try {
-            
+
             nombreYApellido = nombreYApellido.trim();
-            
+
             String nombre = "";
             String apellido = "";
 
@@ -150,7 +149,7 @@ public class PerfilServicio {
             }
 
             nombre = nombre.trim();
-            
+
             apellido = apellido.trim();
             if (nombre.equals("")) {
                 throw new ExcepcionSpring("No ingreso ningun dato en la búsqueda");
@@ -163,14 +162,12 @@ public class PerfilServicio {
             } else {
 
 //                perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
-
-
                 for (Perfil perfil : perfilRepositorio.buscarPerfiles()) {
-                    if ((nombre.equalsIgnoreCase(perfil.getNombre())&& apellido.equalsIgnoreCase(perfil.getApellido())) || nombre.equalsIgnoreCase(perfil.getApellido()) && apellido.equalsIgnoreCase(perfil.getNombre())) {
-                         
+                    if ((nombre.equalsIgnoreCase(perfil.getNombre()) && apellido.equalsIgnoreCase(perfil.getApellido())) || nombre.equalsIgnoreCase(perfil.getApellido()) && apellido.equalsIgnoreCase(perfil.getNombre())) {
+
                         perfiles.add(perfil);
                     }
-                            
+
                 }
 
             }
@@ -264,13 +261,15 @@ public class PerfilServicio {
             throw new ExcepcionSpring("Error al buscar amigos de usuario");
         }
     }
+
     @Transactional
-    public void eliminarPerfil(Long idPerfil) throws ExcepcionSpring{
-         try {
+    public void eliminarPerfil(Long idPerfil) throws ExcepcionSpring {
+        try {
             Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
 
             if (perfil != null) {
                 perfil.setFechaDeBaja(new Date());
+                perfil.getUsuario().setFechaDeBaja(new Date());
 
                 perfilRepositorio.save(perfil);
             } else {
@@ -281,18 +280,17 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al eliminar publicación");
         }
-        
-        
-        
+
     }
-    
-        @Transactional
-    public void activarPerfil(Long idPerfil) throws ExcepcionSpring{
-         try {
+
+    @Transactional
+    public void activarPerfil(Long idPerfil) throws ExcepcionSpring {
+        try {
             Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
 
             if (perfil != null) {
                 perfil.setFechaDeBaja(null);
+                perfil.getUsuario().setFechaDeBaja(null);
 
                 perfilRepositorio.save(perfil);
             } else {
@@ -303,18 +301,16 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al eliminar publicación");
         }
-        
-        
-        
+
     }
-    
-    public void editarRolDePerfil (Long idPerfil, String nombre) throws ExcepcionSpring{
-        
-         try {
+
+    public void editarRolDePerfil(Long idPerfil, String nombre) throws ExcepcionSpring {
+
+        try {
             Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
             Rol rol = rolServicio.buscarRol(nombre);
 
-            if (perfil != null && rol!=null) {
+            if (perfil != null && rol != null) {
                 perfil.getUsuario().setRol(rol);
 
                 usuarioRepositorio.save(perfil.getUsuario());
@@ -327,8 +323,6 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al eliminar publicación");
         }
-        
-        
-        
+
     }
 }

@@ -72,7 +72,6 @@ public class UsuarioControlador {
 
     @PostMapping("/signup-post")
     public RedirectView registro(@RequestParam String correo, @RequestParam String clave, @RequestParam String clave2, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-
         try {
             Usuario usuario = usuarioServicio.crearUsuario(correo, clave, clave2);
             Perfil perfil = perfilServicio.crearPerfil(usuario);
@@ -90,9 +89,7 @@ public class UsuarioControlador {
 
             return new RedirectView("/signup-get");
         } catch (ServletException e) {
-            e.printStackTrace();
             return new RedirectView("/signin");
         }
-
     }
 }

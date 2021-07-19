@@ -62,30 +62,26 @@
       <div class="form-floating mb-3">
         
         <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="name@example.com"
-          required>
+          required autocomplete="off">
                
 
 
         <label for="floatingInput">Correo</label>
       </div>
-      <div class="form-floating">
+      <div class="form-floating" >
         <input type="password" name="password" class="form-control " id="floatingPassword" placeholder="Password1"
-          required>
+          required autocomplete="off">
         <label for="floatingPassword">Ingrese Contraseña</label>
       </div>
 
 
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Recordarme
-        </label>
-      </div>
+      
       <button class="btn-yellow" type="submit" style="margin-bottom: 10px;">Iniciar Sesión</button>
 
       <br><br>
 
       <a th:href="@{/signup-get}" class="btn btn-gray" style="margin-bottom: 10px;">Registrarte</a>
-      <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+      <p class="mt-5 mb-3 text-muted">&copy; 2021</p>
     </form>
   </main>
 

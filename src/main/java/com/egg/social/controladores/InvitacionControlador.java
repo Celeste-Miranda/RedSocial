@@ -21,9 +21,9 @@ import org.springframework.web.servlet.view.RedirectView;
 public class InvitacionControlador {
 
     @Autowired
-    PerfilServicio perfilServicio;
+    private PerfilServicio perfilServicio;
     @Autowired
-    InvitacionServicio invitacionServicio;
+    private InvitacionServicio invitacionServicio;
 
     @GetMapping("/lista")
     public ModelAndView mostrarInvitacionPendiente(HttpSession session) throws ExcepcionSpring {
@@ -64,6 +64,7 @@ public class InvitacionControlador {
     
    @PostMapping("/invitar")
    public RedirectView invitarAmigo (@RequestParam ("idRemitente") Long idPerfil, @RequestParam ("idDestinatario") Long idPerfil2) throws ExcepcionSpring{
+       
        Perfil perfil = perfilServicio.obtenerPerfil(idPerfil);
        Perfil perfil2 = perfilServicio.obtenerPerfil(idPerfil2);
        invitacionServicio.crearInvitacion(perfil, perfil2);
