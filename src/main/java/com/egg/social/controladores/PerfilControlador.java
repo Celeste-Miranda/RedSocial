@@ -47,13 +47,11 @@ public class PerfilControlador {
 
     @GetMapping
     public ModelAndView mostrarPerfil(HttpSession sesion) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("perfil");
+
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
-
         List<Publicacion> publicaciones = publicacionServicio.buscarPublicacionesPorPerfil(perfil);
-
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("perfil", perfil);
@@ -67,14 +65,13 @@ public class PerfilControlador {
         mav.addObject("amistad", true);
 
         return mav;
-
     }
 
     @GetMapping("/todos")
     @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView mostrarPerfiles(HttpSession sesion) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("lista-perfiles-admin");
+
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Perfil> perfiles = perfilServicio.mostrarTodosPerfiles();
 
@@ -83,19 +80,16 @@ public class PerfilControlador {
         mav.addObject("perfiles", perfiles);
 
         return mav;
-
     }
 
     @GetMapping("/buscadosAdmin")
     @PreAuthorize("hasRole('ADMIN')")
     public ModelAndView listaBuscadosAdmin(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("lista-perfiles-admin");
 
         try {
             Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
             List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
-
             List<Perfil> perfilesBuscados = perfilServicio.buscarPorNombreYApellido(nombreYApellido);
 
             mav.addObject("perfil", perfil);
@@ -111,17 +105,15 @@ public class PerfilControlador {
             mav.addObject("perfilFeed", perfil);
             mav.addObject("perfiles", new ArrayList<>());
             mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
-
         }
         return mav;
     }
 
     @GetMapping("/amigos")
     public ModelAndView listaAmigos(HttpSession sesion) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("lista-amigos");
-        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
 
+        Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("perfil", perfil);
@@ -134,13 +126,11 @@ public class PerfilControlador {
 
     @GetMapping("/buscados")
     public ModelAndView listaBuscados(HttpSession sesion, @RequestParam(required = false) String nombreYApellido) throws ExcepcionSpring {
-        /*Corregir excepciones*/
         ModelAndView mav = new ModelAndView("lista-buscados");
 
         try {
             Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
             List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
-
             List<Perfil> perfilesBuscados = perfilServicio.buscarPorNombreYApellido(nombreYApellido);
 
             mav.addObject("perfil", perfil);
@@ -156,7 +146,6 @@ public class PerfilControlador {
             mav.addObject("perfilFeed", perfil);
             mav.addObject("perfiles", new ArrayList<>());
             mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
-
         }
         return mav;
     }
@@ -176,7 +165,6 @@ public class PerfilControlador {
 
         if (!(session.getAttribute("idUsuario").equals(idUsuario))) {
             return new ModelAndView(new RedirectView("/"));
-            /*Redirigir a una vista que detalle el error 403*/
         }
 
         mav.addObject("title", "Cargando Perfil");
@@ -190,8 +178,8 @@ public class PerfilControlador {
     @GetMapping("/mostrar/{id}")
 
     public ModelAndView mostrarPerfil(@PathVariable Long id, HttpSession sesion) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("perfil");
+
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
         Perfil perfil2 = perfilServicio.obtenerPerfil(id);
         List<Perfil> perfiles = perfilServicio.mostrarTodos();
@@ -206,43 +194,39 @@ public class PerfilControlador {
         mav.addObject("amistad", invitacionServicio.sonAmigos(perfil, perfil2));
         mav.addObject("amigos", perfilServicio.obtenerAmigos((Long) sesion.getAttribute("idUsuario")));
         mav.addObject("comentario", new Comentario());
-        return mav;
 
+        return mav;
     }
 
     @GetMapping("/editarRolPerfil/{id}")
     public ModelAndView modificarRolPerfil(@PathVariable Long id, HttpSession session) {
         ModelAndView mav = new ModelAndView("editarRolPerfil");
+
         try {
-
             Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) session.getAttribute("idUsuario"));
-
             Perfil perfilEditado = perfilServicio.obtenerPerfil(id);
 
             mav.addObject("perfil", perfil);
             mav.addObject("perfilFeed", perfil);
             mav.addObject("perfil2", perfilEditado);
-
             mav.addObject("roles", rolServicio.buscarRoles());
+
             return mav;
         } catch (ExcepcionSpring e) {
             mav = new ModelAndView("/");
             mav.addObject("error", "Error en buscar publicacion por id. --- Mensaje: " + e.getMessage());
         }
-        return new ModelAndView("/perfil");
 
+        return new ModelAndView("/perfil");
     }
 
     @PostMapping("/modificar")
     public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) {
-
         try {
             perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
         } catch (ExcepcionSpring e) {
-
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return new RedirectView("/perfil/editar/" + id);
-
         }
 
         return new RedirectView("/");
@@ -250,7 +234,6 @@ public class PerfilControlador {
 
     @PostMapping("/eliminar/{id}")
     public RedirectView eliminarPerfil(@PathVariable Long id) throws ExcepcionSpring {
-
         perfilServicio.eliminarPerfil(id);
 
         return new RedirectView("/perfil/todos");
@@ -258,7 +241,6 @@ public class PerfilControlador {
 
     @PostMapping("/activar")
     public RedirectView activarPerfil(@RequestParam("id") Long id) throws ExcepcionSpring {
-
         perfilServicio.activarPerfil(id);
 
         return new RedirectView("/perfil/todos");
@@ -266,10 +248,8 @@ public class PerfilControlador {
 
     @PostMapping("/editarRol")
     public RedirectView editarRolPerfil(@RequestParam("id") Long id, @RequestParam("nombre") String nombre) throws ExcepcionSpring {
-
         perfilServicio.editarRolDePerfil(id, nombre);
 
         return new RedirectView("/perfil/todos");
     }
-
 }

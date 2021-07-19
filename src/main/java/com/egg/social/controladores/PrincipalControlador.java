@@ -8,7 +8,6 @@ import com.egg.social.excepciones.ExcepcionSpring;
 import com.egg.social.servicios.InvitacionServicio;
 import com.egg.social.servicios.PerfilServicio;
 import com.egg.social.servicios.PublicacionServicio;
-import com.egg.social.servicios.UsuarioServicio;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +22,13 @@ public class PrincipalControlador {
     private PerfilServicio perfilServicio;
 
     @Autowired
-    private UsuarioServicio usuarioServicio;
-
-    @Autowired
     private PublicacionServicio publicacionServicio;
 
     @Autowired
     private InvitacionServicio invitacionServicio;
 
-    @GetMapping("/") //Editar bien el metodo de pasar Usuario y try
+    @GetMapping("/")
     public ModelAndView principal(HttpSession sesion) throws ExcepcionSpring {
-
         ModelAndView mav = new ModelAndView("inicio");
 
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
@@ -53,5 +48,4 @@ public class PrincipalControlador {
 
         return mav;
     }
-
 }

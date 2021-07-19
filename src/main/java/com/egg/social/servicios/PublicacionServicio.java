@@ -1,6 +1,5 @@
 package com.egg.social.servicios;
 
-import com.egg.social.entidades.Comentario;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import com.egg.social.entidades.Publicacion;
@@ -34,15 +33,11 @@ public class PublicacionServicio {
     @Transactional
     public void crearPublicacion(Long idPerfil, String descripcion, MultipartFile foto) throws ExcepcionSpring {
         try {
-            // Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
-            Perfil perfil = perfilRepositorio.getById(idPerfil);
+            Perfil perfil = perfilRepositorio.buscarPerfilPorId(idPerfil);
 
-            if (perfil != null ) {
-
-                if (descripcion.trim().equals("")&& foto.isEmpty()) {
-                    
+            if (perfil != null) {
+                if (descripcion.trim().equals("") && foto.isEmpty()) {
                     throw new ExcepcionSpring("No se puede crear una Publicación sin contenido");
-
                 }
 
                 Publicacion publicacion = new Publicacion();
@@ -59,7 +54,6 @@ public class PublicacionServicio {
             } else {
                 throw new ExcepcionSpring("No existe un usuario con el ID indicado");
             }
-            
         } catch (ExcepcionSpring e) {
             System.out.println(e.getMessage());
             throw e;
@@ -122,9 +116,8 @@ public class PublicacionServicio {
         }
     }
 
-    @Transactional(readOnly = true) // Poner TRY - CATCH
+    @Transactional(readOnly = true)
     public List<Publicacion> buscarPublicacionesPorPerfil(Perfil perfil) {
-
         List<Publicacion> publicaciones = publicacionRepositorio.publicacionesPorPerfil(perfil.getId());
 
         return publicaciones;
@@ -132,16 +125,12 @@ public class PublicacionServicio {
 
     @Transactional(readOnly = true)
     public Publicacion buscarPublicacionPorId(Long idPublicacion) {
-
         return publicacionRepositorio.findById(idPublicacion).orElse(null);
-
     }
 
     @Transactional(readOnly = true)
     public List<Publicacion> buscarTodas() {
-
         return publicacionRepositorio.findAll();
-
     }
 
     @Transactional

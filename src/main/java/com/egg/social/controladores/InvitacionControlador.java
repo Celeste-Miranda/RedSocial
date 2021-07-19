@@ -54,23 +54,20 @@ public class InvitacionControlador {
 
         return new RedirectView("/invitaciones/lista");
     }
-    
+
     @PostMapping("/eliminar")
     public RedirectView eliminarAmistad(@RequestParam("id") Long id) throws ExcepcionSpring {
         invitacionServicio.rechazarInvitacion(id);
 
         return new RedirectView("/invitaciones/lista");
     }
-    
-   @PostMapping("/invitar")
-   public RedirectView invitarAmigo (@RequestParam ("idRemitente") Long idPerfil, @RequestParam ("idDestinatario") Long idPerfil2) throws ExcepcionSpring{
-       
-       Perfil perfil = perfilServicio.obtenerPerfil(idPerfil);
-       Perfil perfil2 = perfilServicio.obtenerPerfil(idPerfil2);
-       invitacionServicio.crearInvitacion(perfil, perfil2);
-       
-       return new RedirectView("/perfil");
-       
-   }
-   
+
+    @PostMapping("/invitar")
+    public RedirectView invitarAmigo(@RequestParam("idRemitente") Long idPerfil, @RequestParam("idDestinatario") Long idPerfil2) throws ExcepcionSpring {
+        Perfil perfil = perfilServicio.obtenerPerfil(idPerfil);
+        Perfil perfil2 = perfilServicio.obtenerPerfil(idPerfil2);
+        invitacionServicio.crearInvitacion(perfil, perfil2);
+
+        return new RedirectView("/perfil");
+    }
 }

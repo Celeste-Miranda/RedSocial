@@ -6,7 +6,6 @@ import com.egg.social.repositorios.RolRepositorio;
 import com.egg.social.repositorios.UsuarioRepositorio;
 import com.egg.social.validaciones.Validacion;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,44 +99,6 @@ public class UsuarioServicio implements UserDetailsService {
             throw e;
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar usuarios");
-        }
-    }
-
-    @Transactional
-    public void deshabilitar(Long idUsuario) throws ExcepcionSpring {
-        try {
-            Usuario usuario = usuarioRepositorio.buscarUsuarioPorId(idUsuario);
-
-            if (usuario != null) {
-                usuario.setFechaDeBaja(new Date());
-
-                usuarioRepositorio.save(usuario);
-            } else {
-                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
-            }
-        } catch (ExcepcionSpring e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ExcepcionSpring("Error al deshabilitar usuario");
-        }
-    }
-
-    @Transactional
-    public void habilitar(Long idUsuario) throws ExcepcionSpring {
-        try {
-            Usuario usuario = usuarioRepositorio.buscarUsuarioPorId(idUsuario);
-
-            if (usuario != null) {
-                usuario.setFechaDeBaja(null);
-
-                usuarioRepositorio.save(usuario);
-            } else {
-                throw new ExcepcionSpring("No existe un usuario con el ID indicado");
-            }
-        } catch (ExcepcionSpring e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ExcepcionSpring("Error al habilitar usuario");
         }
     }
 

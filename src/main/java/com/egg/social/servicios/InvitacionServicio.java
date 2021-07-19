@@ -21,15 +21,11 @@ public class InvitacionServicio {
     @Autowired
     private PerfilRepositorio perfilRepositorio;
 
-    // crear metodo boolean para comporobar si dos perfiles son amigos
     @Transactional
     public Invitacion crearInvitacion(Perfil remitente, Perfil destinatario) throws ExcepcionSpring {
         try {
-
             if (remitente != null && destinatario != null) {
-
                 if (comprobarInvitacion(remitente, destinatario)) {
-
                     Invitacion invitacion = new Invitacion();
                     invitacion.setRemitente(remitente);
                     invitacion.setDestinatario(destinatario);
@@ -45,11 +41,8 @@ public class InvitacionServicio {
 
                     return invitacion;
                 } else {
-
                     throw new ExcepcionSpring("La invitacion Ya Existe");
-
                 }
-
             } else {
                 throw new ExcepcionSpring("Es necesario que exista tanto un remitente como un destinatario");
             }
@@ -62,26 +55,25 @@ public class InvitacionServicio {
 
     @Transactional(readOnly = true)
     public boolean comprobarInvitacion(Perfil remitente, Perfil destinatario) {
-
         Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
 
         if (invitacion != null) {
             return false;
         }
+
         return true;
     }
 
     @Transactional(readOnly = true)
     public boolean sonAmigos(Perfil remitente, Perfil destinatario) {
-
         if (!comprobarInvitacion(remitente, destinatario)) {
             Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
             if (invitacion.getAceptada() == true) {
                 return true;
             }
         }
-        return false;
 
+        return false;
     }
 
     @Transactional
@@ -125,13 +117,11 @@ public class InvitacionServicio {
     @Transactional(readOnly = true)
     public List<Invitacion> invitacionesRecibidasPendientes(Perfil perfil) throws ExcepcionSpring {
         try {
-//            Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
-
             if (perfil != null) {
 
                 return invitacionRepositorio.invitacionesPendiente(perfil.getId());
             } else {
-                throw new ExcepcionSpring("No existe un usuario con el ID indicado en Invitaciones");
+                throw new ExcepcionSpring("No existe un usuario con el ID indicado en invitaciones");
             }
         } catch (ExcepcionSpring e) {
             throw e;
@@ -164,15 +154,11 @@ public class InvitacionServicio {
             throw new ExcepcionSpring("Error al buscar invitaciones enviadas");
         }
     }
-    
-     @Transactional(readOnly = true)
-    public Invitacion invitacionesEntreDosPerfiles(Perfil remitente,Perfil destinatario) throws ExcepcionSpring {
-        
+
+    @Transactional(readOnly = true)
+    public Invitacion invitacionesEntreDosPerfiles(Perfil remitente, Perfil destinatario) throws ExcepcionSpring {
         Invitacion invitacion = invitacionRepositorio.buscarInvitacionEntreDosPerfiles(remitente.getId(), destinatario.getId());
-        
+
         return invitacion;
-        
     }
-    
-   
 }

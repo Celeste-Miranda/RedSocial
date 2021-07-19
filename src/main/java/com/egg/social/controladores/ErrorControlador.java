@@ -39,9 +39,9 @@ public class ErrorControlador implements ErrorController {
                 mensajeDeError = "Ocurrió un error interno.";
                 break;
             }
-            
+
             default: {
-                
+
                 mensajeDeError = "Se produjo un Error Inesperado.";
                 break;
             }

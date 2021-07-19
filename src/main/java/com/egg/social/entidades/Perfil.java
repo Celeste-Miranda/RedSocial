@@ -24,13 +24,11 @@ public class Perfil implements Serializable {
     private String nombre;
     private String apellido;
     private String residencia;
-    
     @Temporal(TemporalType.DATE)
     private Date fechaDeBaja;
-    
     @Column
     @ElementCollection(targetClass = String.class)
-    private List<String> tecnologias ;
+    private List<String> tecnologias;
     @OneToOne
     private Usuario usuario;
     @OneToMany(mappedBy = "perfil")
@@ -63,8 +61,7 @@ public class Perfil implements Serializable {
     public void setFechaDeBaja(Date fechaDeBaja) {
         this.fechaDeBaja = fechaDeBaja;
     }
-    
-    
+
     public String getNombre() {
         return nombre;
     }

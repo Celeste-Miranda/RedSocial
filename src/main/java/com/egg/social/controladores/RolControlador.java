@@ -79,7 +79,6 @@ public class RolControlador {
         ModelAndView mav = new ModelAndView("rol-formulario");
 
         Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
-        List<Perfil> perfiles = perfilServicio.mostrarTodos();
         List<Invitacion> invitacionesPendientes = invitacionServicio.invitacionesRecibidasPendientes(perfil);
 
         mav.addObject("rol", new Rol());
@@ -94,19 +93,13 @@ public class RolControlador {
 
     @PostMapping("/guardar-rol")
     public RedirectView guardarRol(@RequestParam String nombre, RedirectAttributes redirectAttributes) {
-
         try {
-
             rolServicio.crearRol(nombre);
             redirectAttributes.addFlashAttribute("creado", "Rol creado correctamente");
-
         } catch (Exception e) {
-
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-
         }
 
         return new RedirectView("/roles");
     }
-
 }

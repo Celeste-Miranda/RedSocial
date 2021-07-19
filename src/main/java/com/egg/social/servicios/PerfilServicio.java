@@ -1,6 +1,5 @@
 package com.egg.social.servicios;
 
-import com.egg.social.entidades.Invitacion;
 import com.egg.social.entidades.Perfil;
 import com.egg.social.entidades.Rol;
 import com.egg.social.entidades.Usuario;
@@ -126,12 +125,9 @@ public class PerfilServicio {
         }
     }
 
-    /* Método de Celeste */
     @Transactional(readOnly = true)
     public List<Perfil> buscarPorNombreYApellido(String nombreYApellido) throws ExcepcionSpring {
-
         try {
-
             nombreYApellido = nombreYApellido.trim();
 
             String nombre = "";
@@ -160,16 +156,12 @@ public class PerfilServicio {
             if (apellido.equals("")) {
                 perfiles = perfilRepositorio.buscarPerfilesPorNombreOApellido(nombre);
             } else {
-
-//                perfiles = perfilRepositorio.buscarPerfilesPorNombreYApellido(nombre, apellido);
                 for (Perfil perfil : perfilRepositorio.buscarPerfiles()) {
                     if ((nombre.equalsIgnoreCase(perfil.getNombre()) && apellido.equalsIgnoreCase(perfil.getApellido())) || nombre.equalsIgnoreCase(perfil.getApellido()) && apellido.equalsIgnoreCase(perfil.getNombre())) {
 
                         perfiles.add(perfil);
                     }
-
                 }
-
             }
 
             if (!perfiles.isEmpty()) {
@@ -249,14 +241,12 @@ public class PerfilServicio {
     @Transactional(readOnly = true)
     public List<Perfil> obtenerAmigos(Long idUsuario) throws ExcepcionSpring {
         try {
-
             Perfil perfil = perfilRepositorio.buscarPerfilPorIdDeUsuario(idUsuario);
 
             List<Perfil> listaDeAmigos = invitacionRepositorio.listaDestinatarioPerfil(perfil.getId());
             listaDeAmigos.addAll(invitacionRepositorio.listaRemitentePerfil(perfil.getId()));
 
             return listaDeAmigos;
-
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al buscar amigos de usuario");
         }
@@ -280,7 +270,6 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al eliminar publicación");
         }
-
     }
 
     @Transactional
@@ -305,7 +294,6 @@ public class PerfilServicio {
     }
 
     public void editarRolDePerfil(Long idPerfil, String nombre) throws ExcepcionSpring {
-
         try {
             Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
             Rol rol = rolServicio.buscarRol(nombre);
@@ -323,6 +311,5 @@ public class PerfilServicio {
         } catch (Exception e) {
             throw new ExcepcionSpring("Error al eliminar publicación");
         }
-
     }
 }

@@ -8,7 +8,6 @@ import com.egg.social.repositorios.ComentarioRepositorio;
 import com.egg.social.repositorios.PerfilRepositorio;
 import com.egg.social.repositorios.PublicacionRepositorio;
 import java.util.Date;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +25,13 @@ public class ComentarioServicio {
     private PerfilRepositorio perfilRepositorio;
 
     @Transactional
-    public void crearComentario(Long idPerfil, Long idPublicacion, String descripcion) throws ExcepcionSpring  {
+    public void crearComentario(Long idPerfil, Long idPublicacion, String descripcion) throws ExcepcionSpring {
         try {
-            
-            Perfil perfil = perfilRepositorio.findById(idPerfil).orElse(null);
-            
+            Perfil perfil = perfilRepositorio.buscarPerfilPorId(idPerfil);
             Publicacion publicacion = publicacionRepositorio.buscarPublicacionPorId(idPublicacion);
 
             if (perfil != null && publicacion != null) {
-                if (descripcion == null && descripcion.isEmpty()) {
+                if (descripcion == null || descripcion.isEmpty()) {
                     throw new ExcepcionSpring("La descripción no puede ser nula");
                 }
 
@@ -62,9 +59,8 @@ public class ComentarioServicio {
     @Transactional
     public void eliminarComentario(Long idComentario) throws ExcepcionSpring {
         try {
-            
             Comentario comentario = comentarioRepositorio.buscarComentarioPorId(idComentario);
-            
+
             if (comentario != null) {
                 comentario.setFechaDeBaja(new Date());
 
