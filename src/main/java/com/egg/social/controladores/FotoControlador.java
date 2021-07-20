@@ -26,7 +26,7 @@ public class FotoControlador {
         }
 
         if (!recurso.exists() || !recurso.isReadable()) {
-            throw new RuntimeException("Error al cargar la imagen");
+            throw new RuntimeException("Error al cargar la imágen");
         }
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"").body(recurso);

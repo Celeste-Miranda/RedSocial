@@ -33,23 +33,6 @@ public class PublicacionControlador {
     @Autowired
     private InvitacionServicio invitacionServicio;
 
-    /*
-    @GetMapping("/mostrar-publicaciones")
-    public ModelAndView buscarTodos(HttpServletRequest request, HttpSession session) throws ExcepcionSpring {
-        ModelAndView mav = new ModelAndView("publicaciones");
-
-        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
-
-        if (flashMap != null) {
-            mav.addObject("error", flashMap.get("error"));
-        }
-
-        List<Publicacion> publicaciones = publicacionServicio.buscarPublicaciones((Long) session.getAttribute("idUsuario"));
-        mav.addObject("publicaciones", publicaciones);
-        return mav;
-    }
-    */
-    
     @GetMapping("/nueva")
     public ModelAndView mostrarFormulario() {
         return new ModelAndView("formulario-publicacion");

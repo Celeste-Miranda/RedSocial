@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Hugo 0.83.1">
-
-  <link rel="icon" href="./iconos/iconoEgg.svg">
+  <meta name="author" content="Rodrigo Olivera, Cristian Solis, Celeste Miranda y Astor Vargas">
+  <meta name="description" content="">
+  <link rel="shortcut icon" th:href="@{/iconos/iconoEgg.svg}" type="image/x-icon">
   <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/croppr.min.css}">
   <title>Inicio</title>
   <style>
     /* Boton flotante TOP */
@@ -18,20 +18,15 @@
       bottom: 70px;
       right: 30px;
     }
-
     main {
       margin-bottom: 100px;
-      
     }
-
-    header{
+    header {
       margin-bottom: 2rem;
-
     }
     .huevo-gris {
       filter: grayscale(100%);
     }
-
     .huevo-gris:hover {
       filter: grayscale(0);
     }
@@ -39,34 +34,22 @@
 </head>
 
 <body style="background-color: #F2F4F4;">
-  <!-- INICIO NAVBAR -->
   <div th:replace="fragments :: header"></div>
-  <!-- FIN NAVBAR -->
-
-  <!-- INICIO MAIN -->
   <main class="container ">
-
     <div class="row container-fluid" th:object="${usuario}">
-
       <!-- INICIO COLUMNA PERFIL -->
       <div class="d-none d-md-block col-md-4 col-lg-3 me-auto rounded-start">
-
         <div class="d-flex flex-column bg-white p-3">
           <div class="bg-warning mx-0 rounded-3">
             <div class="text-center">
               <div th:if="${perfil.foto != null}">
-
-                <img th:src="@{|/obtener-foto/${perfil.foto}|}" alt="Perfil" id="fotoPerfil"
-                  class="img-fluid rounded-circle w-50 mt-3">
-
-
+                <img th:src="${perfil.foto}" alt="Perfil" id="fotoPerfil" class="img-fluid rounded-circle w-50 mt-3">
               </div>
               <div th:unless="${perfil.foto != null}">
                 <img th:src="@{/foto/FotoPorDefecto.jpg}" class="img-fluid rounded-circle w-50 mt-3">
-
               </div>
-
-              <p class="text-capitalize mt-3"> <span th:text="|${perfil.nombre} ${perfil.apellido}|"> </span> <br>
+              <p class="text-capitalize mt-3">
+                <span th:text="|${perfil.nombre} ${perfil.apellido}|"> </span> <br>
                 <small th:text="${usuario.correo}"></small>
               </p>
             </div>
@@ -74,52 +57,42 @@
           <div class="list-group mt-3">
             <a type="button" th:href="@{/perfil}" class="list-group-item list-group-item-action">Ver Perfil</a>
             <a type="button" th:href="@{/perfil/amigos}" class="list-group-item list-group-item-action">Mis Amigos</a>
-
-            <a th:href="@{/invitaciones/lista}" type="button" class="boton btn list-group-item list-group-item-action ">Invitaciones
-           
-                  <span class ="badge bg-danger" th:text="${cantidadInvitaciones}" th:if="${cantidadInvitaciones} > 0"> </span>
-
-                  <!-- <span class="visually-hidden">unread messages</span> -->
-            
-          </a>
-
+            <a th:href="@{/invitaciones/lista}" type="button" class="boton btn list-group-item list-group-item-action ">
+              Invitaciones
+              <span class="badge bg-danger" th:text="${cantidadInvitaciones}" th:if="${cantidadInvitaciones} > 0"></span>
+            </a>
           </div>
-
-
         </div>
-
-
       </div>
-
       <!-- INICIO COLUMNA PRINCIPAL -->
       <div class="col-md-5 col-lg-6 mx-auto rounded-top rounded-bottom">
         <!-- INICIO FORMULARIO DE NUEVA PUBLICACION -->
-
-        <div th:replace="fragments :: crearPublicacion">
-
-        </div>
-
+        <div th:replace="fragments :: crearPublicacion"></div>
         <!-- FIN FORMULARIO DE NUEVA PUBLICACION -->
-
         <!-- INICIO PUBLICACIONES -->
         <div th:replace="fragments ::publicaciones"> </div>
       </div>
       <!-- AMIGOS -->
-
       <div class="d-none d-lg-block col-lg-3 ms-auto rounded-end ">
         <div th:replace="fragments::listaAmigos"></div>
       </div>
     </div>
-    <!-- RAMDON -->
-
   </main>
-
-
   <!-- FIN MAIN -->
-  <!-- INICIO FOOTER -->
   <div th:replace="fragments :: footer"></div>
-  <!-- FIN FOOTER -->
   <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/croppr.min.js}"></script>
+  <script>  /* Script para mostrar foto que se va a subir */
+    const inputImage = document.querySelector('#foto');  // Input File
+    inputImage.addEventListener('change', abrirEditor, false);
+    let urlImage = undefined;
+
+    function abrirEditor(e) {
+        document.getElementById('mostrarImagenASubir').setAttribute('class','img-fluid w-100');
+        urlImage = URL.createObjectURL(e.target.files[0]);  // Obtiene la imagen
+        document.querySelector('#mostrarImagenASubir').setAttribute('src', urlImage);
+      }
+  </script>
 </body>
 
 </html>

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -37,6 +38,7 @@ public class Perfil implements Serializable {
     private List<Invitacion> invitacionesRecibidas;
     @OneToMany(mappedBy = "destinatario")
     private List<Invitacion> invitacionesEnviadas;
+    @Lob
     private String foto;
 
     public Perfil() {

@@ -47,7 +47,11 @@ public class PublicacionServicio {
                 publicacion.setFechaDePublicacion(new Date());
 
                 if (!foto.isEmpty()) {
-                    publicacion.setFoto(fotoServicio.guardarFoto(foto));
+                    if (foto.getContentType().substring(0,6).equalsIgnoreCase("image/")) {
+                        publicacion.setFoto(fotoServicio.guardarFoto(foto));
+                    } else {
+                        throw new ExcepcionSpring("Sólo puede subir archivos del tipo imágen.");
+                    }
                 }
 
                 publicacionRepositorio.save(publicacion);
@@ -76,12 +80,12 @@ public class PublicacionServicio {
 
                 publicacionRepositorio.save(publicacion);
             } else {
-                throw new ExcepcionSpring("No se ha encontrado a ningun publicacion para editar");
+                throw new ExcepcionSpring("No se ha encontrado ninguna publicación para editar");
             }
         } catch (ExcepcionSpring e) {
             throw e;
         } catch (Exception e) {
-            throw new ExcepcionSpring("Error al modificar publicacion");
+            throw new ExcepcionSpring("Error al modificar publicación");
         }
     }
 
@@ -143,7 +147,7 @@ public class PublicacionServicio {
 
                 publicacionRepositorio.save(publicacion);
             } else {
-                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+                throw new ExcepcionSpring("No existe una publicación con el ID indicado");
             }
         } catch (ExcepcionSpring e) {
             throw e;

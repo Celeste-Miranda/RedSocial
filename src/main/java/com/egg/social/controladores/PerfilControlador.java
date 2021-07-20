@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -136,7 +135,7 @@ public class PerfilControlador {
             mav.addObject("perfil", perfil);
             mav.addObject("perfiles", perfilesBuscados);
             mav.addObject("perfilFeed", perfil);
-            mav.addObject("exito", "busqueda exitosa");
+            mav.addObject("exito", "búsqueda exitosa");
             mav.addObject("cantidadInvitaciones", invitacionesPendientes.size());
         } catch (ExcepcionSpring e) {
             Perfil perfil = perfilServicio.buscarPerfilPorIdUsuario((Long) sesion.getAttribute("idUsuario"));
@@ -170,13 +169,13 @@ public class PerfilControlador {
         mav.addObject("title", "Cargando Perfil");
         mav.addObject("perfil", perfil);
         mav.addObject("listaTecnologia", perfilServicio.obtenerTecnologias());
+        mav.addObject("listaProvincias", perfilServicio.obtenerProvincias());
         mav.addObject("accion", "modificar");
 
         return mav;
     }
 
     @GetMapping("/mostrar/{id}")
-
     public ModelAndView mostrarPerfil(@PathVariable Long id, HttpSession sesion) throws ExcepcionSpring {
         ModelAndView mav = new ModelAndView("perfil");
 
@@ -221,12 +220,17 @@ public class PerfilControlador {
     }
 
     @PostMapping("/modificar")
-    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam String residencia, @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false) MultipartFile foto, RedirectAttributes redirectAttributes) {
+    public RedirectView guardar(@RequestParam Long id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam String residencia, 
+            @RequestParam(required = false) List<String> tecnologias, @RequestParam(required = false, name = "foto2") String foto, RedirectAttributes redirectAttributes) 
+            throws ExcepcionSpring {
+
         try {
             perfilServicio.modificar(id, nombre, apellido, residencia, tecnologias, foto);
-        } catch (ExcepcionSpring e) {
+        } catch (Exception e) {
+
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return new RedirectView("/perfil/editar/" + id);
+
         }
 
         return new RedirectView("/");

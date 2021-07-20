@@ -59,7 +59,7 @@ public class PerfilServicio {
     }
 
     @Transactional
-    public void modificar(Long idUsuario, String nombre, String apellido, String residencia, List<String> tecnologías, MultipartFile foto) throws ExcepcionSpring {
+    public void modificar(Long idUsuario, String nombre, String apellido, String residencia, List<String> tecnologías, String foto) throws ExcepcionSpring {
         try {
             Validacion.validarPerfil(idUsuario, nombre, apellido, residencia);
 
@@ -69,13 +69,10 @@ public class PerfilServicio {
                 perfil.setNombre(nombre);
                 perfil.setApellido(apellido);
                 perfil.setResidencia(residencia);
-
                 perfil.setTecnologias(tecnologías);
-
-                if (!foto.isEmpty()) {
-                    perfil.setFoto(fotoServicio.guardarFoto(foto));
+                if (!foto.equals("")) {
+                    perfil.setFoto(foto);
                 }
-
                 perfilRepositorio.save(perfil);
             } else {
                 throw new ExcepcionSpring("El usuario no puede ser nulo");
@@ -89,6 +86,12 @@ public class PerfilServicio {
 
     public List<String> obtenerTecnologias() {
         return Arrays.asList("Java", "Python", "PHP", "JavaScript", "TypeScript", "Go", "C#", "C++", "Swift");
+    }
+    
+    public List<String> obtenerProvincias() {
+        return Arrays.asList("Buenos Aires", "Catamarca", "Chaco", "Chubut", "Ciudad Autónoma de Buenos Aires", "Córdoba", "Corrientes", "Entre Ríos", "Formosa", "Jujuy", "La Pampa", 
+                "La Rioja", "Mendoza", "Misiones", "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe", "Santiago del Estero", 
+                "Tierra del Fuego, Antártida e Islas del Atlántico Sur", "Tucumán");
     }
 
     @Transactional(readOnly = true)
@@ -148,7 +151,7 @@ public class PerfilServicio {
 
             apellido = apellido.trim();
             if (nombre.equals("")) {
-                throw new ExcepcionSpring("No ingreso ningun dato en la búsqueda");
+                throw new ExcepcionSpring("No ingreso ningún dato en la búsqueda");
             }
 
             List<Perfil> perfiles = new ArrayList<>();
@@ -304,7 +307,7 @@ public class PerfilServicio {
                 usuarioRepositorio.save(perfil.getUsuario());
                 perfilRepositorio.save(perfil);
             } else {
-                throw new ExcepcionSpring("No existe una publicacion con el ID indicado");
+                throw new ExcepcionSpring("No existe una publicación con el ID indicado");
             }
         } catch (ExcepcionSpring e) {
             throw e;

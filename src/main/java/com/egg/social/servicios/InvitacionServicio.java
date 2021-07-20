@@ -41,7 +41,7 @@ public class InvitacionServicio {
 
                     return invitacion;
                 } else {
-                    throw new ExcepcionSpring("La invitacion Ya Existe");
+                    throw new ExcepcionSpring("La invitación ya existe");
                 }
             } else {
                 throw new ExcepcionSpring("Es necesario que exista tanto un remitente como un destinatario");

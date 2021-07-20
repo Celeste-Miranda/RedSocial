@@ -17,13 +17,18 @@ public class RolServicio {
     @Transactional()
     public Rol crearRol(String nombre) throws ExcepcionSpring {
         try {
+            nombre = nombre.trim();
             if (rolRepositorio.findByNombre(nombre) != null) {
                 throw new ExcepcionSpring("Ya existe " + nombre + " en la lista de Roles no se puede guardar");
             }
 
             Rol rol = new Rol();
 
-            rol.setNombre(nombre);
+            if (!nombre.equals("")) {
+                rol.setNombre(nombre);
+            } else {
+                throw new ExcepcionSpring("El nombre del rol no puede ser nulo ni estar vacío.");
+            }
 
             return rolRepositorio.save(rol);
         } catch (ExcepcionSpring e) {
