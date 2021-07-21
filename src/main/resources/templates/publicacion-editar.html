@@ -54,22 +54,29 @@
               <p class="text-muted my-0" th:text="${#dates.format(publicacion.fechaDePublicacion, 'dd/MM/yyyy HH:mm')}"></p>
             </div>
           </div>
+         
           <div th:if="${publicacion.foto != null}" class="">
             <label for="foto" id="labelFoto" class="btn ">
-              <img th:src="@{|/obtener-foto/${publicacion.foto}|}" alt="" id="fotoPublicacion" class="card-img-top img-fluid w-75 mx-auto">
+              <img th:src="@{|/obtener-foto/${publicacion.foto}|}" alt="" id="mostrarImagenASubir"class="card-img-top img-fluid w-75 mx-auto">
               <input type="hidden" name="id" id="id" th:field="${publicacion.id}">
               <input type="file" name="foto" id="foto" th:field="*{foto}" accept="image/*" hidden>
+              
             </label>
+            
           </div>
           <div th:unless="${publicacion.foto != null}" class="">
+
+            <img th:src="@{|/obtener-foto/${publicacion.foto}|}" alt="" id="mostrarImagenASubir"class="card-img-top img-fluid w-75 mx-auto ">
             <input type="hidden" name="id" id="id" th:field="${publicacion.id}">
-            <label for="foto" id="labelFoto" class="btn btn-sm btn-warning"> <img th:src="@{/iconos/image.svg}">CARGAR FOTO</label>
+            <label for="foto" id="labelFoto" class="btn btn-sm btn-warning "> <img th:src="@{/iconos/image.svg}">CARGAR FOTO </label>
             <input type="file" name="foto" id="foto" th:field="*{foto}" accept="image/*" hidden>
           </div>
           <!-- si hay imagen ponerla -->
           <div class="card-body">
             <!-- texto y reacciones -->
+         
             <textarea th:field="*{descripcion}" name="descripcion" id="descripcion" rows="3" class="form-control form-control-sm border-0" placeholder="¿Que estas pensando?"></textarea>
+            
           </div>
           <button type="submit" class="btn btn-warning p-3">Guardar Cambios</button>
         </div>
@@ -78,6 +85,19 @@
   </main>
   <div th:replace=" fragments :: footer"></div>  <!-- FOOTER -->
   <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <script th:src="@{/js/croppr.min.js}"></script>
+  <script>  /* Script para mostrar foto que se va a subir */
+    const inputImage = document.querySelector('#foto');  // Input File
+    inputImage.addEventListener('change', abrirEditor, false);
+    let urlImage = undefined;
+
+    function abrirEditor(e) {
+        document.getElementById('mostrarImagenASubir').setAttribute('class','img-fluid w-50');
+        urlImage = URL.createObjectURL(e.target.files[0]);  // Obtiene la imagen
+        document.querySelector('#mostrarImagenASubir').setAttribute('src', urlImage);
+      }
+  </script>
 </body>
 
 </html>
