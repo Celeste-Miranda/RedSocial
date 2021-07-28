@@ -5,6 +5,8 @@
 
 
 EggSocial es una Red Social pensada para estudiantes y egresados del Intituto educativo Egg Educación. Proyecto final Colaborativo.
+
+
 [![VideoEggSocial](https://gifs.com/gif/eggsocial-DqqN1B)](https://youtu.be/w8VTFgEXxps)
 
 
@@ -28,6 +30,7 @@ EggSocial es una Red Social pensada para estudiantes y egresados del Intituto ed
 
 ## Comezando
  Para que funcione el proyecto de manera local, es necesario tener intalado Java 8 como minimo y MySQL. Crear una base de datos y modificar el archivo properties, con los datos de  base de datos creada , username y password. 
+ 
  
  ![foto](http://drive.google.com/uc?export=view&id=1UCfVxxnhKVT9lYnw64n-m8HiAz9Be5ZB)
 
