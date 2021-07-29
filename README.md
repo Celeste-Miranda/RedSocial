@@ -7,7 +7,8 @@
 EggSocial es una Red Social pensada para estudiantes y egresados del Intituto educativo Egg Educación. Proyecto final Colaborativo.
 
 
-[![VideoEggSocial](https://gifs.com/gif/eggsocial-DqqN1B)](https://youtu.be/w8VTFgEXxps)
+[![VideoEggSocial](http://drive.google.com/uc?export=view&id=1u5TgxcSx1c5DGa89xgZ45MB_ad4RxMLJ)
+)](https://youtu.be/w8VTFgEXxps)
 
 
 ## Características
